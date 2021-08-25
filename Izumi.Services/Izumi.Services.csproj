@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Izumi.Data\Izumi.Data.csproj" />
+      <ProjectReference Include="..\Izumi.Framework\Izumi.Framework.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="10.1.1" />
+      <PackageReference Include="Discord.Net.Labs" Version="3.0.0" />
+      <PackageReference Include="Discord.Net.Labs.Commands" Version="3.0.0" />
+      <PackageReference Include="Humanizer.Core.ru" Version="2.11.10" />
+      <PackageReference Include="MediatR" Version="9.0.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Discord\Emote\Commands" />
+      <Folder Include="Discord\Guild\Commands" />
+      <Folder Include="Discord\SlashCommands\Components" />
+      <Folder Include="Seeder\Game" />
+    </ItemGroup>
+
+</Project>
