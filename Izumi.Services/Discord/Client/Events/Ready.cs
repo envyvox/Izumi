@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using Hangfire;
+using Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes;
 using MediatR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -15,13 +17,16 @@ namespace Izumi.Services.Discord.Client.Events
     {
         private readonly ILogger<ReadyHandler> _logger;
         private readonly IHostApplicationLifetime _lifetime;
+        private readonly TimeZoneInfo _timeZoneInfo;
 
         public ReadyHandler(
             ILogger<ReadyHandler> logger,
-            IHostApplicationLifetime lifetime)
+            IHostApplicationLifetime lifetime,
+            TimeZoneInfo timeZoneInfo)
         {
             _logger = logger;
             _lifetime = lifetime;
+            _timeZoneInfo = timeZoneInfo;
         }
 
         public async Task<Unit> Handle(Ready request, CancellationToken cancellationToken)
@@ -31,6 +36,10 @@ namespace Izumi.Services.Discord.Client.Events
             try
             {
                 _logger.LogInformation("Bot started");
+
+                RecurringJob.AddOrUpdate<IUploadEmotesJob>("upload-emotes",
+                    x => x.Execute(),
+                    Cron.Hourly, _timeZoneInfo);
             }
             catch (Exception e)
             {

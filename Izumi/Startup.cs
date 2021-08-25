@@ -8,6 +8,7 @@ using Izumi.Framework.Hangfire;
 using Izumi.Services.Discord.Client;
 using Izumi.Services.Discord.Client.Impl;
 using Izumi.Services.Discord.Client.Options;
+using Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -58,6 +59,7 @@ namespace Izumi
                 TimeZoneInfo.FindSystemTimeZoneById(_config.GetValue<string>("CronTimezoneId")));
 
             services.AddSingleton<IDiscordClientService, DiscordClientService>();
+            services.AddScoped<IUploadEmotesJob, UploadEmotesJob>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

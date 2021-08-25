@@ -12,6 +12,6 @@ namespace Izumi.Services.Discord.Emote.Models
 
     public class EmoteProfile : Profile
     {
-        public EmoteProfile() => CreateMap<global::Discord.Emote, EmoteDto>();
+        public EmoteProfile() => CreateMap<Data.Entities.Discord.Emote, EmoteDto>();
     }
 }
