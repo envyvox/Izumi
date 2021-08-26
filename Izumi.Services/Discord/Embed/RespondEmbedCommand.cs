@@ -33,7 +33,7 @@ namespace Izumi.Services.Discord.Embed
                 .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))
                 .Build();
 
-            await request.Command.RespondAsync(
+            await request.Command.FollowupAsync(
                 text: request.Text,
                 embeds: new[] { embed },
                 isTTS: false,

@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Discord;
 using Discord.WebSocket;
 using Izumi.Services.Discord.SlashCommands.Commands.Administration;
 using Izumi.Services.Discord.SlashCommands.Commands.User.Info;
@@ -20,6 +21,12 @@ namespace Izumi.Services.Discord.Client.Events
 
         public async Task<Unit> Handle(InteractionCreated request, CancellationToken ct)
         {
+            await request.Interaction.DeferAsync(true, new RequestOptions
+            {
+                RetryMode = RetryMode.Retry502,
+                Timeout = 10000
+            });
+
             return request.Interaction switch
             {
                 SocketSlashCommand command => command.Data.Name switch

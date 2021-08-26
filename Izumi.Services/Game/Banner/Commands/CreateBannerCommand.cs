@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using Izumi.Data;
 using Izumi.Data.Enums;
 using Izumi.Data.Extensions;
+using Izumi.Services.Game.Banner.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,18 +16,22 @@ namespace Izumi.Services.Game.Banner.Commands
             BannerRarityType Rarity,
             uint Price,
             string Url)
-        : IRequest;
+        : IRequest<BannerDto>;
 
-    public class CreateBannerHandler : IRequestHandler<CreateBannerCommand>
+    public class CreateBannerHandler : IRequestHandler<CreateBannerCommand, BannerDto>
     {
+        private readonly IMapper _mapper;
         private readonly AppDbContext _db;
 
-        public CreateBannerHandler(DbContextOptions options)
+        public CreateBannerHandler(
+            DbContextOptions options,
+            IMapper mapper)
         {
+            _mapper = mapper;
             _db = new AppDbContext(options);
         }
 
-        public async Task<Unit> Handle(CreateBannerCommand request, CancellationToken cancellationToken)
+        public async Task<BannerDto> Handle(CreateBannerCommand request, CancellationToken cancellationToken)
         {
             var exist = await _db.Banners
                 .AnyAsync(x => x.Name == request.Name);
@@ -35,7 +41,7 @@ namespace Izumi.Services.Game.Banner.Commands
                 throw new Exception($"banner with name {request.Name} already exist");
             }
 
-            await _db.CreateEntity(new Data.Entities.Banner
+            var created = await _db.CreateEntity(new Data.Entities.Banner
             {
                 Id = Guid.NewGuid(),
                 Name = request.Name,
@@ -44,7 +50,7 @@ namespace Izumi.Services.Game.Banner.Commands
                 Url = request.Url
             });
 
-            return Unit.Value;
+            return _mapper.Map<BannerDto>(created);
         }
     }
 }

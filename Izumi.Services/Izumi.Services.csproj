@@ -19,9 +19,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Discord\Emote\Commands" />
       <Folder Include="Discord\Guild\Commands" />
       <Folder Include="Discord\SlashCommands\Components" />
+      <Folder Include="Hangfire\Commands" />
       <Folder Include="Seeder\Game" />
     </ItemGroup>
 

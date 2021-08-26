@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,10 +29,13 @@ namespace Izumi.Services.Discord.SlashCommands.Commands.User.Info
 
         public async Task<Unit> Handle(ProfileCommand request, CancellationToken ct)
         {
-            var socketUser = (SocketGuildUser) request.Command.Data.Options.First().Value ?? request.Command.User;
+            var socketUser = (SocketGuildUser) (request.Command.Data.Options is null
+                ? request.Command.User
+                : request.Command.Data.Options.First().Value);
+
             var emotes = await _mediator.Send(new GetEmotesQuery());
             var user = await _mediator.Send(new GetUserQuery((long) socketUser.Id));
-            // var banner = await _mediator.Send(new GetUserActiveBannerQuery(user.Id));
+            var banner = await _mediator.Send(new GetUserActiveBannerQuery(user.Id));
 
             var embed = new EmbedBuilder()
                 .WithAuthor("Профиль")
@@ -44,21 +46,22 @@ namespace Izumi.Services.Discord.SlashCommands.Commands.User.Info
                     $"{emotes.GetEmote(user.Gender.EmoteName())} {user.Gender.Localize()}" +
                     $"\n{StringExtensions.EmptyChar}", true)
                 .AddField("День рождения",
-                    $"{emotes.GetEmote("Blank")} WIP...", true)
+                    $"Не указан {emotes.GetEmote("Blank")}", true)
                 .AddField("Энергия",
-                    $"{emotes.GetEmote("Energy")} {user.Energy}")
+                    $"{emotes.DisplayProgressBar(user.Energy)} {emotes.GetEmote("Energy")} {user.Energy} энергии")
                 .AddField("Текущая локация",
                     $"{user.Location.Localize()}" +
                     $"\n{StringExtensions.EmptyChar}")
                 .AddField("Рейтинг приключений",
-                    $"{emotes.GetEmote("Blank")} WIP...")
+                    $"{emotes.GetEmote("Blank")} Временно недоступно.")
                 .AddField("Семья",
-                    $"{emotes.GetEmote("Blank")} WIP..." +
+                    $"{emotes.GetEmote("Blank")} Временно недоступно..." +
                     $"\n{StringExtensions.EmptyChar}")
                 .AddField("Дата присоединения",
                     user.CreatedAt.ToString("dd MMMM yyy", new CultureInfo("ru-RU")))
                 .AddField("Информация",
-                    user.About ?? "Тут пока что ничего не указано, но я уверена что это отличный пользователь.");
+                    user.About ?? "Тут пока что ничего не указано, но я уверена что это отличный пользователь.")
+                .WithImageUrl(banner.Url);
 
             return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
         }
