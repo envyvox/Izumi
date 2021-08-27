@@ -1,7 +1,9 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.SlashCommands.Commands.Administration;
 using Izumi.Services.Discord.SlashCommands.Commands.User.Info;
 using MediatR;
@@ -26,21 +28,33 @@ namespace Izumi.Services.Discord.Client.Events
                 RetryMode = RetryMode.Retry502,
                 Timeout = 10000
             });
-
-            return request.Interaction switch
+            try
             {
-                SocketSlashCommand command => command.Data.Name switch
+                return request.Interaction switch
                 {
-                    "ping" => await _mediator.Send(new PingCommand(command)),
-                    "профиль" => await _mediator.Send(new ProfileCommand(command)),
+                    SocketSlashCommand command => command.Data.Name switch
+                    {
+                        "ping" => await _mediator.Send(new PingCommand(command)),
+                        "профиль" => await _mediator.Send(new ProfileCommand(command)),
+                        _ => Unit.Value
+                    },
+                    SocketMessageComponent component => component.Data.CustomId switch
+                    {
+                        _ => Unit.Value
+                    },
                     _ => Unit.Value
-                },
-                SocketMessageComponent component => component.Data.CustomId switch
-                {
-                    _ => Unit.Value
-                },
-                _ => Unit.Value
-            };
+                };
+            }
+            catch (Exception e)
+            {
+                var embed = new EmbedBuilder()
+                    .WithAuthor("Ой, кажется что-то пошло не так...")
+                    .WithDescription(e.Message);
+
+                await _mediator.Send(new RespondEmbedCommand((SocketSlashCommand) request.Interaction, embed, true));
+            }
+
+            return Unit.Value;
         }
     }
 }
