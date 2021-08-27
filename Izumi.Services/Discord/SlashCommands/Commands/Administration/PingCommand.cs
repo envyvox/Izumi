@@ -14,8 +14,7 @@ namespace Izumi.Services.Discord.SlashCommands.Commands.Administration
     {
         private readonly IMediator _mediator;
 
-        public PingHandler(
-            IMediator mediator)
+        public PingHandler(IMediator mediator)
         {
             _mediator = mediator;
         }

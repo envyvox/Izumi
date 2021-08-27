@@ -30,5 +30,27 @@ namespace Izumi.Data.Extensions
 
             return (T) created.Entity;
         }
+
+        public static async Task UpdateEntity<T>(this AppDbContext db, T entity)
+        {
+            var updated = db.Update(entity);
+
+            updated.State = EntityState.Modified;
+
+            await db.SaveChangesAsync();
+
+            updated.State = EntityState.Detached;
+        }
+
+        public static async Task DeleteEntity<T>(this AppDbContext db, T entity)
+        {
+            var deleted = db.Remove(entity);
+
+            deleted.State = EntityState.Deleted;
+
+            await db.SaveChangesAsync();
+
+            deleted.State = EntityState.Detached;
+        }
     }
 }
