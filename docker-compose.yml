@@ -1,0 +1,7 @@
+version: '3.5'
+services:
+  bot:
+    image: registry.kkxo.ru/izumi
+    build:
+      context: .
+      dockerfile: ./Izumi/Dockerfile
