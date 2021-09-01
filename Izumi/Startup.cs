@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Discord.Commands;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Izumi.Data;
@@ -57,6 +58,7 @@ namespace Izumi
             services.AddSingleton(_ =>
                 TimeZoneInfo.FindSystemTimeZoneById(_config.GetValue<string>("CronTimezoneId")));
 
+            services.AddSingleton<CommandService>();
             services.AddSingleton<IDiscordClientService, DiscordClientService>();
             services.AddScoped<IUploadEmotesJob, UploadEmotesJob>();
         }

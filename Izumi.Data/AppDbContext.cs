@@ -27,7 +27,13 @@ namespace Izumi.Data
             modelBuilder.UseValueConverterForType<DateTime>(new DateTimeUtcKindConverter());
         }
 
+        public DbSet<Channel> Channels { get; set; }
+        public DbSet<ContentMessage> ContentMessages { get; set; }
+        public DbSet<ContentVote> ContentVotes { get; set; }
         public DbSet<Emote> Emotes { get; set; }
+        public DbSet<Image> Images { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
 
         public DbSet<Alcohol> Alcohols { get; set; }
         public DbSet<AlcoholIngredient> AlcoholIngredients { get; set; }
@@ -49,8 +55,10 @@ namespace Izumi.Data
         public DbSet<User> Users { get; set; }
         public DbSet<UserAlcohol> UserAlcohols { get; set; }
         public DbSet<UserBanner> UserBanners { get; set; }
+        public DbSet<UserBox> UserBoxes { get; set; }
         public DbSet<UserCrafting> UserCraftings { get; set; }
         public DbSet<UserCrop> UserCrops { get; set; }
+        public DbSet<UserCurrency> UserCurrencies { get; set; }
         public DbSet<UserDrink> UserDrinks { get; set; }
         public DbSet<UserFish> UserFishes { get; set; }
         public DbSet<UserFood> UserFoods { get; set; }

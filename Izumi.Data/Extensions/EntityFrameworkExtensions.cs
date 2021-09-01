@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Izumi.Data.Extensions
@@ -51,6 +53,12 @@ namespace Izumi.Data.Extensions
             await db.SaveChangesAsync();
 
             deleted.State = EntityState.Detached;
+        }
+
+        /// <summary> Return ordered by random query, db must have uuid-ossp extension. </summary>
+        public static IOrderedQueryable<T> OrderByRandom<T>(this DbSet<T> source) where T : class
+        {
+            return source.AsQueryable().OrderBy(x => Guid.NewGuid());
         }
     }
 }

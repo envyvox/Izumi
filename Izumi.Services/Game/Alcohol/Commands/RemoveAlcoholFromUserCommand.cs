@@ -28,7 +28,7 @@ namespace Izumi.Services.Game.Alcohol.Commands
 
             if (entity is null)
             {
-                throw new Exception($"user {request.UserId} doesnt have entity with alcohol {request.AlcoholId}");
+                throw new Exception($"user {request.UserId} doesnt have alcohol {request.AlcoholId}");
             }
 
             entity.Amount -= request.Amount;

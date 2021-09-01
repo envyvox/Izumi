@@ -61,6 +61,99 @@ namespace Izumi.Data.Migrations
                     b.ToTable("banners");
                 });
 
+            modelBuilder.Entity("Izumi.Data.Entities.Discord.Channel", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<byte>("Type")
+                        .HasColumnType("smallint")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id")
+                        .HasName("pk_channels");
+
+                    b.HasIndex("Type")
+                        .IsUnique()
+                        .HasDatabaseName("ix_channels_type");
+
+                    b.ToTable("channels");
+                });
+
+            modelBuilder.Entity("Izumi.Data.Entities.Discord.ContentMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<long>("ChannelId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("channel_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<long>("MessageId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("message_id");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_content_messages");
+
+                    b.HasIndex("UserId", "ChannelId", "MessageId")
+                        .HasDatabaseName("ix_content_messages_user_id_channel_id_message_id");
+
+                    b.ToTable("content_messages");
+                });
+
+            modelBuilder.Entity("Izumi.Data.Entities.Discord.ContentVote", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<Guid>("MessageId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("message_id");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.Property<byte>("Vote")
+                        .HasColumnType("smallint")
+                        .HasColumnName("vote");
+
+                    b.HasKey("Id")
+                        .HasName("pk_content_votes");
+
+                    b.HasIndex("MessageId")
+                        .HasDatabaseName("ix_content_votes_message_id");
+
+                    b.HasIndex("UserId", "MessageId", "Vote")
+                        .HasDatabaseName("ix_content_votes_user_id_message_id_vote");
+
+                    b.ToTable("content_votes");
+                });
+
             modelBuilder.Entity("Izumi.Data.Entities.Discord.Emote", b =>
                 {
                     b.Property<long>("Id")
@@ -93,6 +186,89 @@ namespace Izumi.Data.Migrations
                         .HasDatabaseName("ix_emotes_name");
 
                     b.ToTable("emotes");
+                });
+
+            modelBuilder.Entity("Izumi.Data.Entities.Discord.Image", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<byte>("Type")
+                        .HasColumnType("smallint")
+                        .HasColumnName("type");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("url");
+
+                    b.HasKey("Id")
+                        .HasName("pk_images");
+
+                    b.HasIndex("Type")
+                        .HasDatabaseName("ix_images_type");
+
+                    b.ToTable("images");
+                });
+
+            modelBuilder.Entity("Izumi.Data.Entities.Discord.Role", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<byte>("Type")
+                        .HasColumnType("smallint")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id")
+                        .HasName("pk_roles");
+
+                    b.HasIndex("Type")
+                        .IsUnique()
+                        .HasDatabaseName("ix_roles_type");
+
+                    b.ToTable("roles");
+                });
+
+            modelBuilder.Entity("Izumi.Data.Entities.Discord.UserRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTimeOffset>("Expiration")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expiration");
+
+                    b.Property<long>("RoleId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("role_id");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_user_roles");
+
+                    b.HasIndex("RoleId")
+                        .HasDatabaseName("ix_user_roles_role_id");
+
+                    b.HasIndex("UserId", "RoleId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_user_roles_user_id_role_id");
+
+                    b.ToTable("user_roles");
                 });
 
             modelBuilder.Entity("Izumi.Data.Entities.Resource.Alcohol", b =>
@@ -789,6 +965,42 @@ namespace Izumi.Data.Migrations
                     b.ToTable("user_banners");
                 });
 
+            modelBuilder.Entity("Izumi.Data.Entities.User.UserBox", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<long>("Amount")
+                        .HasColumnType("bigint")
+                        .HasColumnName("amount");
+
+                    b.Property<byte>("Box")
+                        .HasColumnType("smallint")
+                        .HasColumnName("box");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_user_boxes");
+
+                    b.HasIndex("UserId", "Box")
+                        .IsUnique()
+                        .HasDatabaseName("ix_user_boxes_user_id_box");
+
+                    b.ToTable("user_boxes");
+                });
+
             modelBuilder.Entity("Izumi.Data.Entities.User.UserCrafting", b =>
                 {
                     b.Property<Guid>("Id")
@@ -865,6 +1077,42 @@ namespace Izumi.Data.Migrations
                         .HasDatabaseName("ix_user_crops_user_id_crop_id");
 
                     b.ToTable("user_crops");
+                });
+
+            modelBuilder.Entity("Izumi.Data.Entities.User.UserCurrency", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<long>("Amount")
+                        .HasColumnType("bigint")
+                        .HasColumnName("amount");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<byte>("Currency")
+                        .HasColumnType("smallint")
+                        .HasColumnName("currency");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_user_currencies");
+
+                    b.HasIndex("UserId", "Currency")
+                        .IsUnique()
+                        .HasDatabaseName("ix_user_currencies_user_id_currency");
+
+                    b.ToTable("user_currencies");
                 });
 
             modelBuilder.Entity("Izumi.Data.Entities.User.UserDrink", b =>
@@ -1140,6 +1388,60 @@ namespace Izumi.Data.Migrations
                     b.ToTable("user_seeds");
                 });
 
+            modelBuilder.Entity("Izumi.Data.Entities.Discord.ContentMessage", b =>
+                {
+                    b.HasOne("Izumi.Data.Entities.User.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("fk_content_messages_users_user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Izumi.Data.Entities.Discord.ContentVote", b =>
+                {
+                    b.HasOne("Izumi.Data.Entities.Discord.ContentMessage", "Message")
+                        .WithMany()
+                        .HasForeignKey("MessageId")
+                        .HasConstraintName("fk_content_votes_content_messages_message_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Izumi.Data.Entities.User.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("fk_content_votes_users_user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Message");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Izumi.Data.Entities.Discord.UserRole", b =>
+                {
+                    b.HasOne("Izumi.Data.Entities.Discord.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .HasConstraintName("fk_user_roles_roles_role_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Izumi.Data.Entities.User.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("fk_user_roles_users_user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Izumi.Data.Entities.Resource.Crop", b =>
                 {
                     b.HasOne("Izumi.Data.Entities.Resource.Seed", "Seed")
@@ -1278,6 +1580,18 @@ namespace Izumi.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Izumi.Data.Entities.User.UserBox", b =>
+                {
+                    b.HasOne("Izumi.Data.Entities.User.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("fk_user_boxes_users_user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Izumi.Data.Entities.User.UserCrafting", b =>
                 {
                     b.HasOne("Izumi.Data.Entities.Resource.Crafting", "Crafting")
@@ -1316,6 +1630,18 @@ namespace Izumi.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Crop");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Izumi.Data.Entities.User.UserCurrency", b =>
+                {
+                    b.HasOne("Izumi.Data.Entities.User.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("fk_user_currencies_users_user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

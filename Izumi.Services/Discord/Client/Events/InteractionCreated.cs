@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using Izumi.Services.Discord.Embed;
-using Izumi.Services.Discord.SlashCommands.Commands.Administration;
-using Izumi.Services.Discord.SlashCommands.Commands.User.Info;
+using Izumi.Data.Enums;
+using Izumi.Services.Discord.Commands.Slash.User.Info;
+using Izumi.Services.Discord.Image.Queries;
 using MediatR;
 
 namespace Izumi.Services.Discord.Client.Events
@@ -34,8 +35,8 @@ namespace Izumi.Services.Discord.Client.Events
                 {
                     SocketSlashCommand command => command.Data.Name switch
                     {
-                        "ping" => await _mediator.Send(new PingCommand(command)),
                         "профиль" => await _mediator.Send(new ProfileCommand(command)),
+                        "доска-сообщества" => await _mediator.Send(new CommunityDescCommand(command)),
                         _ => Unit.Value
                     },
                     SocketMessageComponent component => component.Data.CustomId switch
@@ -48,10 +49,12 @@ namespace Izumi.Services.Discord.Client.Events
             catch (Exception e)
             {
                 var embed = new EmbedBuilder()
+                    .WithColor(new Color(uint.Parse("202225", NumberStyles.HexNumber)))
                     .WithAuthor("Ой, кажется что-то пошло не так...")
-                    .WithDescription(e.Message);
+                    .WithDescription(e.Message)
+                    .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.CommandError)));
 
-                await _mediator.Send(new RespondEmbedCommand((SocketSlashCommand) request.Interaction, embed, true));
+                await request.Interaction.FollowupAsync("", new[] { embed.Build() }, false, true);
             }
 
             return Unit.Value;

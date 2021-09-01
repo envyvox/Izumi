@@ -24,7 +24,7 @@ namespace Izumi.Services.Discord.Guild.Queries
 
             if (socketUser is null)
             {
-                throw new Exception($"socket user with id {request.UserId} was not found in guild {socketGuild.Id}");
+                throw new Exception($"socket user {request.UserId} was not found in guild {socketGuild.Id}");
             }
 
             return socketUser;

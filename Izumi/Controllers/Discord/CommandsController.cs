@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Izumi.Services.Discord.SlashCommands.Commands;
+using Izumi.Services.Seeder.Discord;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +20,7 @@ namespace Izumi.Controllers.Discord
         [Route("upload-slash-commands")]
         public async Task<ActionResult> UploadSlashCommands()
         {
-            return Ok(await _mediator.Send(new UploadSlashCommandsCommand()));
+            return Ok(await _mediator.Send(new SeederUploadSlashCommandsCommand()));
         }
     }
 }

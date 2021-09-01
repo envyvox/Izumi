@@ -29,6 +29,7 @@ namespace Izumi.Services.Discord.Embed
         public async Task<Unit> Handle(RespondEmbedCommand request, CancellationToken ct)
         {
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
+
             var embed = request.Builder
                 .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))
                 .Build();
