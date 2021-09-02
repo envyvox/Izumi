@@ -22,6 +22,16 @@ namespace Izumi.Services.Discord.Image.Commands
 
         public async Task<Unit> Handle(CreateImageCommand request, CancellationToken ct)
         {
+            var exist = await _db.Images
+                .AnyAsync(x =>
+                    x.Type == request.Type &&
+                    x.Url == request.Url);
+
+            if (exist)
+            {
+                throw new Exception($"image {request.Type.ToString()} with url {request.Url} already exist");
+            }
+
             await _db.CreateEntity(new Data.Entities.Discord.Image
             {
                 Id = Guid.NewGuid(),
