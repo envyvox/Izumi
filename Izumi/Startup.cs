@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using Discord.Commands;
 using Hangfire;
 using Hangfire.PostgreSql;
@@ -12,8 +11,7 @@ using Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,8 +50,8 @@ namespace Izumi
             services.AddAutoMapper(typeof(IDiscordClientService).Assembly);
             services.AddMediatR(typeof(IDiscordClientService).Assembly);
 
-            services.AddControllers();
-            services.AddSwaggerDocument();
+            services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddSwaggerGen();
 
             services.AddSingleton(_ =>
                 TimeZoneInfo.FindSystemTimeZoneById(_config.GetValue<string>("CronTimezoneId")));
@@ -68,56 +66,21 @@ namespace Izumi
         {
             MigrateDb(app.ApplicationServices);
 
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
             app.UseHangfireServer();
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
                 Authorization = new[] { new AllowAllAuthorizationFilter() }
             });
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseForwardedHeaders(new ForwardedHeadersOptions
-                {
-                    ForwardedHeaders = ForwardedHeaders.XForwardedFor |
-                                       ForwardedHeaders.XForwardedProto
-                });
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Izumi API V1"); });
 
-                app.Use(async (context, next) =>
-                {
-                    if (_config.GetValue<string>("AccessType")?.ToLower() != "whitelist")
-                    {
-                        await next();
-                        return;
-                    }
-
-                    var ips = (_config.GetValue<string>("AllowedIps") ?? "").Split(';');
-                    var remoteIp = context.Request.Headers["X-Real-IP"].ToString();
-
-                    if (!((IList) ips).Contains(remoteIp))
-                    {
-                        await context.Response.WriteAsync(@"
-                            <!doctype html>
-                            <html>
-                                <body>
-                                    <div>
-                                        <h2>Oops, seems that you are not authorized to access this page</h2>
-                                    <div>
-                                </body>
-                            </html>");
-                        return;
-                    }
-
-                    await next();
-                });
-            }
-
-            app.UseOpenApi();
             app.UseRouting();
-            app.UseSwaggerUi3();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
