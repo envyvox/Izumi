@@ -12,7 +12,7 @@ using Izumi.Services.Game.Banner.Commands;
 using MediatR;
 using Microsoft.Extensions.Options;
 
-namespace Izumi.Services.Seeder.Discord
+namespace Izumi.Services.Seeder.Game
 {
     public record SeederUploadBannersCommand : IRequest<TotalAndAffectedCountDto>;
 
@@ -35,7 +35,9 @@ namespace Izumi.Services.Seeder.Discord
             var commands = new List<CreateBannerCommand>();
 
             var guild = await _mediator.Send(new GetSocketGuildQuery(_options.Value.FilesGuildId));
-            var bannerRarities = Enum.GetValues(typeof(BannerRarityType)).Cast<BannerRarityType>();
+            var bannerRarities = Enum
+                .GetValues(typeof(BannerRarityType))
+                .Cast<BannerRarityType>();
 
             foreach (var rarity in bannerRarities)
             {

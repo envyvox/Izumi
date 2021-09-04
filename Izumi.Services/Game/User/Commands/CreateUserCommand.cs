@@ -7,7 +7,6 @@ using Izumi.Data.Enums;
 using Izumi.Data.Extensions;
 using Izumi.Services.Game.Banner.Commands;
 using Izumi.Services.Game.Banner.Queries;
-using Izumi.Services.Game.Currency.Commands;
 using Izumi.Services.Game.User.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

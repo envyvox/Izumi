@@ -15,9 +15,9 @@ namespace Izumi.Services.Game.Fish.Commands
     public record CreateFishCommand(
             string Name,
             FishRarityType Rarity,
+            List<SeasonType> CatchSeasons,
             WeatherType CatchWeather,
             TimesDayType CatchTimesDay,
-            List<SeasonType> CatchSeasons,
             uint Price)
         : IRequest<FishDto>;
 

@@ -36,9 +36,6 @@ namespace Izumi.Services.Seeder.Discord
             var commands = new[]
             {
                 new SlashCommandBuilder()
-                    .WithName("ping")
-                    .WithDescription("Отвечает Pong!"),
-                new SlashCommandBuilder()
                     .WithName("доска-сообщества")
                     .WithDescription("Информация о твоем участии в доске сообщества"),
                 new SlashCommandBuilder()
