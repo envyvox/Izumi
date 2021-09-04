@@ -47,7 +47,12 @@ namespace Izumi.Services.Game.Fish.Commands
             var created = await _db.CreateEntity(new Data.Entities.Resource.Fish
             {
                 Id = Guid.NewGuid(),
-                Name = request.Name
+                Name = request.Name,
+                Rarity = request.Rarity,
+                CatchSeasons = request.CatchSeasons,
+                CatchWeather = request.CatchWeather,
+                CatchTimesDay = request.CatchTimesDay,
+                Price = request.Price
             });
 
             return _mapper.Map<FishDto>(created);
