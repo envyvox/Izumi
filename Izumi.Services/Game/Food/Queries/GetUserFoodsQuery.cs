@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Izumi.Data;
+using Izumi.Data.Extensions;
 using Izumi.Services.Game.Food.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ namespace Izumi.Services.Game.Food.Queries
         public async Task<List<UserFoodDto>> Handle(GetUserFoodsQuery request, CancellationToken ct)
         {
             var entities = await _db.UserFoods
+                .AmountNotZero()
                 .Include(x => x.Food)
                 .Where(x => x.UserId == request.UserId)
                 .ToListAsync();

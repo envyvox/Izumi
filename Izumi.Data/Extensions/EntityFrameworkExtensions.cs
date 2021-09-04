@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Izumi.Data.Util;
 using Microsoft.EntityFrameworkCore;
 
 namespace Izumi.Data.Extensions
@@ -59,6 +60,12 @@ namespace Izumi.Data.Extensions
         public static IOrderedQueryable<T> OrderByRandom<T>(this DbSet<T> source) where T : class
         {
             return source.AsQueryable().OrderBy(x => Guid.NewGuid());
+        }
+
+        /// <summary> Adds condition where amount > 0. </summary>
+        public static IQueryable<T> AmountNotZero<T>(this DbSet<T> source) where T : class, IAmountEntity
+        {
+            return source.Where(x => x.Amount > 0);
         }
     }
 }

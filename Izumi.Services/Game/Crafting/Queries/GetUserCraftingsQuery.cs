@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Izumi.Data;
+using Izumi.Data.Extensions;
 using Izumi.Services.Game.Crafting.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ namespace Izumi.Services.Game.Crafting.Queries
         public async Task<List<UserCraftingDto>> Handle(GetUserCraftingsQuery request, CancellationToken ct)
         {
             var entities = await _db.UserCraftings
+                .AmountNotZero()
                 .Include(x => x.Crafting)
                 .Where(x => x.UserId == request.UserId)
                 .ToListAsync();

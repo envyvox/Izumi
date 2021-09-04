@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 using Izumi.Data.Enums;
 using Izumi.Data.Util;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Izumi.Data.Entities.Resource
 {
@@ -32,7 +35,14 @@ namespace Izumi.Data.Entities.Resource
             builder.Property(x => x.Rarity).IsRequired();
             builder.Property(x => x.CatchWeather).IsRequired();
             builder.Property(x => x.CatchTimesDay).IsRequired();
-            builder.Property(x => x.CatchSeasons).IsRequired().HasConversion<int[]>();
+
+            builder
+                .Property(x => x.CatchSeasons)
+                .IsRequired()
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, null),
+                    v => JsonSerializer.Deserialize<List<SeasonType>>(v, null));
+
             builder.Property(x => x.Price).IsRequired();
         }
     }

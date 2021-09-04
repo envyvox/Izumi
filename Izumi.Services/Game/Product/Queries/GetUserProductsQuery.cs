@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Izumi.Data;
+using Izumi.Data.Extensions;
 using Izumi.Services.Game.Product.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ namespace Izumi.Services.Game.Product.Queries
         public async Task<List<UserProductDto>> Handle(GetUserProductsQuery request, CancellationToken ct)
         {
             var entities = await _db.UserProducts
+                .AmountNotZero()
                 .Include(x => x.Product)
                 .Where(x => x.UserId == request.UserId)
                 .ToListAsync();

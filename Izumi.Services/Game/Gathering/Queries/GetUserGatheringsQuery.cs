@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Izumi.Data;
+using Izumi.Data.Extensions;
 using Izumi.Services.Game.Gathering.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ namespace Izumi.Services.Game.Gathering.Queries
         public async Task<List<UserGatheringDto>> Handle(GetUserGatheringsQuery request, CancellationToken ct)
         {
             var entities = await _db.UserGatherings
+                .AmountNotZero()
                 .Include(x => x.Gathering)
                 .Where(x => x.UserId == request.UserId)
                 .ToListAsync();

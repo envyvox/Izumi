@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Izumi.Data;
+using Izumi.Data.Extensions;
 using Izumi.Services.Game.Fish.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ namespace Izumi.Services.Game.Fish.Queries
         public async Task<List<UserFishDto>> Handle(GetUserFishesQuery request, CancellationToken ct)
         {
             var entities = await _db.UserFishes
+                .AmountNotZero()
                 .Include(x => x.Fish)
                 .Where(x => x.UserId == request.UserId)
                 .ToListAsync();

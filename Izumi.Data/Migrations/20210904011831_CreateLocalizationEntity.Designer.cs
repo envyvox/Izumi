@@ -3,15 +3,17 @@ using System;
 using Izumi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Izumi.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210904011831_CreateLocalizationEntity")]
+    partial class CreateLocalizationEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -300,13 +302,13 @@ namespace Izumi.Data.Migrations
                         .HasColumnName("single");
 
                     b.HasKey("Id")
-                        .HasName("pk_localizations");
+                        .HasName("pk_localization");
 
                     b.HasIndex("Category", "Name")
                         .IsUnique()
-                        .HasDatabaseName("ix_localizations_category_name");
+                        .HasDatabaseName("ix_localization_category_name");
 
-                    b.ToTable("localizations");
+                    b.ToTable("localization");
                 });
 
             modelBuilder.Entity("Izumi.Data.Entities.Resource.Alcohol", b =>
@@ -441,9 +443,9 @@ namespace Izumi.Data.Migrations
                         .HasColumnName("auto_incremented_id")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("CatchSeasons")
+                    b.Property<int[]>("CatchSeasons")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("integer[]")
                         .HasColumnName("catch_seasons");
 
                     b.Property<byte>("CatchTimesDay")

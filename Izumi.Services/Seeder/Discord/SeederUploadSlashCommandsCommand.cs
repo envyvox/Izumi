@@ -38,17 +38,28 @@ namespace Izumi.Services.Seeder.Discord
                 new SlashCommandBuilder()
                     .WithName("доска-сообщества")
                     .WithDescription("Информация о твоем участии в доске сообщества"),
+
                 new SlashCommandBuilder()
                     .WithName("профиль")
                     .WithDescription("Просмотр игрового профиля")
-                    .AddOption("пользователь", ApplicationCommandOptionType.User,
-                        "Пользователь, профиль которого ты хочешь посмотреть", false),
+                    .AddOption(new SlashCommandOptionBuilder()
+                        .WithType(ApplicationCommandOptionType.User)
+                        .WithName("пользователь")
+                        .WithDescription("Пользователь, профиль которого ты хочешь посмотреть")
+                        .WithRequired(false)),
+
                 new SlashCommandBuilder()
                     .WithName("инвентарь")
                     .WithDescription("Просмотр игрового инвентаря")
-                    .AddOption("рыба", ApplicationCommandOptionType.SubCommand, "Просмотр рыбы в инвентаре", false)
-                    .AddOption("семена", ApplicationCommandOptionType.SubCommand, "Просмотр семян в инвентаре", false)
-                    .AddOption("урожай", ApplicationCommandOptionType.SubCommand, "Просмотр урожая в инвентаре", false)
+                    .AddOption(new SlashCommandOptionBuilder()
+                        .WithType(ApplicationCommandOptionType.String)
+                        .WithName("категория")
+                        .WithDescription("Просмотр инвентаря определенной категории")
+                        .WithRequired(false)
+                        .AddChoice("рыба", "рыба")
+                        .AddChoice("семена", "семена")
+                        .AddChoice("урожай", "урожай")
+                        .AddChoice("блюда", "блюда"))
             };
 
             foreach (var command in commands)

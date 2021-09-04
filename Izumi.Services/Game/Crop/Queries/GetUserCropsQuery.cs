@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Izumi.Data;
+using Izumi.Data.Extensions;
 using Izumi.Services.Game.Crop.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ namespace Izumi.Services.Game.Crop.Queries
         public async Task<List<UserCropDto>> Handle(GetUserCropsQuery request, CancellationToken ct)
         {
             var entities = await _db.UserCrops
+                .AmountNotZero()
                 .Include(x => x.Crop)
                 .ThenInclude(x => x.Seed)
                 .Where(x => x.UserId == request.UserId)

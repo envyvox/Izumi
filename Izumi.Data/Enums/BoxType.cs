@@ -8,4 +8,9 @@
         Castle = 4,
         Village = 5
     }
+
+    public static class BoxHelper
+    {
+        public static string EmoteName(this BoxType box) => "Box" + box;
+    }
 }

@@ -35,8 +35,9 @@ namespace Izumi.Services.Discord.Client.Events
                 {
                     SocketSlashCommand command => command.Data.Name switch
                     {
-                        "профиль" => await _mediator.Send(new ProfileCommand(command)),
                         "доска-сообщества" => await _mediator.Send(new CommunityDescCommand(command)),
+                        "профиль" => await _mediator.Send(new ProfileCommand(command)),
+                        "инвентарь" => await _mediator.Send(new InventoryCommand(command)),
                         _ => Unit.Value
                     },
                     SocketMessageComponent component => component.Data.CustomId switch

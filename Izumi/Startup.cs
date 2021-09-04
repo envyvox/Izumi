@@ -7,6 +7,8 @@ using Izumi.Framework.Hangfire;
 using Izumi.Services.Discord.Client;
 using Izumi.Services.Discord.Client.Impl;
 using Izumi.Services.Discord.Client.Options;
+using Izumi.Services.Game.Localization;
+using Izumi.Services.Game.Localization.Impl;
 using Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -58,6 +60,8 @@ namespace Izumi
 
             services.AddSingleton<CommandService>();
             services.AddSingleton<IDiscordClientService, DiscordClientService>();
+            services.AddSingleton<ILocalizationService, LocalizationService>();
+
             services.AddScoped<IUploadEmotesJob, UploadEmotesJob>();
         }
 

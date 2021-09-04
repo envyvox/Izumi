@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Izumi.Data.Entities.User
 {
-    public class UserBox : IUniqueIdentifiedEntity, ICreatedEntity, IUpdatedEntity
+    public class UserBox : IUniqueIdentifiedEntity, ICreatedEntity, IUpdatedEntity, IAmountEntity
     {
         public Guid Id { get; set; }
         public BoxType Box { get; set; }

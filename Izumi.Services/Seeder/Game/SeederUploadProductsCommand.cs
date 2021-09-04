@@ -23,7 +23,7 @@ namespace Izumi.Services.Seeder.Game
             var commands = new CreateProductCommand[]
             {
                 new("Egg", 72),
-                new("Product", 157)
+                new("Milk", 157)
             };
 
             foreach (var command in commands)

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Izumi.Data;
+using Izumi.Data.Extensions;
 using Izumi.Services.Game.Seed.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ namespace Izumi.Services.Game.Seed.Queries
         public async Task<List<UserSeedDto>> Handle(GetUserSeedsQuery request, CancellationToken ct)
         {
             var entities = await _db.UserSeeds
+                .AmountNotZero()
                 .Include(x => x.Seed)
                 .Where(x => x.UserId == request.UserId)
                 .ToListAsync();
