@@ -3,15 +3,17 @@ using System;
 using Izumi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Izumi.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210904063606_CreateUserTitleEntity")]
+    partial class CreateUserTitleEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1384,37 +1386,6 @@ namespace Izumi.Data.Migrations
                     b.ToTable("user_products");
                 });
 
-            modelBuilder.Entity("Izumi.Data.Entities.User.UserReferrer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<long>("ReferrerId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("referrer_id");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_user_referrers");
-
-                    b.HasIndex("ReferrerId")
-                        .HasDatabaseName("ix_user_referrers_referrer_id");
-
-                    b.HasIndex("UserId", "ReferrerId")
-                        .IsUnique()
-                        .HasDatabaseName("ix_user_referrers_user_id_referrer_id");
-
-                    b.ToTable("user_referrers");
-                });
-
             modelBuilder.Entity("Izumi.Data.Entities.User.UserSeafood", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1493,42 +1464,6 @@ namespace Izumi.Data.Migrations
                     b.ToTable("user_seeds");
                 });
 
-            modelBuilder.Entity("Izumi.Data.Entities.User.UserStatistic", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<long>("Amount")
-                        .HasColumnType("bigint")
-                        .HasColumnName("amount");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<byte>("Type")
-                        .HasColumnType("smallint")
-                        .HasColumnName("type");
-
-                    b.Property<DateTimeOffset>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_user_statistics");
-
-                    b.HasIndex("UserId", "Type")
-                        .IsUnique()
-                        .HasDatabaseName("ix_user_statistics_user_id_type");
-
-                    b.ToTable("user_statistics");
-                });
-
             modelBuilder.Entity("Izumi.Data.Entities.User.UserTitle", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1548,13 +1483,13 @@ namespace Izumi.Data.Migrations
                         .HasColumnName("user_id");
 
                     b.HasKey("Id")
-                        .HasName("pk_user_titles");
+                        .HasName("pk_user_title");
 
                     b.HasIndex("UserId", "Type")
                         .IsUnique()
-                        .HasDatabaseName("ix_user_titles_user_id_type");
+                        .HasDatabaseName("ix_user_title_user_id_type");
 
-                    b.ToTable("user_titles");
+                    b.ToTable("user_title");
                 });
 
             modelBuilder.Entity("Izumi.Data.Entities.Discord.ContentMessage", b =>
@@ -1932,27 +1867,6 @@ namespace Izumi.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Izumi.Data.Entities.User.UserReferrer", b =>
-                {
-                    b.HasOne("Izumi.Data.Entities.User.User", "Referrer")
-                        .WithMany()
-                        .HasForeignKey("ReferrerId")
-                        .HasConstraintName("fk_user_referrers_users_referrer_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Izumi.Data.Entities.User.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("fk_user_referrers_users_user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Referrer");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Izumi.Data.Entities.User.UserSeafood", b =>
                 {
                     b.HasOne("Izumi.Data.Entities.Resource.Seafood", "Seafood")
@@ -1995,24 +1909,12 @@ namespace Izumi.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Izumi.Data.Entities.User.UserStatistic", b =>
-                {
-                    b.HasOne("Izumi.Data.Entities.User.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("fk_user_statistics_users_user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Izumi.Data.Entities.User.UserTitle", b =>
                 {
                     b.HasOne("Izumi.Data.Entities.User.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .HasConstraintName("fk_user_titles_users_user_id")
+                        .HasConstraintName("fk_user_title_users_user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

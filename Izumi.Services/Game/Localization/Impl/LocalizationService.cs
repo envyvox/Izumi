@@ -1,4 +1,5 @@
-﻿using Izumi.Data;
+﻿using System;
+using Izumi.Data;
 using Izumi.Data.Enums;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,12 @@ namespace Izumi.Services.Game.Localization.Impl
                     x.Category == category &&
                     x.Name == keyword)
                 .Result;
+
+            if (entity is null)
+            {
+                throw new Exception(
+                    $"localization with category {category.ToString()} and keyword {keyword} not found");
+            }
 
             return entity.Localize(amount);
         }

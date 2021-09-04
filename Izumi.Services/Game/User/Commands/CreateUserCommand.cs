@@ -7,6 +7,7 @@ using Izumi.Data.Enums;
 using Izumi.Data.Extensions;
 using Izumi.Services.Game.Banner.Commands;
 using Izumi.Services.Game.Banner.Queries;
+using Izumi.Services.Game.Title.Commands;
 using Izumi.Services.Game.User.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +53,7 @@ namespace Izumi.Services.Game.User.Commands
             var banner = await _mediator.Send(new GetBannerByIncIdQuery(1));
 
             await _mediator.Send(new AddBannerToUserCommand(entity.Id, banner.Id, true));
+            await _mediator.Send(new AddTitleToUserCommand(entity.Id, TitleType.Newbie));
             // todo add user a startup currency
 
             return _mapper.Map<UserDto>(entity);

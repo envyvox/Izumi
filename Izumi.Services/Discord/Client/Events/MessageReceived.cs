@@ -3,12 +3,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using Izumi.Data.Enums;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.CommunityDesc.Commands;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Extensions;
 using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Game.Statistic.Commands;
 using MediatR;
 
 namespace Izumi.Services.Discord.Client.Events
@@ -56,7 +58,8 @@ namespace Izumi.Services.Discord.Client.Events
 
             if (request.SocketMessage.Channel.Id == (ulong) channels[DiscordChannelType.Chat].Id)
             {
-                // TODO add statistic
+                await _mediator.Send(new AddStatisticToUserCommand(
+                    (long) request.SocketMessage.Author.Id, StatisticType.Messages));
                 // TODO check achievement "first message"
             }
 

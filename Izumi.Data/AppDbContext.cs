@@ -56,6 +56,7 @@ namespace Izumi.Data
         public DbSet<UserAlcohol> UserAlcohols { get; set; }
         public DbSet<UserBanner> UserBanners { get; set; }
         public DbSet<UserBox> UserBoxes { get; set; }
+        public DbSet<UserCooldown> UserCooldowns { get; set; }
         public DbSet<UserCrafting> UserCraftings { get; set; }
         public DbSet<UserCrop> UserCrops { get; set; }
         public DbSet<UserCurrency> UserCurrencies { get; set; }
@@ -64,8 +65,11 @@ namespace Izumi.Data
         public DbSet<UserFood> UserFoods { get; set; }
         public DbSet<UserGathering> UserGatherings { get; set; }
         public DbSet<UserProduct> UserProducts { get; set; }
-        public DbSet<UserSeed> UserSeeds { get; set; }
+        public DbSet<UserReferrer> UserReferrers { get; set; }
         public DbSet<UserSeafood> UserSeafoods { get; set; }
+        public DbSet<UserSeed> UserSeeds { get; set; }
+        public DbSet<UserStatistic> UserStatistics { get; set; }
+        public DbSet<UserTitle> UserTitles { get; set; }
 
         public DbSet<Banner> Banners { get; set; }
         public DbSet<Localization> Localizations { get; set; }
