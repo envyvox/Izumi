@@ -32,7 +32,7 @@ namespace Izumi.Data.Entities.Resource
             builder.Property(x => x.Rarity).IsRequired();
             builder.Property(x => x.CatchWeather).IsRequired();
             builder.Property(x => x.CatchTimesDay).IsRequired();
-            builder.Property(x => x.CatchSeasons).IsRequired();
+            builder.Property(x => x.CatchSeasons).IsRequired().HasConversion<int[]>();
             builder.Property(x => x.Price).IsRequired();
         }
     }
