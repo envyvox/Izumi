@@ -3,15 +3,17 @@ using System;
 using Izumi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Izumi.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210905061249_CreateWorldSettingEntity")]
+    partial class CreateWorldSettingEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -868,38 +870,6 @@ namespace Izumi.Data.Migrations
                     b.ToTable("seeds");
                 });
 
-            modelBuilder.Entity("Izumi.Data.Entities.Transit", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<byte>("Departure")
-                        .HasColumnType("smallint")
-                        .HasColumnName("departure");
-
-                    b.Property<byte>("Destination")
-                        .HasColumnType("smallint")
-                        .HasColumnName("destination");
-
-                    b.Property<TimeSpan>("Duration")
-                        .HasColumnType("interval")
-                        .HasColumnName("duration");
-
-                    b.Property<long>("Price")
-                        .HasColumnType("bigint")
-                        .HasColumnName("price");
-
-                    b.HasKey("Id")
-                        .HasName("pk_transits");
-
-                    b.HasIndex("Departure", "Destination")
-                        .IsUnique()
-                        .HasDatabaseName("ix_transits_departure_destination");
-
-                    b.ToTable("transits");
-                });
-
             modelBuilder.Entity("Izumi.Data.Entities.User.User", b =>
                 {
                     b.Property<long>("Id")
@@ -1375,42 +1345,6 @@ namespace Izumi.Data.Migrations
                         .HasDatabaseName("ix_user_gatherings_user_id_gathering_id");
 
                     b.ToTable("user_gatherings");
-                });
-
-            modelBuilder.Entity("Izumi.Data.Entities.User.UserMovement", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTimeOffset>("Arrival")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("arrival");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<byte>("Departure")
-                        .HasColumnType("smallint")
-                        .HasColumnName("departure");
-
-                    b.Property<byte>("Destination")
-                        .HasColumnType("smallint")
-                        .HasColumnName("destination");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_user_movements");
-
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasDatabaseName("ix_user_movements_user_id");
-
-                    b.ToTable("user_movements");
                 });
 
             modelBuilder.Entity("Izumi.Data.Entities.User.UserProduct", b =>
@@ -1992,18 +1926,6 @@ namespace Izumi.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Gathering");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Izumi.Data.Entities.User.UserMovement", b =>
-                {
-                    b.HasOne("Izumi.Data.Entities.User.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("fk_user_movements_users_user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });

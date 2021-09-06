@@ -40,6 +40,10 @@ namespace Izumi.Services.Seeder.Discord
                     .WithDescription("Информация о твоем участии в доске сообщества"),
 
                 new SlashCommandBuilder()
+                    .WithName("мир")
+                    .WithDescription("Информация о состоянии игрового мира"),
+
+                new SlashCommandBuilder()
                     .WithName("профиль")
                     .WithDescription("Просмотр игрового профиля")
                     .AddOption(new SlashCommandOptionBuilder()

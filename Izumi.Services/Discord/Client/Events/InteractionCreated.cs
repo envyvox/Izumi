@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Izumi.Data.Enums;
+using Izumi.Services.Discord.Commands.Slash.User;
 using Izumi.Services.Discord.Commands.Slash.User.Info;
 using Izumi.Services.Discord.Commands.Slash.User.Info.Interaction;
 using Izumi.Services.Discord.Commands.Slash.User.Referral;
@@ -41,6 +42,7 @@ namespace Izumi.Services.Discord.Client.Events
                     SocketSlashCommand command => command.Data.Name switch
                     {
                         "доска-сообщества" => await _mediator.Send(new CommunityDescCommand(command)),
+                        "мир" => await _mediator.Send(new WorldInfoCommand(command)),
                         "профиль" => await _mediator.Send(new ProfileCommand(command)),
                         "информация" => await _mediator.Send(new UpdateAboutCommand(command)),
                         "инвентарь" => await _mediator.Send(new InventoryCommand(command)),
