@@ -64,6 +64,7 @@ namespace Izumi.Data
         public DbSet<UserFish> UserFishes { get; set; }
         public DbSet<UserFood> UserFoods { get; set; }
         public DbSet<UserGathering> UserGatherings { get; set; }
+        public DbSet<UserHangfireJob> UserHangfireJobs { get; set; }
         public DbSet<UserMovement> UserMovements { get; set; }
         public DbSet<UserProduct> UserProducts { get; set; }
         public DbSet<UserReferrer> UserReferrers { get; set; }
@@ -75,6 +76,7 @@ namespace Izumi.Data
         public DbSet<Banner> Banners { get; set; }
         public DbSet<Localization> Localizations { get; set; }
         public DbSet<Transit> Transits { get; set; }
+        public DbSet<WorldProperty> WorldProperties { get; set; }
         public DbSet<WorldSetting> WorldSettings { get; set; }
     }
 }

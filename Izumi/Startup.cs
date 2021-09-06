@@ -9,6 +9,7 @@ using Izumi.Services.Discord.Client.Impl;
 using Izumi.Services.Discord.Client.Options;
 using Izumi.Services.Game.Localization;
 using Izumi.Services.Game.Localization.Impl;
+using Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit;
 using Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -63,6 +64,7 @@ namespace Izumi
             services.AddSingleton<ILocalizationService, LocalizationService>();
 
             services.AddScoped<IUploadEmotesJob, UploadEmotesJob>();
+            services.AddScoped<ICompleteUserTransitJob, CompleteUserTransitJob>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

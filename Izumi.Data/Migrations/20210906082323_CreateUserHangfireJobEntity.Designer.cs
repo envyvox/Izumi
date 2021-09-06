@@ -3,15 +3,17 @@ using System;
 using Izumi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Izumi.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210906082323_CreateUserHangfireJobEntity")]
+    partial class CreateUserHangfireJobEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1660,26 +1662,6 @@ namespace Izumi.Data.Migrations
                         .HasDatabaseName("ix_user_titles_user_id_type");
 
                     b.ToTable("user_titles");
-                });
-
-            modelBuilder.Entity("Izumi.Data.Entities.WorldProperty", b =>
-                {
-                    b.Property<byte>("Type")
-                        .HasColumnType("smallint")
-                        .HasColumnName("type");
-
-                    b.Property<long>("Value")
-                        .HasColumnType("bigint")
-                        .HasColumnName("value");
-
-                    b.HasKey("Type")
-                        .HasName("pk_world_properties");
-
-                    b.HasIndex("Type")
-                        .IsUnique()
-                        .HasDatabaseName("ix_world_properties_type");
-
-                    b.ToTable("world_properties");
                 });
 
             modelBuilder.Entity("Izumi.Data.Entities.WorldSetting", b =>

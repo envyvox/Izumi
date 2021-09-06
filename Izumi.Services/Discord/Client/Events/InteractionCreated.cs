@@ -9,6 +9,7 @@ using Izumi.Services.Discord.Commands.Slash.User;
 using Izumi.Services.Discord.Commands.Slash.User.Info;
 using Izumi.Services.Discord.Commands.Slash.User.Info.Interaction;
 using Izumi.Services.Discord.Commands.Slash.User.Referral;
+using Izumi.Services.Discord.Commands.Slash.User.Transit;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
@@ -52,6 +53,8 @@ namespace Izumi.Services.Discord.Client.Events
                         "баннер" => await _mediator.Send(new UpdateBannerCommand(command)),
                         "приглашения" => await _mediator.Send(new ReferralListCommand(command)),
                         "пригласил" => await _mediator.Send(new ReferralSetCommand(command)),
+                        "отправления" => await _mediator.Send(new TransitListCommand(command)),
+                        "отправиться" => await _mediator.Send(new TransitMakeCommand(command)),
                         _ => Unit.Value
                     },
                     SocketMessageComponent component => component.Data.CustomId switch

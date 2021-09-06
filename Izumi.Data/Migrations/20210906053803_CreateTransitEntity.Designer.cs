@@ -3,15 +3,17 @@ using System;
 using Izumi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Izumi.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210906053803_CreateTransitEntity")]
+    partial class CreateTransitEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1377,43 +1379,6 @@ namespace Izumi.Data.Migrations
                     b.ToTable("user_gatherings");
                 });
 
-            modelBuilder.Entity("Izumi.Data.Entities.User.UserHangfireJob", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<DateTimeOffset>("Expiration")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("expiration");
-
-                    b.Property<string>("JobId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("job_id");
-
-                    b.Property<byte>("Type")
-                        .HasColumnType("smallint")
-                        .HasColumnName("type");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_user_hangfire_jobs");
-
-                    b.HasIndex("UserId", "Type")
-                        .IsUnique()
-                        .HasDatabaseName("ix_user_hangfire_jobs_user_id_type");
-
-                    b.ToTable("user_hangfire_jobs");
-                });
-
             modelBuilder.Entity("Izumi.Data.Entities.User.UserMovement", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1660,26 +1625,6 @@ namespace Izumi.Data.Migrations
                         .HasDatabaseName("ix_user_titles_user_id_type");
 
                     b.ToTable("user_titles");
-                });
-
-            modelBuilder.Entity("Izumi.Data.Entities.WorldProperty", b =>
-                {
-                    b.Property<byte>("Type")
-                        .HasColumnType("smallint")
-                        .HasColumnName("type");
-
-                    b.Property<long>("Value")
-                        .HasColumnType("bigint")
-                        .HasColumnName("value");
-
-                    b.HasKey("Type")
-                        .HasName("pk_world_properties");
-
-                    b.HasIndex("Type")
-                        .IsUnique()
-                        .HasDatabaseName("ix_world_properties_type");
-
-                    b.ToTable("world_properties");
                 });
 
             modelBuilder.Entity("Izumi.Data.Entities.WorldSetting", b =>
@@ -2049,18 +1994,6 @@ namespace Izumi.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Gathering");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Izumi.Data.Entities.User.UserHangfireJob", b =>
-                {
-                    b.HasOne("Izumi.Data.Entities.User.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("fk_user_hangfire_jobs_users_user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });

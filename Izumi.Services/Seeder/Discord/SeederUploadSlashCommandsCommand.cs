@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
+using Izumi.Data.Enums;
 using Izumi.Data.Util;
 using Izumi.Services.Discord.Client;
 using Izumi.Services.Discord.Client.Options;
@@ -111,6 +112,24 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.User)
                         .WithName("пользователь")
                         .WithDescription("Пользователь, который тебя пригласил")
+                        .WithRequired(true)),
+
+                new SlashCommandBuilder()
+                    .WithName("отправления")
+                    .WithDescription("Просмотр доступных отправлений из текущей локации"),
+
+                new SlashCommandBuilder()
+                    .WithName("отправиться")
+                    .WithDescription("Отправиться в указанную локацию")
+                    .AddOption(new SlashCommandOptionBuilder()
+                        .WithType(ApplicationCommandOptionType.Integer)
+                        .WithName("локация")
+                        .WithDescription("Локация в которую ты хочешь отправиться")
+                        .AddChoice(LocationType.Capital.Localize(), LocationType.Capital.GetHashCode())
+                        .AddChoice(LocationType.Garden.Localize(), LocationType.Garden.GetHashCode())
+                        .AddChoice(LocationType.Seaport.Localize(), LocationType.Seaport.GetHashCode())
+                        .AddChoice(LocationType.Castle.Localize(), LocationType.Castle.GetHashCode())
+                        .AddChoice(LocationType.Village.Localize(), LocationType.Village.GetHashCode())
                         .WithRequired(true))
             };
 

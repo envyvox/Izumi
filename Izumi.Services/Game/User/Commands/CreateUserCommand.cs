@@ -4,11 +4,15 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Izumi.Data;
 using Izumi.Data.Enums;
+using Izumi.Data.Enums.Discord;
 using Izumi.Data.Extensions;
+using Izumi.Services.Discord.Guild.Commands;
 using Izumi.Services.Game.Banner.Commands;
 using Izumi.Services.Game.Banner.Queries;
+using Izumi.Services.Game.Currency.Commands;
 using Izumi.Services.Game.Title.Commands;
 using Izumi.Services.Game.User.Models;
+using Izumi.Services.Game.World.Queries;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -51,10 +55,13 @@ namespace Izumi.Services.Game.User.Commands
             });
 
             var banner = await _mediator.Send(new GetBannerByIncIdQuery(1));
+            var startup = await _mediator.Send(new GetWorldPropertyValueQuery(
+                WorldPropertyType.EconomyStartup));
 
+            await _mediator.Send(new AddRoleToGuildUserCommand((ulong) entity.Id, DiscordRoleType.LocationCapital));
             await _mediator.Send(new AddBannerToUserCommand(entity.Id, banner.Id, true));
             await _mediator.Send(new AddTitleToUserCommand(entity.Id, TitleType.Newbie));
-            // todo add user a startup currency
+            await _mediator.Send(new AddCurrencyToUserCommand(entity.Id, CurrencyType.Ien, startup));
 
             return _mapper.Map<UserDto>(entity);
         }
