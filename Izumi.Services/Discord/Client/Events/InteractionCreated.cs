@@ -47,6 +47,7 @@ namespace Izumi.Services.Discord.Client.Events
                         "профиль" => await _mediator.Send(new ProfileCommand(command)),
                         "информация" => await _mediator.Send(new UpdateAboutCommand(command)),
                         "инвентарь" => await _mediator.Send(new InventoryCommand(command)),
+                        "коллекция" => await _mediator.Send(new CollectionCommand(command)),
                         "титулы" => await _mediator.Send(new TitlesCommand(command)),
                         "титул" => await _mediator.Send(new UpdateTitleCommand(command)),
                         "баннеры" => await _mediator.Send(new BannersCommand(command)),

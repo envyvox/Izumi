@@ -76,6 +76,22 @@ namespace Izumi.Services.Seeder.Discord
                         .AddChoice("блюда", "блюда")),
 
                 new SlashCommandBuilder()
+                    .WithName("коллекция")
+                    .WithDescription("Просмотр своей коллекции")
+                    .AddOption(new SlashCommandOptionBuilder()
+                        .WithType(ApplicationCommandOptionType.Integer)
+                        .WithName("категория")
+                        .WithDescription("Категория коллекции которую ты хочешь посмотреть")
+                        .AddChoice(CollectionType.Gathering.Localize(), CollectionType.Gathering.GetHashCode())
+                        .AddChoice(CollectionType.Crafting.Localize(), CollectionType.Crafting.GetHashCode())
+                        .AddChoice(CollectionType.Alcohol.Localize(), CollectionType.Alcohol.GetHashCode())
+                        .AddChoice(CollectionType.Drink.Localize(), CollectionType.Drink.GetHashCode())
+                        .AddChoice(CollectionType.Crop.Localize(), CollectionType.Crop.GetHashCode())
+                        .AddChoice(CollectionType.Fish.Localize(), CollectionType.Fish.GetHashCode())
+                        .AddChoice(CollectionType.Food.Localize(), CollectionType.Food.GetHashCode())
+                        .WithRequired(true)),
+
+                new SlashCommandBuilder()
                     .WithName("титулы")
                     .WithDescription("Просмотр коллекции титулов"),
 

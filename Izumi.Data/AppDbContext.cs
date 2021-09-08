@@ -56,6 +56,7 @@ namespace Izumi.Data
         public DbSet<UserAlcohol> UserAlcohols { get; set; }
         public DbSet<UserBanner> UserBanners { get; set; }
         public DbSet<UserBox> UserBoxes { get; set; }
+        public DbSet<UserCollection> UserCollections { get; set; }
         public DbSet<UserCooldown> UserCooldowns { get; set; }
         public DbSet<UserCrafting> UserCraftings { get; set; }
         public DbSet<UserCrop> UserCrops { get; set; }
