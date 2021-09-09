@@ -26,6 +26,7 @@ using Izumi.Services.Game.World.Queries;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit;
 using Izumi.Services.Hangfire.Commands;
 using MediatR;
+using StringExtensions = Izumi.Services.Extensions.StringExtensions;
 
 namespace Izumi.Services.Discord.Commands.Slash.User.Transit
 {
@@ -100,7 +101,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
                         .WithDescription(
                             $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                             $"ты отправляешься в **{transit.Destination.Localize()}**, хорошей дороги!" +
-                            $"\n{emotes.GetEmote("Blank")}")
+                            $"\n{StringExtensions.EmptyChar}")
                         .AddField("Стоимость перемещения",
                             $"{emotes.GetEmote(CurrencyType.Ien.ToString())} {transit.Price} " +
                             $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString(), transit.Price)}",

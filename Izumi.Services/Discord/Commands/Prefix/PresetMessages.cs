@@ -8,6 +8,7 @@ using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Discord.Image.Queries;
+using Izumi.Services.Extensions;
 using MediatR;
 
 namespace Izumi.Services.Discord.Commands.Prefix
@@ -112,7 +113,7 @@ namespace Izumi.Services.Discord.Commands.Prefix
                 .WithDescription(
                     "Ты можешь делиться с нами своими любимыми изображениями в каналах доски сообщества." +
                     $"\n\n{emotes.GetEmote("Arrow")} Напиши `/доска-сообщества` чтобы посмотреть информацию о своем участии." +
-                    $"\n{emotes.GetEmote("Blank")}")
+                    $"\n{StringExtensions.EmptyChar}")
                 .AddField("Каналы доски",
                     $"{emotes.GetEmote("List")} <#{channels[DiscordChannelType.Photos].Id}> - Красивые ~~котики~~ фотографии.\n" +
                     $"{emotes.GetEmote("List")} <#{channels[DiscordChannelType.Screenshots].Id}> - Твои яркие моменты.\n" +
@@ -120,13 +121,13 @@ namespace Izumi.Services.Discord.Commands.Prefix
                     $"{emotes.GetEmote("List")} <#{channels[DiscordChannelType.Arts].Id}> - Красивые рисунки.\n" +
                     $"{emotes.GetEmote("List")} <#{channels[DiscordChannelType.Erotic].Id}> - Изображения, носящие эротический характер.\n" +
                     $"{emotes.GetEmote("List")} <#{channels[DiscordChannelType.Nsfw].Id}> - Изображения 18+." +
-                    $"\n{emotes.GetEmote("Blank")}")
+                    $"\n{StringExtensions.EmptyChar}")
                 .AddField("Получение роли",
                     $"Пользователи, публикации который набирают суммарно {emotes.GetEmote("Like")} 500 лайков " +
                     $"получают роль <@&{roles[DiscordRoleType.ContentProvider].Id}> на 30 дней." +
                     $"\n\n{emotes.GetEmote("Arrow")} Если пользователь получит еще {emotes.GetEmote("Like")} 500 лайков " +
                     "уже имя роль, то ее длительность увеличится на 30 дней." +
-                    $"\n{emotes.GetEmote("Blank")}")
+                    $"\n{StringExtensions.EmptyChar}")
                 .AddField("Модерация",
                     $"Публикации набирающие {emotes.GetEmote("Dislike")} 5 дизлайков будут автоматически удалены." +
                     $"\n\n{emotes.GetEmote("Arrow")} Публикации нарушающие правила сервера или правила отдельных " +

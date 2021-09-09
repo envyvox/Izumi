@@ -37,7 +37,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     "тут отображаются твои баннеры:" +
                     $"\n\n{emotes.GetEmote("Arrow")} Напиши `/баннер [номер баннера]` чтобы изменить текущий баннер." +
-                    $"\n{emotes.GetEmote("Blank")}");
+                    $"\n{StringExtensions.EmptyChar}");
 
             var counter = 0;
             foreach (var userBanner in userBanners.Take(16))

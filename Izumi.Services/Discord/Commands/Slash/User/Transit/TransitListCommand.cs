@@ -44,7 +44,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     "тут отображаются доступные отправления из твоей локации:" +
                     $"\n\n{emotes.GetEmote("Arrow")} Напиши `/отправиться [название локации]` чтобы отправиться." +
-                    $"\n{emotes.GetEmote("Blank")}")
+                    $"\n{StringExtensions.EmptyChar}")
                 .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.TransitList)));
 
             var counter = 0;

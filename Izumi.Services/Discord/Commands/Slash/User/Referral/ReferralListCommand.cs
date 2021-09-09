@@ -7,6 +7,7 @@ using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Localization;
 using Izumi.Services.Game.Referral.Queries;
 using Izumi.Services.Game.User.Queries;
@@ -71,9 +72,9 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Referral
                 .WithDescription(
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     "тут отображается информация о твоем участии в реферальной системе:" +
-                    $"\n{emotes.GetEmote("Blank")}")
+                    $"\n{StringExtensions.EmptyChar}")
                 .AddField("Твой реферер",
-                    referrerString + $"\n{emotes.GetEmote("Blank")}")
+                    referrerString + $"\n{StringExtensions.EmptyChar}")
                 .AddField("Награды реферальной системы",
                     $"{emotes.GetEmote(userReferrals.Count >= 2 ? "Checkmark" : "List")} За `1`, `2` приглашенных ты получишь {emotes.GetEmote(BoxType.Capital.EmoteName())} {_local.Localize(LocalizationCategoryType.Box, BoxType.Capital.ToString())}.\n" +
                     $"{emotes.GetEmote(userReferrals.Count >= 4 ? "Checkmark" : "List")} За `3`, `4` приглашенных ты получишь {emotes.GetEmote(BoxType.Capital.EmoteName())} 2 {_local.Localize(LocalizationCategoryType.Box, BoxType.Capital.ToString(), 2)}.\n" +
@@ -81,7 +82,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Referral
                     $"{emotes.GetEmote(userReferrals.Count >= 9 ? "Checkmark" : "List")} За `6`, `7`, `8`, `9` пользователя ты получишь {emotes.GetEmote(CurrencyType.Pearl.ToString())} 10 {_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Pearl.ToString(), 10)}.\n" +
                     $"{emotes.GetEmote(userReferrals.Count >= 10 ? "Checkmark" : "List")} За `10` приглашенных ты получишь {emotes.GetEmote(CurrencyType.Pearl.ToString())} 10 {_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Pearl.ToString(), 10)} и титул {emotes.GetEmote(TitleType.Yatagarasu.EmoteName())} {TitleType.Yatagarasu.Localize()}.\n" +
                     $"{emotes.GetEmote("List")} За каждого последующего ты будешь получать {emotes.GetEmote(CurrencyType.Pearl.ToString())} 15 {_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Pearl.ToString(), 15)}." +
-                    $"\n{emotes.GetEmote("Blank")}")
+                    $"\n{StringExtensions.EmptyChar}")
                 .AddField("Приглашенные пользователи",
                     referralString.Length > 0
                         ? referralString.Length > 1024

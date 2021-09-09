@@ -9,6 +9,7 @@ using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Alcohol.Queries;
 using Izumi.Services.Game.Collection.Queries;
 using Izumi.Services.Game.Crafting.Queries;
@@ -50,7 +51,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info
                 .WithDescription(
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     $"тут отображается твоя коллекция в категории **{type.Localize()}**:" +
-                    $"\n{emotes.GetEmote("Blank")}")
+                    $"\n{StringExtensions.EmptyChar}")
                 .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.Collection)));
 
             switch (type)

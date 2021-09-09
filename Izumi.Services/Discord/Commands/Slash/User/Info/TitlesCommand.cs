@@ -37,7 +37,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     "тут отображаются твои титулы:" +
                     $"\n\n{emotes.GetEmote("Arrow")} Напиши `/титул [номер титула]` чтобы изменить текущий титул." +
-                    $"\n{emotes.GetEmote("Blank")}");
+                    $"\n{StringExtensions.EmptyChar}");
 
             var counter = 0;
             foreach (var title in userTitles.Take(16))

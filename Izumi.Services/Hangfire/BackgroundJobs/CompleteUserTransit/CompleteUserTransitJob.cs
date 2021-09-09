@@ -9,6 +9,7 @@ using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Commands;
 using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Discord.Image.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Statistic.Commands;
 using Izumi.Services.Game.Transit.Commands;
 using Izumi.Services.Game.User.Commands;
@@ -76,7 +77,7 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit
                 .WithAuthor("Прибытие в локацию")
                 .WithDescription(
                     $"Ты достиг точки прибытия, добро пожаловать в **{destination.Localize()}**!" +
-                    $"\n{emotes.GetEmote("Blank")}")
+                    $"\n{StringExtensions.EmptyChar}")
                 .AddField("Каналы локации",
                     $"<#{channels[descChannel].Id}>, <#{channels[whatToDoChannel].Id}>, <#{channels[eventsChannel].Id}>")
                 .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.InTransit)));
