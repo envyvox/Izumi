@@ -1,14 +1,17 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using Humanizer;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Game.Banner.Queries;
+using Izumi.Services.Game.Transit.Queries;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
 using StringExtensions = Izumi.Services.Extensions.StringExtensions;
@@ -37,6 +40,49 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info
             var user = await _mediator.Send(new GetUserQuery((long) socketUser.Id));
             var banner = await _mediator.Send(new GetUserActiveBannerQuery(user.Id));
 
+            string locationString;
+            switch (user.Location)
+            {
+                case LocationType.InTransit:
+                {
+                    var userMovement = await _mediator.Send(new GetUserMovementQuery(user.Id));
+
+                    locationString =
+                        $"В пути из **{userMovement.Departure.Localize()}** в **{userMovement.Destination.Localize()}**, " +
+                        $"до прибытия {userMovement.Arrival.Subtract(DateTimeOffset.UtcNow).Humanize(1, new CultureInfo("ru-RU"))}";
+
+                    break;
+                }
+
+                case LocationType.WorkOnContract:
+
+                    // todo display contract
+                    locationString = ".";
+
+                    break;
+                case LocationType.ExploreGarden:
+                case LocationType.ExploreCastle:
+                case LocationType.Fishing:
+                case LocationType.FieldWatering:
+                case LocationType.CraftingResource:
+                case LocationType.CraftingAlcohol:
+                case LocationType.CraftingDrink:
+                case LocationType.CraftingFood:
+                {
+                    var userMovement = await _mediator.Send(new GetUserMovementQuery(user.Id));
+
+                    locationString =
+                        $"**{user.Location.Localize()}**, еще " +
+                        $"{userMovement.Arrival.Subtract(DateTimeOffset.UtcNow).Humanize(1, new CultureInfo("ru-RU"))}";
+
+                    break;
+                }
+
+                default:
+                    locationString = $"**{user.Location.Localize()}**";
+                    break;
+            }
+
             var embed = new EmbedBuilder()
                 .WithAuthor("Профиль")
                 .WithThumbnailUrl(socketUser.GetAvatarUrl())
@@ -50,7 +96,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info
                 .AddField("Энергия",
                     $"{emotes.DisplayProgressBar(user.Energy)} {emotes.GetEmote("Energy")} {user.Energy} энергии")
                 .AddField("Текущая локация",
-                    $"{user.Location.Localize()}" +
+                    locationString +
                     $"\n{StringExtensions.EmptyChar}")
                 .AddField("Рейтинг приключений",
                     $"{emotes.GetEmote("Blank")} Временно недоступно.")
