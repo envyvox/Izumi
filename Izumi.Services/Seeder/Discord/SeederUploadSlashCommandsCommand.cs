@@ -146,7 +146,19 @@ namespace Izumi.Services.Seeder.Discord
                         .AddChoice(LocationType.Seaport.Localize(), LocationType.Seaport.GetHashCode())
                         .AddChoice(LocationType.Castle.Localize(), LocationType.Castle.GetHashCode())
                         .AddChoice(LocationType.Village.Localize(), LocationType.Village.GetHashCode())
-                        .WithRequired(true))
+                        .WithRequired(true)),
+
+                new SlashCommandBuilder()
+                    .WithName("исследовать")
+                    .WithDescription($"Отправиться исследовать {LocationType.Garden.Localize()}"),
+
+                new SlashCommandBuilder()
+                    .WithName("копать")
+                    .WithDescription($"Отправиться копать в {LocationType.Castle.Localize(true)}"),
+
+                new SlashCommandBuilder()
+                    .WithName("рыбачить")
+                    .WithDescription($"Отправиться рыбачить в {LocationType.Seaport.Localize(true)}")
             };
 
             foreach (var command in commands)

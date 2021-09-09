@@ -6,6 +6,7 @@ using Discord;
 using Discord.WebSocket;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Commands.Slash.User;
+using Izumi.Services.Discord.Commands.Slash.User.Explore;
 using Izumi.Services.Discord.Commands.Slash.User.Info;
 using Izumi.Services.Discord.Commands.Slash.User.Info.Interaction;
 using Izumi.Services.Discord.Commands.Slash.User.Referral;
@@ -56,6 +57,9 @@ namespace Izumi.Services.Discord.Client.Events
                         "пригласил" => await _mediator.Send(new ReferralSetCommand(command)),
                         "отправления" => await _mediator.Send(new TransitListCommand(command)),
                         "отправиться" => await _mediator.Send(new TransitMakeCommand(command)),
+                        "исследовать" => await _mediator.Send(new ExploreGardenCommand(command)),
+                        "копать" => await _mediator.Send(new ExploreCastleCommand(command)),
+                        "рыбачить" => await _mediator.Send(new FishingCommand(command)),
                         _ => Unit.Value
                     },
                     SocketMessageComponent component => component.Data.CustomId switch

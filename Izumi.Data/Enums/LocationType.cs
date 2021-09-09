@@ -56,5 +56,11 @@ namespace Izumi.Data.Enums
             LocationType.Village => DiscordRoleType.LocationVillage,
             _ => throw new ArgumentOutOfRangeException(nameof(location), location, null)
         };
+
+        public static void CheckRequiredLocation(this LocationType userLocation, LocationType requiredLocation)
+        {
+            if (userLocation != requiredLocation)
+                throw new Exception($"это действие доступно лишь в **{requiredLocation.Localize(true)}**.");
+        }
     }
 }

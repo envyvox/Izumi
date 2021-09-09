@@ -9,6 +9,9 @@ using Izumi.Services.Discord.Client.Impl;
 using Izumi.Services.Discord.Client.Options;
 using Izumi.Services.Game.Localization;
 using Izumi.Services.Game.Localization.Impl;
+using Izumi.Services.Hangfire.BackgroundJobs.CompleteExploreCastle;
+using Izumi.Services.Hangfire.BackgroundJobs.CompleteExploreGarden;
+using Izumi.Services.Hangfire.BackgroundJobs.CompleteFishing;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit;
 using Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes;
 using MediatR;
@@ -65,6 +68,9 @@ namespace Izumi
 
             services.AddScoped<IUploadEmotesJob, UploadEmotesJob>();
             services.AddScoped<ICompleteUserTransitJob, CompleteUserTransitJob>();
+            services.AddScoped<ICompleteExploreGardenJob, CompleteExploreGardenJob>();
+            services.AddScoped<ICompleteExploreCastleJob, CompleteExploreCastleJob>();
+            services.AddScoped<ICompleteFishingJob, CompleteFishingJob>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

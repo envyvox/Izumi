@@ -26,6 +26,16 @@
         OpenBoxVillageProductMaxAmount = 22,
         OpenBoxVillageCropMinAmount = 23,
         OpenBoxVillageCropMaxAmount = 24,
-        ActionTimePremiumReduceTransitPercent = 25
+        ActionTimePremiumReduceTransitPercent = 25,
+        FishRarityChanceCommon = 26,
+        FishRarityChanceRare = 27,
+        FishRarityChanceEpic = 28,
+        FishRarityChanceMythical = 29,
+        FishRarityChanceLegendary = 30,
+        FishFailChanceCommon = 31,
+        FishFailChanceRare = 32,
+        FishFailChanceEpic = 33,
+        FishFailChanceMythical = 34,
+        FishFailChanceLegendary = 35,
     }
 }
