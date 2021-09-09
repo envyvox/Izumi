@@ -22,7 +22,6 @@
     <ItemGroup>
       <Folder Include="Discord\Commands\Component" />
       <Folder Include="Discord\Commands\Message" />
-      <Folder Include="Discord\Commands\Slash" />
       <Folder Include="Discord\Commands\User" />
     </ItemGroup>
 

@@ -210,7 +210,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info
                     s +
                     $"{_emotes.GetEmote(v.EmoteName())} {(userBoxes.ContainsKey(v) ? userBoxes[v].Amount : 0)} {_local.Localize(LocalizationCategoryType.Box, v.ToString(), userBoxes.ContainsKey(v) ? userBoxes[v].Amount : 0)}, ");
 
-            return str.RemoveFromEnd(2) + $"\n\n{_emotes.GetEmote("Arrow")} Напиши `/открыть [название] [количество]` чтобы открыть коробку.";
+            return str.RemoveFromEnd(2) + $"\n\n{_emotes.GetEmote("Arrow")} Напиши `/открыть [количество] [название]` чтобы открыть коробку.";
         }
 
         private string DisplayGatherings(IEnumerable<UserGatheringDto> userGatherings)

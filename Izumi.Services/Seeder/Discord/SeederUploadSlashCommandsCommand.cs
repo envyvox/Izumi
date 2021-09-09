@@ -7,6 +7,7 @@ using Izumi.Data.Enums;
 using Izumi.Data.Util;
 using Izumi.Services.Discord.Client;
 using Izumi.Services.Discord.Client.Options;
+using Izumi.Services.Game.Localization;
 using MediatR;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -20,13 +21,16 @@ namespace Izumi.Services.Seeder.Discord
     {
         private readonly IDiscordClientService _discordClientService;
         private readonly IOptions<DiscordOptions> _options;
+        private readonly ILocalizationService _local;
 
         public SeederUploadSlashCommandsHandler(
             IDiscordClientService discordClientService,
-            IOptions<DiscordOptions> options)
+            IOptions<DiscordOptions> options,
+            ILocalizationService local)
         {
             _discordClientService = discordClientService;
             _options = options;
+            _local = local;
         }
 
         public async Task<TotalAndAffectedCountDto> Handle(SeederUploadSlashCommandsCommand request,
@@ -36,6 +40,14 @@ namespace Izumi.Services.Seeder.Discord
             var socketClient = await _discordClientService.GetSocketClient();
             var commands = new[]
             {
+                new SlashCommandBuilder()
+                    .WithName("ping")
+                    .WithDescription("Respond with Pong"),
+
+                new SlashCommandBuilder()
+                    .WithName("пинг")
+                    .WithDescription("Отвечает Понг"),
+
                 new SlashCommandBuilder()
                     .WithName("доска-сообщества")
                     .WithDescription("Информация о твоем участии в доске сообщества"),
@@ -158,7 +170,31 @@ namespace Izumi.Services.Seeder.Discord
 
                 new SlashCommandBuilder()
                     .WithName("рыбачить")
-                    .WithDescription($"Отправиться рыбачить в {LocationType.Seaport.Localize(true)}")
+                    .WithDescription($"Отправиться рыбачить в {LocationType.Seaport.Localize(true)}"),
+
+                new SlashCommandBuilder()
+                    .WithName("открыть")
+                    .WithDescription("Открыть указанные коробки")
+                    .AddOption(new SlashCommandOptionBuilder()
+                        .WithType(ApplicationCommandOptionType.Integer)
+                        .WithName("количество")
+                        .WithDescription("Количество коробок которое ты хочешь открыть")
+                        .WithRequired(true))
+                    .AddOption(new SlashCommandOptionBuilder()
+                        .WithType(ApplicationCommandOptionType.Integer)
+                        .WithName("название")
+                        .WithDescription("Название коробки которую ты хочешь открыть")
+                        .AddChoice(_local.Localize(LocalizationCategoryType.Box, BoxType.Capital.ToString()),
+                            BoxType.Capital.GetHashCode())
+                        .AddChoice(_local.Localize(LocalizationCategoryType.Box, BoxType.Garden.ToString()),
+                            BoxType.Garden.GetHashCode())
+                        .AddChoice(_local.Localize(LocalizationCategoryType.Box, BoxType.Seaport.ToString()),
+                            BoxType.Seaport.GetHashCode())
+                        .AddChoice(_local.Localize(LocalizationCategoryType.Box, BoxType.Castle.ToString()),
+                            BoxType.Castle.GetHashCode())
+                        .AddChoice(_local.Localize(LocalizationCategoryType.Box, BoxType.Village.ToString()),
+                            BoxType.Village.GetHashCode())
+                        .WithRequired(true))
             };
 
             foreach (var command in commands)

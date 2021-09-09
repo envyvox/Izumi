@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Izumi.Data.Enums;
+using Izumi.Services.Discord.Commands.Slash;
 using Izumi.Services.Discord.Commands.Slash.User;
 using Izumi.Services.Discord.Commands.Slash.User.Explore;
 using Izumi.Services.Discord.Commands.Slash.User.Info;
@@ -43,6 +44,8 @@ namespace Izumi.Services.Discord.Client.Events
                 {
                     SocketSlashCommand command => command.Data.Name switch
                     {
+                        "ping" => await _mediator.Send(new PingCommand(command)),
+                        "пинг" => await _mediator.Send(new PingCommand(command)),
                         "доска-сообщества" => await _mediator.Send(new CommunityDescCommand(command)),
                         "мир" => await _mediator.Send(new WorldInfoCommand(command)),
                         "профиль" => await _mediator.Send(new ProfileCommand(command)),
@@ -60,6 +63,7 @@ namespace Izumi.Services.Discord.Client.Events
                         "исследовать" => await _mediator.Send(new ExploreGardenCommand(command)),
                         "копать" => await _mediator.Send(new ExploreCastleCommand(command)),
                         "рыбачить" => await _mediator.Send(new FishingCommand(command)),
+                        "открыть" => await _mediator.Send(new OpenBoxCommand(command)),
                         _ => Unit.Value
                     },
                     SocketMessageComponent component => component.Data.CustomId switch
