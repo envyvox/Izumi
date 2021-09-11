@@ -27,6 +27,7 @@
         Casino = 23,
         Market = 24,
         ColorPicker = 25,
-        Premium = 26
+        Premium = 26,
+        Tutorial = 27
     }
 }

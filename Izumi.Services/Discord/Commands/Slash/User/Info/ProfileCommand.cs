@@ -12,6 +12,7 @@ using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Game.Banner.Queries;
 using Izumi.Services.Game.Transit.Queries;
+using Izumi.Services.Game.Tutorial.Commands;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
 using StringExtensions = Izumi.Services.Extensions.StringExtensions;
@@ -109,6 +110,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info
                     user.About ?? "Тут пока что ничего не указано, но я уверена что это отличный пользователь.")
                 .WithImageUrl(banner.Url);
 
+            await _mediator.Send(new CheckUserTutorialStepCommand(user.Id, TutorialStepType.CheckProfile));
             return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
         }
     }

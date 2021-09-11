@@ -34,15 +34,15 @@ namespace Izumi.Services.Game.Fish.Queries
 
         public async Task<FishDto> Handle(GetRandomFishWithParamsQuery request, CancellationToken ct)
         {
-            var entity = await _db.Fishes
+            var entities = await _db.Fishes
                 .OrderByRandom()
-                .Where(x =>
-                    x.Rarity == request.Rarity &&
-                    x.CatchTimesDay == request.TimesDay &&
-                    x.CatchWeather == request.Weather &&
-                    (x.CatchSeasons.Contains(SeasonType.Any) ||
-                     x.CatchSeasons.Contains(request.Season)))
-                .SingleOrDefaultAsync();
+                .ToListAsync();
+
+            var entity = entities.FirstOrDefault(x =>
+                x.Rarity == request.Rarity &&
+                (x.CatchTimesDay == TimesDayType.Any || x.CatchTimesDay == request.TimesDay) &&
+                (x.CatchWeather == WeatherType.Any || x.CatchWeather == request.Weather) &&
+                (x.CatchSeasons.Contains(SeasonType.Any) || x.CatchSeasons.Contains(request.Season)));
 
             if (entity is null)
             {

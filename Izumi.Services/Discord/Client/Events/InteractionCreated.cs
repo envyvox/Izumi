@@ -7,10 +7,17 @@ using Discord.WebSocket;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Commands.Slash;
 using Izumi.Services.Discord.Commands.Slash.User;
+using Izumi.Services.Discord.Commands.Slash.User.Casino;
+using Izumi.Services.Discord.Commands.Slash.User.Contract;
+using Izumi.Services.Discord.Commands.Slash.User.Cooking;
+using Izumi.Services.Discord.Commands.Slash.User.Crafting;
 using Izumi.Services.Discord.Commands.Slash.User.Explore;
+using Izumi.Services.Discord.Commands.Slash.User.Field;
 using Izumi.Services.Discord.Commands.Slash.User.Info;
 using Izumi.Services.Discord.Commands.Slash.User.Info.Interaction;
+using Izumi.Services.Discord.Commands.Slash.User.Market;
 using Izumi.Services.Discord.Commands.Slash.User.Referral;
+using Izumi.Services.Discord.Commands.Slash.User.Shop;
 using Izumi.Services.Discord.Commands.Slash.User.Transit;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
@@ -44,8 +51,6 @@ namespace Izumi.Services.Discord.Client.Events
                 {
                     SocketSlashCommand command => command.Data.Name switch
                     {
-                        "ping" => await _mediator.Send(new PingCommand(command)),
-                        "пинг" => await _mediator.Send(new PingCommand(command)),
                         "доска-сообщества" => await _mediator.Send(new CommunityDescCommand(command)),
                         "мир" => await _mediator.Send(new WorldInfoCommand(command)),
                         "профиль" => await _mediator.Send(new ProfileCommand(command)),
@@ -64,6 +69,20 @@ namespace Izumi.Services.Discord.Client.Events
                         "копать" => await _mediator.Send(new ExploreCastleCommand(command)),
                         "рыбачить" => await _mediator.Send(new FishingCommand(command)),
                         "открыть" => await _mediator.Send(new OpenBoxCommand(command)),
+                        "магазин" => await _mediator.Send(new ShopCommand(command)),
+                        "контракты" => await _mediator.Send(new ContractListCommand(command)),
+                        "контракт" => await _mediator.Send(new ContractAcceptCommand(command)),
+                        "съесть" => await _mediator.Send(new EatFoodCommand(command)),
+                        "репутация" => await _mediator.Send(new ReputationsCommand(command)),
+                        "участок" => await _mediator.Send(new FieldCommand(command)),
+                        "изготовление" => await _mediator.Send(new CraftingListCommand(command)),
+                        "изготовить" => await _mediator.Send(new CraftingStartCommand(command)),
+                        "приготовление" => await _mediator.Send(new CookingListCommand(command)),
+                        "приготовить" => await _mediator.Send(new CookingStartCommand(command)),
+                        "лотерея" => await _mediator.Send(new LotteryCommand(command)),
+                        "ставка" => await _mediator.Send(new BetCommand(command)),
+                        "обучение" => await _mediator.Send(new TutorialCommand(command)),
+                        "рынок" => await _mediator.Send(new MarketCommand(command)),
                         _ => Unit.Value
                     },
                     SocketMessageComponent component => component.Data.CustomId switch

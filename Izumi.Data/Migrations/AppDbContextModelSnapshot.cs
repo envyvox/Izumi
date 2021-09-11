@@ -1694,6 +1694,38 @@ namespace Izumi.Data.Migrations
                     b.ToTable("user_titles");
                 });
 
+            modelBuilder.Entity("Izumi.Data.Entities.User.UserTutorial", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<byte>("Step")
+                        .HasColumnType("smallint")
+                        .HasColumnName("step");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_user_tutorials");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_user_tutorials_user_id");
+
+                    b.ToTable("user_tutorials");
+                });
+
             modelBuilder.Entity("Izumi.Data.Entities.WorldProperty", b =>
                 {
                     b.Property<byte>("Type")
@@ -2223,6 +2255,18 @@ namespace Izumi.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .HasConstraintName("fk_user_titles_users_user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Izumi.Data.Entities.User.UserTutorial", b =>
+                {
+                    b.HasOne("Izumi.Data.Entities.User.User", "User")
+                        .WithOne()
+                        .HasForeignKey("Izumi.Data.Entities.User.UserTutorial", "UserId")
+                        .HasConstraintName("fk_user_tutorials_users_user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

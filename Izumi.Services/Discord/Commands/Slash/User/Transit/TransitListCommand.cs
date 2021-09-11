@@ -11,6 +11,7 @@ using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Game.Localization;
 using Izumi.Services.Game.Transit.Queries;
+using Izumi.Services.Game.Tutorial.Commands;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
 using StringExtensions = Izumi.Services.Extensions.StringExtensions;
@@ -43,7 +44,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
                 .WithDescription(
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     "тут отображаются доступные отправления из твоей локации:" +
-                    $"\n\n{emotes.GetEmote("Arrow")} Напиши `/отправиться [название локации]` чтобы отправиться." +
+                    $"\n\n{emotes.GetEmote("Arrow")} Напиши `/отправиться` и выбери локацию из списка вариантов." +
                     $"\n{StringExtensions.EmptyChar}")
                 .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.TransitList)));
 
@@ -65,6 +66,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
                 }
             }
 
+            await _mediator.Send(new CheckUserTutorialStepCommand(user.Id, TutorialStepType.CheckTransits));
             return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
         }
     }

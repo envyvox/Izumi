@@ -9,6 +9,7 @@ using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
+using Izumi.Services.Game.Tutorial.Commands;
 using Izumi.Services.Game.User.Queries;
 using Izumi.Services.Game.World.Queries;
 using MediatR;
@@ -61,12 +62,9 @@ namespace Izumi.Services.Discord.Commands.Slash.User
                     "Посаженные на ячейки семена умирают при смене сезона, поэтому будь дальновидным. " +
                     "Так же влияет на виды рыб, которые можно поймать.*" +
                     $"\n\n{emotes.GetEmote("Arrow")} Сейчас **{currentSeason.Localize().ToLower()}**")
-                .WithThumbnailUrl(await _mediator.Send(new GetImageUrlQuery(
-                    weatherToday == WeatherType.Clear
-                        ? ImageType.WeatherClear
-                        : ImageType.WeatherRain)))
                 .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.WorldInfo)));
 
+            await _mediator.Send(new CheckUserTutorialStepCommand(user.Id, TutorialStepType.CheckWorldInfo));
             return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
         }
     }

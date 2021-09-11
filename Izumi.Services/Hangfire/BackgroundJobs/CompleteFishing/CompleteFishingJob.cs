@@ -12,6 +12,7 @@ using Izumi.Services.Game.Fish.Queries;
 using Izumi.Services.Game.Localization;
 using Izumi.Services.Game.Statistic.Commands;
 using Izumi.Services.Game.Transit.Commands;
+using Izumi.Services.Game.Tutorial.Commands;
 using Izumi.Services.Game.User.Commands;
 using Izumi.Services.Game.World.Queries;
 using Izumi.Services.Hangfire.Commands;
@@ -94,6 +95,7 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteFishing
                     "рыба в здешних водах никуда не денется, возвращайся и попытай удачу еще раз!");
             }
 
+            await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.CompleteFishing));
             await _mediator.Send(new SendEmbedToUserCommand((ulong) userId, embed));
         }
     }

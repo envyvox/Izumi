@@ -73,6 +73,7 @@ namespace Izumi.Data
         public DbSet<UserSeed> UserSeeds { get; set; }
         public DbSet<UserStatistic> UserStatistics { get; set; }
         public DbSet<UserTitle> UserTitles { get; set; }
+        public DbSet<UserTutorial> UserTutorials { get; set; }
 
         public DbSet<Banner> Banners { get; set; }
         public DbSet<Localization> Localizations { get; set; }

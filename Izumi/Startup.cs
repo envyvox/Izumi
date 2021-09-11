@@ -12,6 +12,8 @@ using Izumi.Services.Game.Localization.Impl;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteExploreCastle;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteExploreGarden;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteFishing;
+using Izumi.Services.Hangfire.BackgroundJobs.CompleteMaking;
+using Izumi.Services.Hangfire.BackgroundJobs.CompleteMaking.Impl;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit;
 using Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes;
 using MediatR;
@@ -71,6 +73,10 @@ namespace Izumi
             services.AddScoped<ICompleteExploreGardenJob, CompleteExploreGardenJob>();
             services.AddScoped<ICompleteExploreCastleJob, CompleteExploreCastleJob>();
             services.AddScoped<ICompleteFishingJob, CompleteFishingJob>();
+            services.AddScoped<ICompleteCookingJob, CompleteCookingJob>();
+            services.AddScoped<ICompleteCraftingItemJob, CompleteCraftingItemJob>();
+            services.AddScoped<ICompleteCraftingAlcoholJob, CompleteCraftingAlcoholJob>();
+            services.AddScoped<ICompleteCraftingDrinkJob, CompleteCraftingDrinkJob>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

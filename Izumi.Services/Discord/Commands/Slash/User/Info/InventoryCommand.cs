@@ -37,6 +37,7 @@ using Izumi.Services.Game.Seafood.Models;
 using Izumi.Services.Game.Seafood.Queries;
 using Izumi.Services.Game.Seed.Models;
 using Izumi.Services.Game.Seed.Queries;
+using Izumi.Services.Game.Tutorial.Commands;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
 
@@ -186,6 +187,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info
                 $"{_emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                 $"{desc}\n{_emotes.GetEmote("Blank")}");
 
+            await _mediator.Send(new CheckUserTutorialStepCommand(user.Id, TutorialStepType.CheckInventory));
             return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
         }
 
@@ -210,7 +212,8 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info
                     s +
                     $"{_emotes.GetEmote(v.EmoteName())} {(userBoxes.ContainsKey(v) ? userBoxes[v].Amount : 0)} {_local.Localize(LocalizationCategoryType.Box, v.ToString(), userBoxes.ContainsKey(v) ? userBoxes[v].Amount : 0)}, ");
 
-            return str.RemoveFromEnd(2) + $"\n\n{_emotes.GetEmote("Arrow")} Напиши `/открыть [количество] [название]` чтобы открыть коробку.";
+            return str.RemoveFromEnd(2) +
+                   $"\n\n{_emotes.GetEmote("Arrow")} Напиши `/открыть [количество] [название]` чтобы открыть коробку.";
         }
 
         private string DisplayGatherings(IEnumerable<UserGatheringDto> userGatherings)

@@ -13,6 +13,7 @@ using Izumi.Services.Game.Gathering.Queries;
 using Izumi.Services.Game.Localization;
 using Izumi.Services.Game.Statistic.Commands;
 using Izumi.Services.Game.Transit.Commands;
+using Izumi.Services.Game.Tutorial.Commands;
 using Izumi.Services.Game.User.Commands;
 using Izumi.Services.Hangfire.Commands;
 using MediatR;
@@ -85,6 +86,7 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteExploreGarden
                     "обратно ты вспомнил что ходил то за ресурсами.");
             }
 
+            await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.CompleteExploreGarden));
             await _mediator.Send(new SendEmbedToUserCommand((ulong) userId, embed));
         }
     }

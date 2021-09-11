@@ -20,6 +20,9 @@ namespace Izumi.Services.Discord.Guild.Queries
         public async Task<SocketGuildUser> Handle(GetSocketGuildUserQuery request, CancellationToken ct)
         {
             var socketGuild = await _mediator.Send(new GetSocketGuildQuery());
+
+            await socketGuild.DownloadUsersAsync();
+
             var socketUser = socketGuild.GetUser(request.UserId);
 
             if (socketUser is null)

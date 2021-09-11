@@ -12,6 +12,7 @@ using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
 using Izumi.Services.Game.Statistic.Commands;
 using Izumi.Services.Game.Transit.Commands;
+using Izumi.Services.Game.Tutorial.Commands;
 using Izumi.Services.Game.User.Commands;
 using Izumi.Services.Hangfire.Commands;
 using MediatR;
@@ -38,29 +39,49 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit
             switch (destination)
             {
                 case LocationType.Capital:
+
                     descChannel = DiscordChannelType.CapitalDesc;
                     whatToDoChannel = DiscordChannelType.CapitalWhatToDo;
                     eventsChannel = DiscordChannelType.CapitalEvents;
+
+                    await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.TransitToCapital));
+
                     break;
                 case LocationType.Garden:
+
                     descChannel = DiscordChannelType.GardenDesc;
                     whatToDoChannel = DiscordChannelType.GardenWhatToDo;
                     eventsChannel = DiscordChannelType.GardenEvents;
+
+                    await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.TransitToGarden));
+
                     break;
                 case LocationType.Seaport:
+
                     descChannel = DiscordChannelType.SeaportDesc;
                     whatToDoChannel = DiscordChannelType.SeaportWhatToDo;
                     eventsChannel = DiscordChannelType.SeaportEvents;
+
+                    await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.TransitToSeaport));
+
                     break;
                 case LocationType.Castle:
+
                     descChannel = DiscordChannelType.CastleDesc;
                     whatToDoChannel = DiscordChannelType.CastleWhatToDo;
                     eventsChannel = DiscordChannelType.CastleEvents;
+
+                    await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.TransitToCastle));
+
                     break;
                 case LocationType.Village:
+
                     descChannel = DiscordChannelType.VillageDesc;
                     whatToDoChannel = DiscordChannelType.VillageWhatToDo;
                     eventsChannel = DiscordChannelType.VillageEvents;
+
+                    await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.TransitToVillage));
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(destination), destination, null);
