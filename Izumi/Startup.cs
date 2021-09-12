@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Discord.Commands;
 using Hangfire;
 using Hangfire.PostgreSql;
@@ -19,6 +20,8 @@ using Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -83,6 +86,37 @@ namespace Izumi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             MigrateDb(app.ApplicationServices);
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                                   ForwardedHeaders.XForwardedProto
+            });
+
+            app.Use(async (context, next) =>
+            {
+                var ips = (_config.GetValue<string>("AllowedIps") ?? "").Split(';');
+                var remoteIp = context.Request.Headers["X-Real-IP"].ToString();
+
+                if (!ips.Contains(remoteIp))
+                {
+                    await context.Response.WriteAsync($@"
+                        <!doctype html>
+                        <html>
+                            <body>
+                                <div>
+                                    <h2>Oops, seems that you are not authorized to access this page</h2>
+                                <div>
+                                <footer>
+                                    <small>Your IP logged: {remoteIp}</small>
+                                </footer>
+                            </body>
+                        </html>");
+                    return;
+                }
+
+                await next();
+            });
 
             if (env.IsDevelopment())
             {
