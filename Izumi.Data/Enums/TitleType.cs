@@ -24,6 +24,7 @@ namespace Izumi.Data.Enums
         FirstSamurai = 18,
         Yatagarasu = 19,
         HarbingerOfSummer = 20,
+        DrinkCollection = 21,
         Wanderer = 255 // титул для Изуми
     }
 
@@ -52,6 +53,7 @@ namespace Izumi.Data.Enums
             TitleType.FirstSamurai => "Первый самурай",
             TitleType.Yatagarasu => "Ятагарасу",
             TitleType.HarbingerOfSummer => "Предвестник лета",
+            TitleType.DrinkCollection => "Титул за коллекцию напитков",
             _ => throw new ArgumentOutOfRangeException(nameof(title), title, null)
         };
 

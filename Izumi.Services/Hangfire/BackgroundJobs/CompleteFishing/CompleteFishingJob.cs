@@ -6,6 +6,7 @@ using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
+using Izumi.Services.Game.Achievement.Commands;
 using Izumi.Services.Game.Collection.Commands;
 using Izumi.Services.Game.Fish.Commands;
 using Izumi.Services.Game.Fish.Queries;
@@ -55,7 +56,7 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteFishing
             {
                 await _mediator.Send(new AddFishToUserCommand(userId, fish.Id, 1));
                 await _mediator.Send(new AddCollectionToUserCommand(userId, CollectionType.Fish, fish.Id));
-                // todo check achievement
+                await _mediator.Send(new AddStatisticToUserCommand(userId, StatisticType.Fishing));
 
                 switch (rarity)
                 {
@@ -67,15 +68,18 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteFishing
                         break;
                     case FishRarityType.Epic:
                         await _mediator.Send(new AddStatisticToUserCommand(userId, StatisticType.FishingEpic));
-                        // todo check achievement
+                        await _mediator.Send(new CheckAchievementInUserCommand(
+                            userId, AchievementType.CatchEpicFish));
                         break;
                     case FishRarityType.Mythical:
                         await _mediator.Send(new AddStatisticToUserCommand(userId, StatisticType.FishingMythical));
-                        // todo check achievement
+                        await _mediator.Send(new CheckAchievementInUserCommand(
+                            userId, AchievementType.CatchMythicalFish));
                         break;
                     case FishRarityType.Legendary:
                         await _mediator.Send(new AddStatisticToUserCommand(userId, StatisticType.FishingLegendary));
-                        // todo check achievement
+                        await _mediator.Send(new CheckAchievementInUserCommand(
+                            userId, AchievementType.CatchLegendaryFish));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -95,6 +99,8 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteFishing
                     "рыба в здешних водах никуда не денется, возвращайся и попытай удачу еще раз!");
             }
 
+            await _mediator.Send(new CheckAchievementsInUserCommand(userId,
+                new[] { AchievementType.Catch50Fish, AchievementType.Catch300Fish }));
             await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.CompleteFishing));
             await _mediator.Send(new SendEmbedToUserCommand((ulong) userId, embed));
         }

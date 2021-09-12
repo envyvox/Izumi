@@ -5,6 +5,7 @@ using Izumi.Data;
 using Izumi.Data.Entities.User;
 using Izumi.Data.Enums;
 using Izumi.Data.Extensions;
+using Izumi.Services.Game.Statistic.Commands;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,10 +15,14 @@ namespace Izumi.Services.Game.Currency.Commands
 
     public class AddCurrencyToUserHandler : IRequestHandler<AddCurrencyToUserCommand>
     {
+        private readonly IMediator _mediator;
         private readonly AppDbContext _db;
 
-        public AddCurrencyToUserHandler(DbContextOptions options)
+        public AddCurrencyToUserHandler(
+            DbContextOptions options,
+            IMediator mediator)
         {
+            _mediator = mediator;
             _db = new AppDbContext(options);
         }
 
@@ -48,7 +53,8 @@ namespace Izumi.Services.Game.Currency.Commands
                 await _db.UpdateEntity(entity);
             }
 
-            return Unit.Value;
+            return await _mediator.Send(new AddStatisticToUserCommand(
+                request.UserId, StatisticType.CurrencyEarned, request.Amount));
         }
     }
 }

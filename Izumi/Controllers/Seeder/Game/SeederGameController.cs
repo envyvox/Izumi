@@ -18,6 +18,14 @@ namespace Izumi.Controllers.Seeder.Game
         }
 
         [HttpPost]
+        [Route("achievements")]
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadAchievements(SeederUploadAchievementsCommand
+            request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
         [Route("banners")]
         public async Task<ActionResult<TotalAndAffectedCountDto>> UploadBanners(SeederUploadBannersCommand request)
         {

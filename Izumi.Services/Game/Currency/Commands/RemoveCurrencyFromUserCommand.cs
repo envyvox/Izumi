@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Izumi.Data;
 using Izumi.Data.Enums;
+using Izumi.Data.Extensions;
+using Izumi.Services.Game.Statistic.Commands;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,10 +14,14 @@ namespace Izumi.Services.Game.Currency.Commands
 
     public class RemoveCurrencyFromUserHandler : IRequestHandler<RemoveCurrencyFromUserCommand>
     {
+        private readonly IMediator _mediator;
         private readonly AppDbContext _db;
 
-        public RemoveCurrencyFromUserHandler(DbContextOptions options)
+        public RemoveCurrencyFromUserHandler(
+            DbContextOptions options,
+            IMediator mediator)
         {
+            _mediator = mediator;
             _db = new AppDbContext(options);
         }
 
@@ -34,7 +40,10 @@ namespace Izumi.Services.Game.Currency.Commands
             entity.Amount -= request.Amount;
             entity.UpdatedAt = DateTimeOffset.UtcNow;
 
-            return Unit.Value;
+            await _db.UpdateEntity(entity);
+
+            return await _mediator.Send(new AddStatisticToUserCommand(
+                request.UserId, StatisticType.CurrencySpent, request.Amount));
         }
     }
 }

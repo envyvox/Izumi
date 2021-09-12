@@ -10,6 +10,7 @@ using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Extensions;
 using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Game.Achievement.Commands;
 using Izumi.Services.Game.Statistic.Commands;
 using MediatR;
 
@@ -60,7 +61,8 @@ namespace Izumi.Services.Discord.Client.Events
             {
                 await _mediator.Send(new AddStatisticToUserCommand(
                     (long) request.SocketMessage.Author.Id, StatisticType.Messages));
-                // TODO check achievement "first message"
+                await _mediator.Send(new CheckAchievementInUserCommand(
+                    (long) request.SocketMessage.Author.Id, AchievementType.FirstMessage));
             }
 
             return Unit.Value;

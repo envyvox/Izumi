@@ -10,6 +10,7 @@ using Izumi.Services.Discord.Guild.Commands;
 using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
+using Izumi.Services.Game.Achievement.Commands;
 using Izumi.Services.Game.Statistic.Commands;
 using Izumi.Services.Game.Transit.Commands;
 using Izumi.Services.Game.Tutorial.Commands;
@@ -93,6 +94,7 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit
             await _mediator.Send(new RemoveRoleFromGuildUserCommand((ulong) userId, DiscordRoleType.LocationInTransit));
             await _mediator.Send(new AddRoleToGuildUserCommand((ulong) userId, destination.Role()));
             await _mediator.Send(new AddStatisticToUserCommand(userId, StatisticType.Transit));
+            await _mediator.Send(new CheckAchievementInUserCommand(userId, AchievementType.FirstTransit));
 
             var embed = new EmbedBuilder()
                 .WithAuthor("Прибытие в локацию")

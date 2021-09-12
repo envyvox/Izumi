@@ -6,6 +6,7 @@ using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
+using Izumi.Services.Game.Achievement.Commands;
 using Izumi.Services.Game.Calculation;
 using Izumi.Services.Game.Collection.Commands;
 using Izumi.Services.Game.Gathering.Commands;
@@ -74,6 +75,8 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteExploreGarden
 
             if (itemsCount > 0)
             {
+                await _mediator.Send(new AddStatisticToUserCommand(userId, StatisticType.Gathering, itemsCount));
+
                 embed
                     .WithDescription("Ты вернулся с исследования леса и был приятно удивлен тяжестью своей корзины.")
                     .AddField("Полученные ресурсы", gatheringString.RemoveFromEnd(2));
@@ -86,6 +89,12 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteExploreGarden
                     "обратно ты вспомнил что ходил то за ресурсами.");
             }
 
+            await _mediator.Send(new CheckAchievementsInUserCommand(userId, new[]
+            {
+                AchievementType.FirstGatheringResource,
+                AchievementType.Gather40Resources,
+                AchievementType.Gather250Resources
+            }));
             await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.CompleteExploreGarden));
             await _mediator.Send(new SendEmbedToUserCommand((ulong) userId, embed));
         }

@@ -250,8 +250,6 @@ namespace Izumi.Services.Seeder.Discord
                             AchievementCategoryType.Crafting.GetHashCode())
                         .AddChoice(AchievementCategoryType.Trading.Localize(),
                             AchievementCategoryType.Trading.GetHashCode())
-                        .AddChoice(AchievementCategoryType.Alchemy.Localize(),
-                            AchievementCategoryType.Alchemy.GetHashCode())
                         .AddChoice(AchievementCategoryType.Casino.Localize(),
                             AchievementCategoryType.Casino.GetHashCode())
                         .AddChoice(AchievementCategoryType.Collection.Localize(),

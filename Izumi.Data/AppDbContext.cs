@@ -52,7 +52,9 @@ namespace Izumi.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Seafood> Seafoods { get; set; }
         public DbSet<Seed> Seeds { get; set; }
+
         public DbSet<User> Users { get; set; }
+        public DbSet<UserAchievement> UserAchievements { get; set; }
         public DbSet<UserAlcohol> UserAlcohols { get; set; }
         public DbSet<UserBanner> UserBanners { get; set; }
         public DbSet<UserBox> UserBoxes { get; set; }
@@ -75,6 +77,7 @@ namespace Izumi.Data
         public DbSet<UserTitle> UserTitles { get; set; }
         public DbSet<UserTutorial> UserTutorials { get; set; }
 
+        public DbSet<Achievement> Achievements { get; set; }
         public DbSet<Banner> Banners { get; set; }
         public DbSet<Localization> Localizations { get; set; }
         public DbSet<Transit> Transits { get; set; }

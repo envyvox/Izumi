@@ -3,15 +3,17 @@ using System;
 using Izumi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Izumi.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210911164436_CreateAchievementEntity")]
+    partial class CreateAchievementEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -990,37 +992,6 @@ namespace Izumi.Data.Migrations
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("Izumi.Data.Entities.User.UserAchievement", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<byte>("Type")
-                        .HasColumnType("smallint")
-                        .HasColumnName("type");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_user_achievements");
-
-                    b.HasIndex("Type")
-                        .HasDatabaseName("ix_user_achievements_type");
-
-                    b.HasIndex("UserId", "Type")
-                        .IsUnique()
-                        .HasDatabaseName("ix_user_achievements_user_id_type");
-
-                    b.ToTable("user_achievements");
-                });
-
             modelBuilder.Entity("Izumi.Data.Entities.User.UserAlcohol", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1975,27 +1946,6 @@ namespace Izumi.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Gathering");
-                });
-
-            modelBuilder.Entity("Izumi.Data.Entities.User.UserAchievement", b =>
-                {
-                    b.HasOne("Izumi.Data.Entities.Achievement", "Achievement")
-                        .WithMany()
-                        .HasForeignKey("Type")
-                        .HasConstraintName("fk_user_achievements_achievements_type")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Izumi.Data.Entities.User.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("fk_user_achievements_users_user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Achievement");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Izumi.Data.Entities.User.UserAlcohol", b =>

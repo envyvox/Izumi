@@ -83,6 +83,7 @@ namespace Izumi.Services.Discord.Client.Events
                         "ставка" => await _mediator.Send(new BetCommand(command)),
                         "обучение" => await _mediator.Send(new TutorialCommand(command)),
                         "рынок" => await _mediator.Send(new MarketCommand(command)),
+                        "достижения" => await _mediator.Send(new AchievementsCommand(command)),
                         _ => Unit.Value
                     },
                     SocketMessageComponent component => component.Data.CustomId switch

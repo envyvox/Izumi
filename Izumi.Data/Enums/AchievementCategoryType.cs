@@ -11,10 +11,9 @@ namespace Izumi.Data.Enums
         Cooking = 5,
         Crafting = 6,
         Trading = 7,
-        Alchemy = 8,
-        Casino = 9,
-        Collection = 10,
-        Event = 11
+        Casino = 8,
+        Collection = 9,
+        Event = 10
     }
 
     public static class AchievementCategoryHelper
@@ -28,7 +27,6 @@ namespace Izumi.Data.Enums
             AchievementCategoryType.Cooking => "Кулинария",
             AchievementCategoryType.Crafting => "Изготовление",
             AchievementCategoryType.Trading => "Торговля",
-            AchievementCategoryType.Alchemy => "Алхимия",
             AchievementCategoryType.Casino => "Казино",
             AchievementCategoryType.Collection => "Коллекция",
             AchievementCategoryType.Event => "События",

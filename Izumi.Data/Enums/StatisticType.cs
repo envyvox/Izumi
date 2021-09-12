@@ -34,6 +34,9 @@
         MarketSell = 30,
         MarketBuy = 31,
         Contracts = 32,
-        BossKilled = 33
+        BossKilled = 33,
+        Gathering = 34,
+        Fishing = 35,
+        Cooking = 36
     }
 }
