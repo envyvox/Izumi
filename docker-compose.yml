@@ -5,3 +5,9 @@ services:
     build:
       context: .
       dockerfile: ./Izumi/Dockerfile
+
+  dashboard:
+    image: registry.kkxo.ru/izumi-dashboard
+    build:
+      context: .
+      dockerfile: Izumi.Dashboard/Dockerfile

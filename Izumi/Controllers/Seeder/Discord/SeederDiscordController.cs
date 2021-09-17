@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Izumi.Controllers.Seeder.Discord
 {
-    [ApiController]
-    [Route("seeder/discord")]
+    [ApiController, Route("seeder/discord")]
     public class SeederDiscordController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -17,8 +16,7 @@ namespace Izumi.Controllers.Seeder.Discord
             _mediator = mediator;
         }
 
-        [HttpPost]
-        [Route("images")]
+        [HttpPost, Route("images")]
         public async Task<ActionResult<TotalAndAffectedCountDto>> UploadImages(SeederUploadImagesCommand request)
         {
             return Ok(await _mediator.Send(request));

@@ -1,0 +1,157 @@
+﻿@page "/resource/fish"
+@inject HttpClient _http;
+@inject ISnackbar _snackbar;
+
+@if (_fishes is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <MudTable Items="_fishes"
+              CanCancelEdit="@true"
+              @bind-SelectedItem="_selected"
+              RowEditPreview="Backup"
+              RowEditCancel="Reset"
+              RowEditCommit="Save">
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>IncId</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Rarity</MudTh>
+            <MudTh>CatchTimesDay</MudTh>
+            <MudTh>CatchWeather</MudTh>
+            <MudTh>CatchSeasons</MudTh>
+            <MudTh>Price</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Rarity">@context.Rarity</MudTd>
+            <MudTd DataLabel="CatchTimesDay">@context.CatchTimesDay</MudTd>
+            <MudTd DataLabel="CatchWeather">@context.CatchWeather</MudTd>
+            <MudTd DataLabel="CatchSeasons">@string.Join(", ", context.CatchSeasons)</MudTd>
+            <MudTd DataLabel="Price">@context.Price</MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">
+                <MudTextField @bind-Value="@context.Name" Required/>
+            </MudTd>
+            <MudTd DataLabel="Rarity">
+                <MudSelect @bind-Value="@context.Rarity">
+                    @foreach (FishRarityType rarity in Enum.GetValues(typeof(FishRarityType)))
+                    {
+                        <MudSelectItem Value="@rarity">@rarity</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudTd>
+            <MudTd DataLabel="CatchTimesDay">
+                <MudSelect @bind-Value="@context.CatchTimesDay">
+                    @foreach (TimesDayType timesDay in Enum.GetValues(typeof(TimesDayType)))
+                    {
+                        <MudSelectItem Value="@timesDay">@timesDay</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudTd>
+            <MudTd DataLabel="CatchWeather">
+                <MudSelect @bind-Value="@context.CatchWeather">
+                    @foreach (WeatherType weather in Enum.GetValues(typeof(WeatherType)))
+                    {
+                        <MudSelectItem Value="@weather">@weather</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudTd>
+            <MudTd DataLabel="CatchSeasons">
+                You can't change this right now ;c
+
+                @* todo requires PR https://github.com/MudBlazor/MudBlazor/pull/2734
+                @* <MudSelect MultiSelection="true" @bind-SelectedValues="@context.CatchSeasons"> *@
+                @*     @foreach (SeasonType season in Enum.GetValues(typeof(SeasonType))) *@
+                @*     { *@
+                @*         <MudSelectItem Value="@season">@season</MudSelectItem> *@
+                @*     } *@
+                @* </MudSelect> *@
+            </MudTd>
+            <MudTd DataLabel="Price">
+                <MudTextField @bind-Value="@context.Price" Required/>
+            </MudTd>
+        </RowEditingTemplate>
+    </MudTable>
+}
+
+@code {
+    private FishClient _client;
+
+    private ICollection<FishDto> _fishes;
+    private FishDto _selected;
+    private FishDto _backup;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new FishClient(_http);
+        _fishes = await _client.GetFishesAsync();
+    }
+
+    private void Backup(object element)
+    {
+        var fish = (FishDto) element;
+
+        _backup = new FishDto
+        {
+            Id = fish.Id,
+            AutoIncrementedId = fish.AutoIncrementedId,
+            Name = fish.Name,
+            Rarity = fish.Rarity,
+            CatchTimesDay = fish.CatchTimesDay,
+            CatchWeather = fish.CatchWeather,
+            CatchSeasons = fish.CatchSeasons,
+            Price = fish.Price
+        };
+    }
+
+    private async void Save(object element)
+    {
+        var fish = (FishDto) element;
+
+        try
+        {
+            await _client.UpdateFishAsync(new UpdateFishCommand
+            {
+                Id = fish.Id,
+                Name = fish.Name,
+                Rarity = fish.Rarity,
+                CatchTimesDay = fish.CatchTimesDay,
+                CatchWeather = fish.CatchWeather,
+                CatchSeasons = fish.CatchSeasons,
+                Price = fish.Price
+            });
+
+            _snackbar.Add("Рыба успешно обновлена");
+        }
+        catch (Exception e)
+        {
+            Reset(element);
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void Reset(object element)
+    {
+        var fish = (FishDto) element;
+
+        fish.Id = _backup.Id;
+        fish.AutoIncrementedId = _backup.AutoIncrementedId;
+        fish.Name = _backup.Name;
+        fish.Rarity = _backup.Rarity;
+        fish.CatchTimesDay = _backup.CatchTimesDay;
+        fish.CatchWeather = _backup.CatchWeather;
+        fish.CatchSeasons = _backup.CatchSeasons;
+        fish.Price = _backup.Price;
+    }
+
+}

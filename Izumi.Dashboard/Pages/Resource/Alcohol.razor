@@ -1,0 +1,170 @@
+﻿@page "/resource/alcohol"
+@inject HttpClient _http;
+@inject ISnackbar _snackbar;
+
+@if (_alcohols is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <MudTable Items="_alcohols"
+              CanCancelEdit="@true"
+              @bind-SelectedItem="_selected"
+              RowEditPreview="Backup"
+              RowEditCancel="Reset"
+              RowEditCommit="Save">
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>IncId</MudTh>
+            <MudTh>Name</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">
+                <MudTextField @bind-Value="@context.Name" Required/>
+            </MudTd>
+        </RowEditingTemplate>
+        <ChildRowContent>
+            <MudTr>
+                <td colspan="4">
+                    <MudExpansionPanel Text="Properties" Elevation="0">
+                        <MudTable Items="@context.Properties"
+                                  CanCancelEdit="@true"
+                                  Context="PropContext"
+                                  @bind-SelectedItem="_selectedProp"
+                                  RowEditPreview="BackupProp"
+                                  RowEditCancel="ResetProp"
+                                  RowEditCommit="SaveProp">
+                            <HeaderContent>
+                                <MudTh>Property</MudTh>
+                                <MudTh>Value</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd DataLabel="Property">@PropContext.Property</MudTd>
+                                <MudTd DataLabel="Value">@PropContext.Value</MudTd>
+                            </RowTemplate>
+                            <RowEditingTemplate>
+                                <MudTd DataLabel="Property">@PropContext.Property</MudTd>
+                                <MudTd DataLabel="Value">
+                                    <MudTextField @bind-Value="@PropContext.Value" Required/>
+                                </MudTd>
+                            </RowEditingTemplate>
+                        </MudTable>
+                    </MudExpansionPanel>
+                </td>
+            </MudTr>
+        </ChildRowContent>
+    </MudTable>
+}
+
+@code {
+    private AlcoholClient _client;
+
+    private ICollection<AlcoholDto> _alcohols;
+    private AlcoholDto _selected;
+    private AlcoholDto _backup;
+
+    private AlcoholProperty _selectedProp;
+    private AlcoholProperty _backupProp;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new AlcoholClient(_http);
+        _alcohols = await _client.GetAlcoholsAsync();
+    }
+
+    private void Backup(object element)
+    {
+        var alcohol = (AlcoholDto) element;
+
+        _backup = new AlcoholDto
+        {
+            Id = alcohol.Id,
+            AutoIncrementedId = alcohol.AutoIncrementedId,
+            Name = alcohol.Name
+        };
+    }
+
+    private async void Save(object element)
+    {
+        var alcohol = (AlcoholDto) element;
+
+        try
+        {
+            await _client.UpdateAlcoholAsync(new UpdateAlcoholCommand
+            {
+                Id = alcohol.Id,
+                Name = alcohol.Name
+            });
+
+            _snackbar.Add("Алкоголь успешно обновлен");
+        }
+        catch (Exception e)
+        {
+            Reset(element);
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void Reset(object element)
+    {
+        var alcohol = (AlcoholDto) element;
+
+        if (alcohol is null) return;
+
+        alcohol.Id = _backup.Id;
+        alcohol.AutoIncrementedId = _backup.AutoIncrementedId;
+        alcohol.Name = _backup.Name;
+    }
+
+    private void BackupProp(object element)
+    {
+        var prop = (AlcoholProperty) element;
+
+        _backupProp = new AlcoholProperty
+        {
+            Property = prop.Property,
+            Value = prop.Value
+        };
+    }
+
+    private async void SaveProp(object element)
+    {
+        var prop = (AlcoholProperty) element;
+
+        try
+        {
+            await _client.UpdateAlcoholPropertyAsync(new UpdateAlcoholPropertyCommand
+            {
+                AlcoholId = prop.Alcohol.Id,
+                Property = prop.Property,
+                Value = prop.Value
+            });
+
+            _snackbar.Add("Свойство алкоголя успешно обновлено");
+        }
+        catch (Exception e)
+        {
+            ResetProp(element);
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void ResetProp(object element)
+    {
+        var prop = (AlcoholProperty) element;
+
+        prop.Property = _backupProp.Property;
+        prop.Value = _backupProp.Value;
+    }
+
+}

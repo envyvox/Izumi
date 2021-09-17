@@ -27,6 +27,7 @@ namespace Izumi.Services.Game.Alcohol.Queries
         public async Task<List<AlcoholDto>> Handle(GetAlcoholsQuery request, CancellationToken ct)
         {
             var entities = await _db.Alcohols
+                .Include(x => x.Properties)
                 .ToListAsync();
 
             return _mapper.Map<List<AlcoholDto>>(entities);

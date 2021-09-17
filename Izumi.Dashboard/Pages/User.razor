@@ -1,0 +1,155 @@
+﻿@page "/user"
+@using Microsoft.AspNetCore.Components
+@using System.Globalization
+@inject HttpClient _http;
+@inject ISnackbar _snackbar;
+
+@if (_users == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <MudTable Items="@_users"
+              CanCancelEdit="@true"
+              @bind-SelectedItem="_selected"
+              RowEditPreview="Backup"
+              RowEditCancel="Reset"
+              RowEditCommit="Save">
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>About</MudTh>
+            <MudTh>Title</MudTh>
+            <MudTh>Gender</MudTh>
+            <MudTh>Location</MudTh>
+            <MudTh>Energy</MudTh>
+            <MudTh>Points</MudTh>
+            <MudTh>IsPremium</MudTh>
+            <MudTh>CommandColor</MudTh>
+            <MudTh>CreatedAt</MudTh>
+            <MudTh>UpdatedAt</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="About">@context.About</MudTd>
+            <MudTd DataLabel="Title">@context.Title</MudTd>
+            <MudTd DataLabel="Gender">@context.Gender</MudTd>
+            <MudTd DataLabel="Location">@context.Location</MudTd>
+            <MudTd DataLabel="Energy">@context.Energy</MudTd>
+            <MudTd DataLabel="Points">@context.Points</MudTd>
+            <MudTd DataLabel="IsPremium">
+                <MudCheckBox ReadOnly="@true" @bind-Checked="@context.IsPremium"/>
+            </MudTd>
+            <MudTd DataLabel="CommandColor">@context.CommandColor</MudTd>
+            <MudTd DataLabel="CreatedAt">@context.CreatedAt.ToString("g", new CultureInfo("ru-RU"))</MudTd>
+            <MudTd DataLabel="UpdatedAt">@context.UpdatedAt.ToString("g", new CultureInfo("ru-RU"))</MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="About">
+                <MudTextField @bind-Value="@context.About"/>
+            </MudTd>
+            <MudTd DataLabel="Title">
+                <MudTextField @bind-Value="@context.Title" Required/>
+            </MudTd>
+            <MudTd DataLabel="Gender">
+                <MudTextField @bind-Value="@context.Gender" Required/>
+            </MudTd>
+            <MudTd DataLabel="Location">
+                <MudTextField @bind-Value="@context.Location" Required/>
+            </MudTd>
+            <MudTd DataLabel="Energy">
+                <MudTextField @bind-Value="@context.Energy" Required/>
+            </MudTd>
+            <MudTd DataLabel="Points">
+                <MudTextField @bind-Value="@context.Points" Required/>
+            </MudTd>
+            <MudTd DataLabel="IsPremium">
+                <MudCheckBox @bind-Checked="@context.IsPremium" Required/>
+            </MudTd>
+            <MudTd DataLabel="CommandColor">
+                <MudTextField @bind-Value="@context.CommandColor" Required/>
+            </MudTd>
+            <MudTd DataLabel="CreatedAt">@context.CreatedAt.ToString("g", new CultureInfo("ru-RU"))</MudTd>
+            <MudTd DataLabel="UpdatedAt">@context.UpdatedAt.ToString("g", new CultureInfo("ru-RU"))</MudTd>
+        </RowEditingTemplate>
+    </MudTable>
+}
+
+@code {
+    private UserClient _client;
+
+    private ICollection<UserDto> _users;
+    private UserDto _selected;
+    private UserDto _backup;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new UserClient(_http);
+        _users = await _client.GetUsersAsync();
+    }
+
+    private void Backup(object element)
+    {
+        var user = (UserDto) element;
+
+        _backup = new UserDto
+        {
+            Id = user.Id,
+            About = user.About,
+            Title = user.Title,
+            Gender = user.Gender,
+            Location = user.Location,
+            Energy = user.Energy,
+            Points = user.Points,
+            IsPremium = user.IsPremium,
+            CommandColor = user.CommandColor
+        };
+    }
+
+    private async void Save(object element)
+    {
+        var user = (UserDto) element;
+
+        try
+        {
+            await _client.UpdateUserAsync(new UpdateUserCommand
+            {
+                Id = user.Id,
+                About = user.About,
+                Title = user.Title,
+                Gender = user.Gender,
+                Location = user.Location,
+                Energy = user.Energy,
+                Points = user.Points,
+                IsPremium = user.IsPremium,
+                CommandColor = user.CommandColor
+            });
+
+            _snackbar.Add("Пользователь успешно обновлен");
+        }
+        catch (Exception e)
+        {
+            Reset(element);
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void Reset(object element)
+    {
+        var user = (UserDto) element;
+
+        user.Id = _backup.Id;
+        user.About = _backup.About;
+        user.Title = _backup.Title;
+        user.Gender = _backup.Gender;
+        user.Location = _backup.Location;
+        user.Energy = _backup.Energy;
+        user.Points = _backup.Points;
+        user.IsPremium = _backup.IsPremium;
+        user.CommandColor = _backup.CommandColor;
+    }
+
+}

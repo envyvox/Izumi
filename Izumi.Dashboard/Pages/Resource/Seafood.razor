@@ -1,0 +1,102 @@
+﻿@page "/resource/seafood"
+@inject HttpClient _http;
+@inject ISnackbar _snackbar;
+
+@if (_seafoods is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <MudTable Items="_seafoods"
+              CanCancelEdit="@true"
+              @bind-SelectedItem="_selected"
+              RowEditPreview="Backup"
+              RowEditCancel="Reset"
+              RowEditCommit="Save">
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>IncId</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Price</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Price">@context.Price</MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">
+                <MudTextField @bind-Value="@context.Name" Required/>
+            </MudTd>
+            <MudTd DataLabel="Price">
+                <MudTextField @bind-Value="@context.Price" Required/>
+            </MudTd>
+        </RowEditingTemplate>
+    </MudTable>
+}
+
+@code {
+    private SeafoodClient _client;
+
+    private ICollection<SeafoodDto> _seafoods;
+    private SeafoodDto _selected;
+    private SeafoodDto _backup;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new SeafoodClient(_http);
+        _seafoods = await _client.GetSeafoodsAsync();
+    }
+
+    private void Backup(object element)
+    {
+        var seafood = (SeafoodDto) element;
+
+        _backup = new SeafoodDto
+        {
+            Id = seafood.Id,
+            AutoIncrementedId = seafood.AutoIncrementedId,
+            Name = seafood.Name,
+            Price = seafood.Price
+        };
+    }
+
+    private async void Save(object element)
+    {
+        var seafood = (SeafoodDto) element;
+
+        try
+        {
+            await _client.UpdateSeafoodAsync(new UpdateSeafoodCommand
+            {
+                Id = seafood.Id,
+                Name = seafood.Name,
+                Price = seafood.Price
+            });
+
+            _snackbar.Add("Морепродукт успешно обновлен");
+        }
+        catch (Exception e)
+        {
+            Reset(element);
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void Reset(object element)
+    {
+        var seafood = (SeafoodDto) element;
+
+        seafood.Id = _backup.Id;
+        seafood.AutoIncrementedId = _backup.AutoIncrementedId;
+        seafood.Name = _backup.Name;
+        seafood.Price = _backup.Price;
+    }
+
+}

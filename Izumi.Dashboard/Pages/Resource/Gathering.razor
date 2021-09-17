@@ -1,0 +1,115 @@
+﻿@page "/resource/gathering"
+@inject HttpClient _http;
+@inject ISnackbar _snackbar;
+
+@if (_gatherings is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <MudTable Items="_gatherings"
+              CanCancelEdit="@true"
+              @bind-SelectedItem="_selected"
+              RowEditPreview="Backup"
+              RowEditCancel="Reset"
+              RowEditCommit="Save">
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>IncId</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Location</MudTh>
+            <MudTh>Price</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Location">@context.Location</MudTd>
+            <MudTd DataLabel="Price">@context.Price</MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">
+                <MudTextField @bind-Value="@context.Name" Required/>
+            </MudTd>
+            <MudTd DataLabel="Location">
+                <MudSelect @bind-Value="@context.Location">
+                    @foreach (LocationType location in Enum.GetValues(typeof(LocationType)))
+                    {
+                        <MudSelectItem Value="@location">@location</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudTd>
+            <MudTd DataLabel="Price">
+                <MudTextField @bind-Value="@context.Price" Required/>
+            </MudTd>
+        </RowEditingTemplate>
+    </MudTable>
+}
+
+@code {
+    private GatheringClient _client;
+
+    private ICollection<GatheringDto> _gatherings;
+    private GatheringDto _selected;
+    private GatheringDto _backup;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new GatheringClient(_http);
+        _gatherings = await _client.GetGatheringsAsync();
+    }
+
+    private void Backup(object element)
+    {
+        var gathering = (GatheringDto) element;
+
+        _backup = new GatheringDto
+        {
+            Id = gathering.Id,
+            AutoIncrementedId = gathering.AutoIncrementedId,
+            Name = gathering.Name,
+            Location = gathering.Location,
+            Price = gathering.Price
+        };
+    }
+
+    private async void Save(object element)
+    {
+        var gathering = (GatheringDto) element;
+
+        try
+        {
+            await _client.UpdateGatheringAsync(new UpdateGatheringCommand
+            {
+                Id = gathering.Id,
+                Name = gathering.Name,
+                Location = gathering.Location,
+                Price = gathering.Price
+            });
+
+            _snackbar.Add("Собирательский ресурс успешно обновлен");
+        }
+        catch (Exception e)
+        {
+            Reset(element);
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void Reset(object element)
+    {
+        var gathering = (GatheringDto) element;
+
+        gathering.Id = _backup.Id;
+        gathering.AutoIncrementedId = _backup.AutoIncrementedId;
+        gathering.Name = _backup.Name;
+        gathering.Location = _backup.Location;
+        gathering.Price = _backup.Price;
+    }
+
+}

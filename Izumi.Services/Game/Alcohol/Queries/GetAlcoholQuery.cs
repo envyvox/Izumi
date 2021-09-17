@@ -27,6 +27,7 @@ namespace Izumi.Services.Game.Alcohol.Queries
         public async Task<AlcoholDto> Handle(GetAlcoholQuery request, CancellationToken ct)
         {
             var entity = await _db.Alcohols
+                .Include(x => x.Properties)
                 .SingleOrDefaultAsync(x => x.Id == request.Id);
 
             if (entity is null)

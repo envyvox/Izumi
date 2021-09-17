@@ -1,0 +1,101 @@
+﻿@page "/resource/product"
+@inject HttpClient _http;
+@inject ISnackbar _snackbar;
+
+@if (_products is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <MudTable Items="_products"
+              CanCancelEdit="@true"
+              @bind-SelectedItem="_selected"
+              RowEditPreview="Backup"
+              RowEditCancel="Reset"
+              RowEditCommit="Save">
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>IncId</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Price</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Price">@context.Price</MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">
+                <MudTextField @bind-Value="@context.Name" Required/>
+            </MudTd>
+            <MudTd DataLabel="Price">
+                <MudTextField @bind-Value="@context.Price" Required/>
+            </MudTd>
+        </RowEditingTemplate>
+    </MudTable>
+}
+
+@code {
+    private ProductClient _client;
+
+    private ICollection<ProductDto> _products;
+    private ProductDto _selected;
+    private ProductDto _backup;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new ProductClient(_http);
+        _products = await _client.GetProductsAsync();
+    }
+
+    private void Backup(object element)
+    {
+        var product = (ProductDto) element;
+
+        _backup = new ProductDto
+        {
+            Id = product.Id,
+            AutoIncrementedId = product.AutoIncrementedId,
+            Name = product.Name,
+            Price = product.Price
+        };
+    }
+
+    private async void Save(object element)
+    {
+        var product = (ProductDto) element;
+
+        try
+        {
+            await _client.UpdateProductAsync(new UpdateProductCommand
+            {
+                Id = product.Id,
+                Name = product.Name
+            });
+
+            _snackbar.Add("Продукт успешно обновлен");
+        }
+        catch (Exception e)
+        {
+            Reset(element);
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void Reset(object element)
+    {
+        var product = (ProductDto) element;
+
+        product.Id = _backup.Id;
+        product.AutoIncrementedId = _backup.AutoIncrementedId;
+        product.Name = _backup.Name;
+        product.Price = _backup.Price;
+    }
+
+}

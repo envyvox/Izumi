@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Izumi.Controllers.Seeder.Game
 {
-    [ApiController]
-    [Route("seeder/game/resource/property")]
+    [ApiController, Route("seeder/game/resource/property")]
     public class SeederGameResourcePropertyController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -17,24 +16,21 @@ namespace Izumi.Controllers.Seeder.Game
             _mediator = mediator;
         }
 
-        [HttpPost]
-        [Route("alcohol")]
+        [HttpPost, Route("alcohol")]
         public async Task<ActionResult<TotalAndAffectedCountDto>> UploadAlcoholProperties(
             SeederUploadAlcoholPropertiesCommand request)
         {
             return Ok(await _mediator.Send(request));
         }
 
-        [HttpPost]
-        [Route("crafting")]
+        [HttpPost, Route("crafting")]
         public async Task<ActionResult<TotalAndAffectedCountDto>> UploadCraftingProperties(
             SeederUploadCraftingPropertiesCommand request)
         {
             return Ok(await _mediator.Send(request));
         }
 
-        [HttpPost]
-        [Route("gathering")]
+        [HttpPost, Route("gathering")]
         public async Task<ActionResult<TotalAndAffectedCountDto>> UploadGatheringProperties(
             SeederUploadGatheringPropertiesCommand request)
         {

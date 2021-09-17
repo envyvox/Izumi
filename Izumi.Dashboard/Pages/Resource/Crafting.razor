@@ -1,0 +1,94 @@
+﻿@page "/resource/crafting"
+@inject HttpClient _http;
+@inject ISnackbar _snackbar;
+
+@if (_craftings is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <MudTable Items="_craftings"
+              CanCancelEdit="@true"
+              @bind-SelectedItem="_selected"
+              RowEditPreview="Backup"
+              RowEditCancel="Reset"
+              RowEditCommit="Save">
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>IncId</MudTh>
+            <MudTh>Name</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">
+                <MudTextField @bind-Value="@context.Name" Required/>
+            </MudTd>
+        </RowEditingTemplate>
+    </MudTable>
+}
+
+@code {
+    private CraftingClient _client;
+
+    private ICollection<CraftingDto> _craftings;
+    private CraftingDto _selected;
+    private CraftingDto _backup;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new CraftingClient(_http);
+        _craftings = await _client.GetCraftingsAsync();
+    }
+
+    private void Backup(object element)
+    {
+        var crafting = (CraftingDto) element;
+
+        _backup = new CraftingDto
+        {
+            Id = crafting.Id,
+            AutoIncrementedId = crafting.AutoIncrementedId,
+            Name = crafting.Name
+        };
+    }
+
+    private async void Save(object element)
+    {
+        var crafting = (CraftingDto) element;
+
+        try
+        {
+            await _client.UpdateCraftingAsync(new UpdateCraftingCommand
+            {
+                Id = crafting.Id,
+                Name = crafting.Name
+            });
+
+            _snackbar.Add("Изготавливаемый предмет успешно обновлен");
+        }
+        catch (Exception e)
+        {
+            Reset(element);
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void Reset(object element)
+    {
+        var crafting = (CraftingDto) element;
+
+        crafting.Id = _backup.Id;
+        crafting.AutoIncrementedId = _backup.AutoIncrementedId;
+        crafting.Name = _backup.Name;
+    }
+
+}

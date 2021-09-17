@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
+using Izumi.Data.Entities.Resource.Properties;
 
 namespace Izumi.Services.Game.Alcohol.Models
 {
     public record AlcoholDto(
         Guid Id,
         long AutoIncrementedId,
-        string Name);
+        string Name,
+        List<AlcoholProperty> Properties);
 
     public class AlcoholProfile : Profile
     {

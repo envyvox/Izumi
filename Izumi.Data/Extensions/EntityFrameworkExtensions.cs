@@ -34,7 +34,7 @@ namespace Izumi.Data.Extensions
             return (T) created.Entity;
         }
 
-        public static async Task UpdateEntity<T>(this AppDbContext db, T entity)
+        public static async Task<T> UpdateEntity<T>(this AppDbContext db, T entity)
         {
             var updated = db.Update(entity);
 
@@ -43,6 +43,8 @@ namespace Izumi.Data.Extensions
             await db.SaveChangesAsync();
 
             updated.State = EntityState.Detached;
+
+            return (T) updated.Entity;
         }
 
         public static async Task DeleteEntity<T>(this AppDbContext db, T entity)

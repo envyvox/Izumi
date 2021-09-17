@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Izumi.Controllers.Discord
 {
-    [ApiController]
-    [Route("discord/commands")]
+    [ApiController, Route("discord/commands")]
     public class CommandsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -16,8 +15,7 @@ namespace Izumi.Controllers.Discord
             _mediator = mediator;
         }
 
-        [HttpPost]
-        [Route("upload-slash-commands")]
+        [HttpPost, Route("upload-slash-commands")]
         public async Task<ActionResult> UploadSlashCommands()
         {
             return Ok(await _mediator.Send(new SeederUploadSlashCommandsCommand()));

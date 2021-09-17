@@ -39,6 +39,14 @@ namespace Izumi.Services.Game.User.Commands
 
         public async Task<UserDto> Handle(CreateUserCommand request, CancellationToken ct)
         {
+            var exist = await _db.Users
+                .AnyAsync(x => x.Id == request.UserId);
+
+            if (exist)
+            {
+                throw new Exception($"user with id {request.UserId} already exist");
+            }
+
             var entity = await _db.CreateEntity(new Data.Entities.User.User
             {
                 Id = request.UserId,

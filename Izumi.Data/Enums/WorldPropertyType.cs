@@ -36,6 +36,6 @@
         FishFailChanceRare = 32,
         FishFailChanceEpic = 33,
         FishFailChanceMythical = 34,
-        FishFailChanceLegendary = 35,
+        FishFailChanceLegendary = 35
     }
 }

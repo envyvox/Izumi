@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Izumi.Controllers.Seeder.Game
 {
-    [ApiController]
-    [Route("seeder/game")]
+    [ApiController, Route("seeder/game")]
     public class SeederGameController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -17,31 +16,27 @@ namespace Izumi.Controllers.Seeder.Game
             _mediator = mediator;
         }
 
-        [HttpPost]
-        [Route("achievements")]
+        [HttpPost, Route("achievements")]
         public async Task<ActionResult<TotalAndAffectedCountDto>> UploadAchievements(SeederUploadAchievementsCommand
             request)
         {
             return Ok(await _mediator.Send(request));
         }
 
-        [HttpPost]
-        [Route("banners")]
+        [HttpPost, Route("banners")]
         public async Task<ActionResult<TotalAndAffectedCountDto>> UploadBanners(SeederUploadBannersCommand request)
         {
             return Ok(await _mediator.Send(request));
         }
 
-        [HttpPost]
-        [Route("localizations")]
+        [HttpPost, Route("localizations")]
         public async Task<ActionResult<TotalAndAffectedCountDto>> UploadLocalizations(
             SeederUploadLocalizationsCommand request)
         {
             return Ok(await _mediator.Send(request));
         }
 
-        [HttpPost]
-        [Route("transits")]
+        [HttpPost, Route("transits")]
         public async Task<ActionResult<TotalAndAffectedCountDto>> UploadTransits(SeederUploadTransitsCommand request)
         {
             return Ok(await _mediator.Send(request));

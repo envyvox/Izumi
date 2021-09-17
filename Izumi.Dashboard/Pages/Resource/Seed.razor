@@ -1,0 +1,141 @@
+﻿@page "/resource/seed"
+@inject HttpClient _http;
+@inject ISnackbar _snackbar;
+
+@if (_seeds is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <MudTable Items="_seeds"
+              CanCancelEdit="@true"
+              @bind-SelectedItem="_selected"
+              RowEditPreview="Backup"
+              RowEditCancel="Reset"
+              RowEditCommit="Save">
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>IncId</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Season</MudTh>
+            <MudTh>GrowthDays</MudTh>
+            <MudTh>ReGrowthDays</MudTh>
+            <MudTh>IsMultiply</MudTh>
+            <MudTh>Price</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Season">@context.Season</MudTd>
+            <MudTd DataLabel="GrowthDays">@context.GrowthDays</MudTd>
+            <MudTd DataLabel="ReGrowthDays">@context.ReGrowthDays</MudTd>
+            <MudTd DataLabel="IsMultiply">
+                <MudCheckBox ReadOnly="@true" @bind-Checked="@context.IsMultiply"/>
+            </MudTd>
+            <MudTd DataLabel="Price">@context.Price</MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">
+                <MudTextField @bind-Value="@context.Name" Required/>
+            </MudTd>
+            <MudTd DataLabel="Season">
+                <MudSelect @bind-Value="@context.Season">
+                    @foreach (SeasonType season in Enum.GetValues(typeof(SeasonType)))
+                    {
+                        <MudSelectItem Value="@season">@season</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudTd>
+            <MudTd DataLabel="GrowthDays">
+                <MudTextField @bind-Value="@context.GrowthDays" Required/>
+            </MudTd>
+            <MudTd DataLabel="ReGrowthDays">
+                <MudTextField @bind-Value="@context.ReGrowthDays" Required/>
+            </MudTd>
+            <MudTd DataLabel="IsMultiply">
+                <MudCheckBox @bind-Checked="@context.IsMultiply"/>
+            </MudTd>
+            <MudTd DataLabel="Price">
+                <MudTextField @bind-Value="@context.Price" Required/>
+            </MudTd>
+        </RowEditingTemplate>
+    </MudTable>
+}
+
+@code {
+    private SeedClient _client;
+
+    private ICollection<SeedDto> _seeds;
+    private SeedDto _selected;
+    private SeedDto _backup;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new SeedClient(_http);
+        _seeds = await _client.GetSeedsAsync();
+    }
+
+    private void Backup(object element)
+    {
+        var seed = (SeedDto) element;
+
+        _backup = new SeedDto
+        {
+            Id = seed.Id,
+            AutoIncrementedId = seed.AutoIncrementedId,
+            Name = seed.Name,
+            Season = seed.Season,
+            GrowthDays = seed.GrowthDays,
+            ReGrowthDays = seed.ReGrowthDays,
+            IsMultiply = seed.IsMultiply,
+            Price = seed.Price
+        };
+    }
+
+    private async void Save(object element)
+    {
+        var seed = (SeedDto) element;
+
+        try
+        {
+            await _client.UpdateSeedAsync(new UpdateSeedCommand
+            {
+                Id = seed.Id,
+                Name = seed.Name,
+                Season = seed.Season,
+                GrowthDays = seed.GrowthDays,
+                ReGrowthDays = seed.ReGrowthDays,
+                IsMultiply = seed.IsMultiply,
+                Price = seed.Price
+            });
+
+            _snackbar.Add("Семя успешно обновлено");
+        }
+        catch (Exception e)
+        {
+            Reset(element);
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void Reset(object element)
+    {
+        var seed = (SeedDto) element;
+
+        seed.Id = _backup.Id;
+        seed.AutoIncrementedId = _backup.AutoIncrementedId;
+        seed.Name = _backup.Name;
+        seed.Season = _backup.Season;
+        seed.GrowthDays = _backup.GrowthDays;
+        seed.ReGrowthDays = _backup.ReGrowthDays;
+        seed.IsMultiply = _backup.IsMultiply;
+        seed.Price = _backup.Price;
+    }
+
+}

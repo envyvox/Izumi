@@ -1,0 +1,90 @@
+﻿@page "/world-property"
+@inject HttpClient _http;
+@inject ISnackbar _snackbar;
+
+@if (_properties is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <MudTable Items="@_properties"
+              CanCancelEdit="@true"
+              @bind-SelectedItem="_selected"
+              RowEditPreview="Backup"
+              RowEditCancel="Reset"
+              RowEditCommit="Save">
+        <HeaderContent>
+            <MudTh>Type</MudTh>
+            <MudTh>Value</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Type">@context.Type.ToString()</MudTd>
+            <MudTd DataLabel="Value">@context.Value</MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Type">@context.Type.ToString()</MudTd>
+            <MudTd DataLabel="Value">
+                <MudTextField @bind-Value="@context.Value" Required Min="1"/>
+            </MudTd>
+        </RowEditingTemplate>
+    </MudTable>
+}
+
+@code {
+    private WorldClient _client;
+
+    private ICollection<WorldPropertyDto> _properties;
+    private WorldPropertyDto _selected;
+    private WorldPropertyDto _backup;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new WorldClient(_http);
+        _properties = await _client.GetWorldPropertiesAsync();
+    }
+
+    private void Backup(object element)
+    {
+        var property = (WorldPropertyDto) element;
+
+        _backup = new WorldPropertyDto
+        {
+            Type = property.Type,
+            Value = property.Value
+        };
+    }
+
+    private async void Save(object element)
+    {
+        var property = (WorldPropertyDto) element;
+
+        try
+        {
+            await _client.UpdateWorldPropertyAsync(new UpdateWorldPropertyCommand
+            {
+                Type = property.Type,
+                Value = property.Value
+            });
+
+            _snackbar.Add("Свойство мира успешно обновлено");
+        }
+        catch (Exception e)
+        {
+            Reset(element);
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void Reset(object element)
+    {
+        var property = (WorldPropertyDto) element;
+
+        property.Type = _backup.Type;
+        property.Value = _backup.Value;
+    }
+
+}

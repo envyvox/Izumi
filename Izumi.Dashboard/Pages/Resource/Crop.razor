@@ -1,0 +1,102 @@
+﻿@page "/resource/crop"
+@inject HttpClient _http;
+@inject ISnackbar _snackbar;
+
+@if (_crops is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <MudTable Items="_crops"
+              CanCancelEdit="@true"
+              @bind-SelectedItem="_selected"
+              RowEditPreview="Backup"
+              RowEditCancel="Reset"
+              RowEditCommit="Save">
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>IncId</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Price</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Price">@context.Price</MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">
+                <MudTextField @bind-Value="@context.Name" Required/>
+            </MudTd>
+            <MudTd DataLabel="Price">
+                <MudTextField @bind-Value="@context.Price" Required/>
+            </MudTd>
+        </RowEditingTemplate>
+    </MudTable>
+}
+
+@code {
+    private CropClient _client;
+
+    private ICollection<CropDto> _crops;
+    private CropDto _selected;
+    private CropDto _backup;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new CropClient(_http);
+        _crops = await _client.GetCropsAsync();
+    }
+
+    private void Backup(object element)
+    {
+        var crop = (CropDto) element;
+
+        _backup = new CropDto
+        {
+            Id = crop.Id,
+            AutoIncrementedId = crop.AutoIncrementedId,
+            Name = crop.Name,
+            Price = crop.Price
+        };
+    }
+
+    private async void Save(object element)
+    {
+        var crop = (CropDto) element;
+
+        try
+        {
+            await _client.UpdateCropAsync(new UpdateCropCommand
+            {
+                Id = crop.Id,
+                Name = crop.Name,
+                Price = crop.Price
+            });
+
+            _snackbar.Add("Урожай успешно обновлен");
+        }
+        catch (Exception e)
+        {
+            Reset(element);
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void Reset(object element)
+    {
+        var crop = (CropDto) element;
+
+        crop.Id = _backup.Id;
+        crop.AutoIncrementedId = _backup.AutoIncrementedId;
+        crop.Name = _backup.Name;
+        crop.Price = _backup.Price;
+    }
+
+}

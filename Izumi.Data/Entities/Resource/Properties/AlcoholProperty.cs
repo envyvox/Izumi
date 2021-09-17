@@ -29,7 +29,7 @@ namespace Izumi.Data.Entities.Resource.Properties
 
             builder
                 .HasOne(x => x.Alcohol)
-                .WithMany()
+                .WithMany(x => x.Properties)
                 .HasForeignKey(x => x.AlcoholId);
         }
     }

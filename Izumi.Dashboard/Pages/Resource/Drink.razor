@@ -1,0 +1,94 @@
+﻿@page "/resource/drink"
+@inject HttpClient _http;
+@inject ISnackbar _snackbar;
+
+@if (_drinks is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <MudTable Items="_drinks"
+              CanCancelEdit="@true"
+              @bind-SelectedItem="_selected"
+              RowEditPreview="Backup"
+              RowEditCancel="Reset"
+              RowEditCommit="Save">
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>IncId</MudTh>
+            <MudTh>Name</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+            <MudTd DataLabel="Name">
+                <MudTextField @bind-Value="@context.Name" Required/>
+            </MudTd>
+        </RowEditingTemplate>
+    </MudTable>
+}
+
+@code {
+    private DrinkClient _client;
+
+    private ICollection<DrinkDto> _drinks;
+    private DrinkDto _selected;
+    private DrinkDto _backup;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new DrinkClient(_http);
+        _drinks = await _client.GetDrinksAsync();
+    }
+
+    private void Backup(object element)
+    {
+        var drink = (DrinkDto) element;
+
+        _backup = new DrinkDto
+        {
+            Id = drink.Id,
+            AutoIncrementedId = drink.AutoIncrementedId,
+            Name = drink.Name
+        };
+    }
+
+    private async void Save(object element)
+    {
+        var drink = (DrinkDto) element;
+
+        try
+        {
+            await _client.UpdateDrinkAsync(new UpdateDrinkCommand
+            {
+                Id = drink.Id,
+                Name = drink.Name
+            });
+
+            _snackbar.Add("Напиток успешно обновлен");
+        }
+        catch (Exception e)
+        {
+            Reset(element);
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void Reset(object element)
+    {
+        var drink = (DrinkDto) element;
+
+        drink.Id = _backup.Id;
+        drink.AutoIncrementedId = _backup.AutoIncrementedId;
+        drink.Name = _backup.Name;
+    }
+
+}

@@ -4,6 +4,7 @@ using Discord.Commands;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Izumi.Data;
+using Izumi.Extensions;
 using Izumi.Framework.Hangfire;
 using Izumi.Services.Discord.Client;
 using Izumi.Services.Discord.Client.Impl;
@@ -20,13 +21,12 @@ using Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 
 namespace Izumi
 {
@@ -61,8 +61,14 @@ namespace Izumi
             services.AddAutoMapper(typeof(IDiscordClientService).Assembly);
             services.AddMediatR(typeof(IDiscordClientService).Assembly);
 
-            services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddSwaggerGen();
+            services
+                .AddControllers()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                );
+
+            services.AddOpenApiDocument();
 
             services.AddSingleton(_ =>
                 TimeZoneInfo.FindSystemTimeZoneById(_config.GetValue<string>("CronTimezoneId")));
@@ -87,37 +93,6 @@ namespace Izumi
         {
             MigrateDb(app.ApplicationServices);
 
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor |
-                                   ForwardedHeaders.XForwardedProto
-            });
-
-            app.Use(async (context, next) =>
-            {
-                var ips = (_config.GetValue<string>("AllowedIps") ?? "").Split(';');
-                var remoteIp = context.Request.Headers["X-Real-IP"].ToString();
-
-                if (!ips.Contains(remoteIp))
-                {
-                    await context.Response.WriteAsync($@"
-                        <!doctype html>
-                        <html>
-                            <body>
-                                <div>
-                                    <h2>Oops, seems that you are not authorized to access this page</h2>
-                                <div>
-                                <footer>
-                                    <small>Your IP logged: {remoteIp}</small>
-                                </footer>
-                            </body>
-                        </html>");
-                    return;
-                }
-
-                await next();
-            });
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -129,10 +104,12 @@ namespace Izumi
                 Authorization = new[] { new AllowAllAuthorizationFilter() }
             });
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Izumi API V1"); });
-
             app.UseRouting();
+
+            app.UseCorsMiddleware();
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 

@@ -12,6 +12,7 @@ using Izumi.Services.Discord.Guild.Extensions;
 using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Game.Achievement.Commands;
 using Izumi.Services.Game.Statistic.Commands;
+using Izumi.Services.Game.User.Queries;
 using MediatR;
 
 namespace Izumi.Services.Discord.Client.Events
@@ -59,10 +60,10 @@ namespace Izumi.Services.Discord.Client.Events
 
             if (request.SocketMessage.Channel.Id == (ulong) channels[DiscordChannelType.Chat].Id)
             {
-                await _mediator.Send(new AddStatisticToUserCommand(
-                    (long) request.SocketMessage.Author.Id, StatisticType.Messages));
-                await _mediator.Send(new CheckAchievementInUserCommand(
-                    (long) request.SocketMessage.Author.Id, AchievementType.FirstMessage));
+                var user = await _mediator.Send(new GetUserQuery((long) request.SocketMessage.Author.Id));
+
+                await _mediator.Send(new AddStatisticToUserCommand(user.Id, StatisticType.Messages));
+                await _mediator.Send(new CheckAchievementInUserCommand(user.Id, AchievementType.FirstMessage));
             }
 
             return Unit.Value;
