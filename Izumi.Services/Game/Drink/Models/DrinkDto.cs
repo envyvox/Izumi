@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
+using Izumi.Data.Entities.Resource.Ingredients;
 
 namespace Izumi.Services.Game.Drink.Models
 {
     public record DrinkDto(
         Guid Id,
         long AutoIncrementedId,
-        string Name);
+        string Name,
+        List<DrinkIngredient> Ingredients);
 
     public class DrinkProfile : Profile
     {

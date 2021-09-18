@@ -2,39 +2,53 @@
 @inject HttpClient _http;
 @inject ISnackbar _snackbar;
 
-@if (_drinks is null)
-{
-    <p>
-        <em>Loading...</em>
-    </p>
-}
-else
-{
-    <MudTable Items="_drinks"
-              CanCancelEdit="@true"
-              @bind-SelectedItem="_selected"
-              RowEditPreview="Backup"
-              RowEditCancel="Reset"
-              RowEditCommit="Save">
-        <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>IncId</MudTh>
-            <MudTh>Name</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-        </RowTemplate>
-        <RowEditingTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
-            <MudTd DataLabel="Name">
-                <MudTextField @bind-Value="@context.Name" Required/>
-            </MudTd>
-        </RowEditingTemplate>
-    </MudTable>
-}
+<MudTable Items="_drinks"
+          CanCancelEdit="@true"
+          @bind-SelectedItem="_selected"
+          RowEditPreview="Backup"
+          RowEditCancel="Reset"
+          RowEditCommit="Save">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>IncId</MudTh>
+        <MudTh>Id</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Name">
+            <MudTextField @bind-Value="@context.Name" Required/>
+        </MudTd>
+        <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+    </RowEditingTemplate>
+    <ChildRowContent>
+        <MudTr>
+            <td colspan="12">
+                <MudExpansionPanel Text="Ingredients"
+                                   Elevation="0"
+                                   Style="background-color: #31313b">
+                    <MudTable Items="@context.Ingredients"
+                              Context="IngredientContext">
+                        <HeaderContent>
+                            <MudTh>Category</MudTh>
+                            <MudTh>Id</MudTh>
+                            <MudTh>Amount</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Category">@IngredientContext.Category</MudTd>
+                            <MudTd DataLabel="Property">@IngredientContext.Id</MudTd>
+                            <MudTd DataLabel="Amount">@IngredientContext.Amount</MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudExpansionPanel>
+            </td>
+        </MudTr>
+    </ChildRowContent>
+</MudTable>
 
 @code {
     private DrinkClient _client;

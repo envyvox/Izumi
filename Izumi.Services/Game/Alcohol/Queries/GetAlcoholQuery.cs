@@ -28,6 +28,7 @@ namespace Izumi.Services.Game.Alcohol.Queries
         {
             var entity = await _db.Alcohols
                 .Include(x => x.Properties)
+                .Include(x => x.Ingredients)
                 .SingleOrDefaultAsync(x => x.Id == request.Id);
 
             if (entity is null)

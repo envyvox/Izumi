@@ -27,6 +27,7 @@ namespace Izumi.Services.Game.Food.Queries
         public async Task<List<FoodDto>> Handle(GetFoodsQuery request, CancellationToken ct)
         {
             var entities = await _db.Foods
+                .Include(x => x.Ingredients)
                 .ToListAsync();
 
             return _mapper.Map<List<FoodDto>>(entities);

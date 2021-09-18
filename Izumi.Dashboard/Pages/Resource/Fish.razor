@@ -2,87 +2,78 @@
 @inject HttpClient _http;
 @inject ISnackbar _snackbar;
 
-@if (_fishes is null)
-{
-    <p>
-        <em>Loading...</em>
-    </p>
-}
-else
-{
-    <MudTable Items="_fishes"
-              CanCancelEdit="@true"
-              @bind-SelectedItem="_selected"
-              RowEditPreview="Backup"
-              RowEditCancel="Reset"
-              RowEditCommit="Save">
-        <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>IncId</MudTh>
-            <MudTh>Name</MudTh>
-            <MudTh>Rarity</MudTh>
-            <MudTh>CatchTimesDay</MudTh>
-            <MudTh>CatchWeather</MudTh>
-            <MudTh>CatchSeasons</MudTh>
-            <MudTh>Price</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Rarity">@context.Rarity</MudTd>
-            <MudTd DataLabel="CatchTimesDay">@context.CatchTimesDay</MudTd>
-            <MudTd DataLabel="CatchWeather">@context.CatchWeather</MudTd>
-            <MudTd DataLabel="CatchSeasons">@string.Join(", ", context.CatchSeasons)</MudTd>
-            <MudTd DataLabel="Price">@context.Price</MudTd>
-        </RowTemplate>
-        <RowEditingTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
-            <MudTd DataLabel="Name">
-                <MudTextField @bind-Value="@context.Name" Required/>
-            </MudTd>
-            <MudTd DataLabel="Rarity">
-                <MudSelect @bind-Value="@context.Rarity">
-                    @foreach (FishRarityType rarity in Enum.GetValues(typeof(FishRarityType)))
-                    {
-                        <MudSelectItem Value="@rarity">@rarity</MudSelectItem>
-                    }
-                </MudSelect>
-            </MudTd>
-            <MudTd DataLabel="CatchTimesDay">
-                <MudSelect @bind-Value="@context.CatchTimesDay">
-                    @foreach (TimesDayType timesDay in Enum.GetValues(typeof(TimesDayType)))
-                    {
-                        <MudSelectItem Value="@timesDay">@timesDay</MudSelectItem>
-                    }
-                </MudSelect>
-            </MudTd>
-            <MudTd DataLabel="CatchWeather">
-                <MudSelect @bind-Value="@context.CatchWeather">
-                    @foreach (WeatherType weather in Enum.GetValues(typeof(WeatherType)))
-                    {
-                        <MudSelectItem Value="@weather">@weather</MudSelectItem>
-                    }
-                </MudSelect>
-            </MudTd>
-            <MudTd DataLabel="CatchSeasons">
-                You can't change this right now ;c
+<MudTable Items="_fishes"
+          CanCancelEdit="@true"
+          @bind-SelectedItem="_selected"
+          RowEditPreview="Backup"
+          RowEditCancel="Reset"
+          RowEditCommit="Save">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Rarity</MudTh>
+        <MudTh>CatchTimesDay</MudTh>
+        <MudTh>CatchWeather</MudTh>
+        <MudTh>CatchSeasons</MudTh>
+        <MudTh>Price</MudTh>
+        <MudTh>IncId</MudTh>
+        <MudTh>Id</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Rarity">@context.Rarity</MudTd>
+        <MudTd DataLabel="CatchTimesDay">@context.CatchTimesDay</MudTd>
+        <MudTd DataLabel="CatchWeather">@context.CatchWeather</MudTd>
+        <MudTd DataLabel="CatchSeasons">@string.Join(", ", context.CatchSeasons)</MudTd>
+        <MudTd DataLabel="Price">@context.Price</MudTd>
+        <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Name">
+            <MudTextField @bind-Value="@context.Name" Required/>
+        </MudTd>
+        <MudTd DataLabel="Rarity">
+            <MudSelect @bind-Value="@context.Rarity">
+                @foreach (FishRarityType rarity in Enum.GetValues(typeof(FishRarityType)))
+                {
+                    <MudSelectItem Value="@rarity">@rarity</MudSelectItem>
+                }
+            </MudSelect>
+        </MudTd>
+        <MudTd DataLabel="CatchTimesDay">
+            <MudSelect @bind-Value="@context.CatchTimesDay">
+                @foreach (TimesDayType timesDay in Enum.GetValues(typeof(TimesDayType)))
+                {
+                    <MudSelectItem Value="@timesDay">@timesDay</MudSelectItem>
+                }
+            </MudSelect>
+        </MudTd>
+        <MudTd DataLabel="CatchWeather">
+            <MudSelect @bind-Value="@context.CatchWeather">
+                @foreach (WeatherType weather in Enum.GetValues(typeof(WeatherType)))
+                {
+                    <MudSelectItem Value="@weather">@weather</MudSelectItem>
+                }
+            </MudSelect>
+        </MudTd>
+        <MudTd DataLabel="CatchSeasons">
+            You can't change this right now ;c
 
-                @* todo requires PR https://github.com/MudBlazor/MudBlazor/pull/2734
+            @* todo requires PR https://github.com/MudBlazor/MudBlazor/pull/2734
                 @* <MudSelect MultiSelection="true" @bind-SelectedValues="@context.CatchSeasons"> *@
-                @*     @foreach (SeasonType season in Enum.GetValues(typeof(SeasonType))) *@
-                @*     { *@
-                @*         <MudSelectItem Value="@season">@season</MudSelectItem> *@
-                @*     } *@
-                @* </MudSelect> *@
-            </MudTd>
-            <MudTd DataLabel="Price">
-                <MudTextField @bind-Value="@context.Price" Required/>
-            </MudTd>
-        </RowEditingTemplate>
-    </MudTable>
-}
+            @*     @foreach (SeasonType season in Enum.GetValues(typeof(SeasonType))) *@
+            @*     { *@
+            @*         <MudSelectItem Value="@season">@season</MudSelectItem> *@
+            @*     } *@
+            @* </MudSelect> *@
+        </MudTd>
+        <MudTd DataLabel="Price">
+            <MudTextField @bind-Value="@context.Price" Required/>
+        </MudTd>
+        <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+    </RowEditingTemplate>
+</MudTable>
 
 @code {
     private FishClient _client;

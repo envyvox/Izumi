@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using Izumi.Data.Entities.Resource.Ingredients;
+using Izumi.Data.Entities.Resource.Properties;
 using Izumi.Data.Util;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,6 +13,8 @@ namespace Izumi.Data.Entities.Resource
         public Guid Id { get; set; }
         public long AutoIncrementedId { get; set; }
         public string Name { get; set; }
+        public List<CraftingProperty> Properties { get; set; }
+        public List<CraftingIngredient> Ingredients { get; set; }
     }
 
     public class CraftingConfiguration : IEntityTypeConfiguration<Crafting>

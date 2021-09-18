@@ -28,6 +28,7 @@ namespace Izumi.Services.Game.Alcohol.Queries
         {
             var entities = await _db.Alcohols
                 .Include(x => x.Properties)
+                .Include(x => x.Ingredients)
                 .ToListAsync();
 
             return _mapper.Map<List<AlcoholDto>>(entities);

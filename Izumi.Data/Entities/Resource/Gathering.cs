@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Izumi.Data.Entities.Resource.Properties;
 using Izumi.Data.Enums;
 using Izumi.Data.Util;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +15,7 @@ namespace Izumi.Data.Entities.Resource
         public string Name { get; set; }
         public LocationType Location { get; set; }
         public uint Price { get; set; }
+        public List<GatheringProperty> Properties { get; set; }
     }
 
     public class GatheringConfiguration : IEntityTypeConfiguration<Gathering>

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Izumi.Data.Entities.Resource.Ingredients;
 using Izumi.Data.Enums;
 using Izumi.Data.Util;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +16,7 @@ namespace Izumi.Data.Entities.Resource
         public FoodCategoryType Category { get; set; }
         public bool RecipeSellable { get; set; }
         public bool IsSpecial { get; set; }
+        public List<FoodIngredient> Ingredients { get; set; }
     }
 
     public class FoodConfiguration : IEntityTypeConfiguration<Food>

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
+using Izumi.Data.Entities.Resource.Properties;
 using Izumi.Data.Enums;
 
 namespace Izumi.Services.Game.Gathering.Models
@@ -9,7 +11,8 @@ namespace Izumi.Services.Game.Gathering.Models
         long AutoIncrementedId,
         string Name,
         LocationType Location,
-        uint Price);
+        uint Price,
+        List<GatheringProperty> Properties);
 
     public class GatheringProfile : Profile
     {

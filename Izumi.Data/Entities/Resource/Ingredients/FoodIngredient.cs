@@ -31,7 +31,7 @@ namespace Izumi.Data.Entities.Resource.Ingredients
 
             builder
                 .HasOne(x => x.Food)
-                .WithMany()
+                .WithMany(x => x.Ingredients)
                 .HasForeignKey(x => x.FoodId);
         }
     }

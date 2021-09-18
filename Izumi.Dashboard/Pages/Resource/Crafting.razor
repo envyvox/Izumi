@@ -2,39 +2,81 @@
 @inject HttpClient _http;
 @inject ISnackbar _snackbar;
 
-@if (_craftings is null)
-{
-    <p>
-        <em>Loading...</em>
-    </p>
-}
-else
-{
-    <MudTable Items="_craftings"
-              CanCancelEdit="@true"
-              @bind-SelectedItem="_selected"
-              RowEditPreview="Backup"
-              RowEditCancel="Reset"
-              RowEditCommit="Save">
-        <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>IncId</MudTh>
-            <MudTh>Name</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-        </RowTemplate>
-        <RowEditingTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
-            <MudTd DataLabel="Name">
-                <MudTextField @bind-Value="@context.Name" Required/>
-            </MudTd>
-        </RowEditingTemplate>
-    </MudTable>
-}
+<MudTable Items="_craftings"
+          CanCancelEdit="@true"
+          @bind-SelectedItem="_selected"
+          RowEditPreview="Backup"
+          RowEditCancel="Reset"
+          RowEditCommit="Save">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>IncId</MudTh>
+        <MudTh>Id</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Name">
+            <MudTextField @bind-Value="@context.Name" Required/>
+        </MudTd>
+        <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+    </RowEditingTemplate>
+    <ChildRowContent>
+        <MudTr>
+            <td colspan="12">
+                <MudTabs Elevation="2"
+                         Rounded="true"
+                         ApplyEffectsToContainer="true"
+                         PanelClass="pa-6"
+                         Style="background-color: #31313b">
+                    <MudTabPanel Text="Properties">
+                        <MudTable Items="@context.Properties"
+                                  CanCancelEdit="@true"
+                                  Context="PropContext"
+                                  @bind-SelectedItem="_selectedProp"
+                                  RowEditPreview="BackupProp"
+                                  RowEditCancel="ResetProp"
+                                  RowEditCommit="SaveProp">
+                            <HeaderContent>
+                                <MudTh>Property</MudTh>
+                                <MudTh>Value</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd DataLabel="Property">@PropContext.Property</MudTd>
+                                <MudTd DataLabel="Value">@PropContext.Value</MudTd>
+                            </RowTemplate>
+                            <RowEditingTemplate>
+                                <MudTd DataLabel="Property">@PropContext.Property</MudTd>
+                                <MudTd DataLabel="Value">
+                                    <MudTextField @bind-Value="@PropContext.Value" Required/>
+                                </MudTd>
+                            </RowEditingTemplate>
+                        </MudTable>
+                    </MudTabPanel>
+                    <MudTabPanel Text="Ingredients">
+                        <MudTable Items="@context.Ingredients"
+                                  Context="IngredientContext">
+                            <HeaderContent>
+                                <MudTh>Category</MudTh>
+                                <MudTh>Id</MudTh>
+                                <MudTh>Amount</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd DataLabel="Category">@IngredientContext.Category</MudTd>
+                                <MudTd DataLabel="Property">@IngredientContext.Id</MudTd>
+                                <MudTd DataLabel="Amount">@IngredientContext.Amount</MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    </MudTabPanel>
+                </MudTabs>
+            </td>
+        </MudTr>
+    </ChildRowContent>
+</MudTable>
 
 @code {
     private CraftingClient _client;
@@ -42,6 +84,9 @@ else
     private ICollection<CraftingDto> _craftings;
     private CraftingDto _selected;
     private CraftingDto _backup;
+
+    private CraftingProperty _selectedProp;
+    private CraftingProperty _backupProp;
 
     protected override async Task OnInitializedAsync()
     {
@@ -86,9 +131,52 @@ else
     {
         var crafting = (CraftingDto) element;
 
+        if (crafting is null) return;
+
         crafting.Id = _backup.Id;
         crafting.AutoIncrementedId = _backup.AutoIncrementedId;
         crafting.Name = _backup.Name;
+    }
+
+    private void BackupProp(object element)
+    {
+        var prop = (CraftingProperty) element;
+
+        _backupProp = new CraftingProperty
+        {
+            Property = prop.Property,
+            Value = prop.Value
+        };
+    }
+
+    private async void SaveProp(object element)
+    {
+        var prop = (CraftingProperty) element;
+
+        try
+        {
+            await _client.UpdateCraftingPropertyAsync(new UpdateCraftingPropertyCommand
+            {
+                CraftingId = prop.CraftingId,
+                Property = prop.Property,
+                Value = prop.Value
+            });
+
+            _snackbar.Add("Свойство изготавливаемого предмета успешно обновлено");
+        }
+        catch (Exception e)
+        {
+            ResetProp(element);
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void ResetProp(object element)
+    {
+        var prop = (CraftingProperty) element;
+
+        prop.Property = _backupProp.Property;
+        prop.Value = _backupProp.Value;
     }
 
 }

@@ -27,6 +27,7 @@ namespace Izumi.Services.Game.Gathering.Queries
         public async Task<GatheringDto> Handle(GetGatheringQuery request, CancellationToken ct)
         {
             var entity = await _db.Gatherings
+                .Include(x => x.Properties)
                 .SingleOrDefaultAsync(x => x.Id == request.Id);
 
             if (entity is null)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Izumi.Data.Entities.Resource.Ingredients;
 using Izumi.Data.Entities.Resource.Properties;
 using Izumi.Data.Util;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ namespace Izumi.Data.Entities.Resource
         public long AutoIncrementedId { get; set; }
         public string Name { get; set; }
         public List<AlcoholProperty> Properties { get; set; }
+        public List<AlcoholIngredient> Ingredients { get; set; }
     }
 
     public class AlcoholConfiguration : IEntityTypeConfiguration<Alcohol>

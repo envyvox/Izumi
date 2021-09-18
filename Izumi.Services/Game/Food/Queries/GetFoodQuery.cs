@@ -27,6 +27,7 @@ namespace Izumi.Services.Game.Food.Queries
         public async Task<FoodDto> Handle(GetFoodQuery request, CancellationToken ct)
         {
             var entity = await _db.Foods
+                .Include(x => x.Ingredients)
                 .SingleOrDefaultAsync(x => x.Id == request.Id);
 
             if (entity is null)

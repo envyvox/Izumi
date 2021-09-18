@@ -2,44 +2,35 @@
 @inject HttpClient _http;
 @inject ISnackbar _snackbar;
 
-@if (_seafoods is null)
-{
-    <p>
-        <em>Loading...</em>
-    </p>
-}
-else
-{
-    <MudTable Items="_seafoods"
-              CanCancelEdit="@true"
-              @bind-SelectedItem="_selected"
-              RowEditPreview="Backup"
-              RowEditCancel="Reset"
-              RowEditCommit="Save">
-        <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>IncId</MudTh>
-            <MudTh>Name</MudTh>
-            <MudTh>Price</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Price">@context.Price</MudTd>
-        </RowTemplate>
-        <RowEditingTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
-            <MudTd DataLabel="Name">
-                <MudTextField @bind-Value="@context.Name" Required/>
-            </MudTd>
-            <MudTd DataLabel="Price">
-                <MudTextField @bind-Value="@context.Price" Required/>
-            </MudTd>
-        </RowEditingTemplate>
-    </MudTable>
-}
+<MudTable Items="_seafoods"
+          CanCancelEdit="@true"
+          @bind-SelectedItem="_selected"
+          RowEditPreview="Backup"
+          RowEditCancel="Reset"
+          RowEditCommit="Save">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Price</MudTh>
+        <MudTh>IncId</MudTh>
+        <MudTh>Id</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Price">@context.Price</MudTd>
+        <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Name">
+            <MudTextField @bind-Value="@context.Name" Required/>
+        </MudTd>
+        <MudTd DataLabel="Price">
+            <MudTextField @bind-Value="@context.Price" Required/>
+        </MudTd>
+        <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+    </RowEditingTemplate>
+</MudTable>
 
 @code {
     private SeafoodClient _client;

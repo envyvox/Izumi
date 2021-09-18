@@ -27,6 +27,8 @@ namespace Izumi.Services.Game.Crafting.Queries
         public async Task<List<CraftingDto>> Handle(GetCraftingsQuery request, CancellationToken ct)
         {
             var entities = await _db.Craftings
+                .Include(x => x.Ingredients)
+                .Include(x => x.Properties)
                 .ToListAsync();
 
             return _mapper.Map<List<CraftingDto>>(entities);

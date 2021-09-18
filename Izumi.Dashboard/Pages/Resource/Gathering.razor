@@ -2,54 +2,77 @@
 @inject HttpClient _http;
 @inject ISnackbar _snackbar;
 
-@if (_gatherings is null)
-{
-    <p>
-        <em>Loading...</em>
-    </p>
-}
-else
-{
-    <MudTable Items="_gatherings"
-              CanCancelEdit="@true"
-              @bind-SelectedItem="_selected"
-              RowEditPreview="Backup"
-              RowEditCancel="Reset"
-              RowEditCommit="Save">
-        <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>IncId</MudTh>
-            <MudTh>Name</MudTh>
-            <MudTh>Location</MudTh>
-            <MudTh>Price</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Location">@context.Location</MudTd>
-            <MudTd DataLabel="Price">@context.Price</MudTd>
-        </RowTemplate>
-        <RowEditingTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
-            <MudTd DataLabel="Name">
-                <MudTextField @bind-Value="@context.Name" Required/>
-            </MudTd>
-            <MudTd DataLabel="Location">
-                <MudSelect @bind-Value="@context.Location">
-                    @foreach (LocationType location in Enum.GetValues(typeof(LocationType)))
-                    {
-                        <MudSelectItem Value="@location">@location</MudSelectItem>
-                    }
-                </MudSelect>
-            </MudTd>
-            <MudTd DataLabel="Price">
-                <MudTextField @bind-Value="@context.Price" Required/>
-            </MudTd>
-        </RowEditingTemplate>
-    </MudTable>
-}
+<MudTable Items="_gatherings"
+          CanCancelEdit="@true"
+          @bind-SelectedItem="_selected"
+          RowEditPreview="Backup"
+          RowEditCancel="Reset"
+          RowEditCommit="Save">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Location</MudTh>
+        <MudTh>Price</MudTh>
+        <MudTh>IncId</MudTh>
+        <MudTh>Id</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Location">@context.Location</MudTd>
+        <MudTd DataLabel="Price">@context.Price</MudTd>
+        <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Name">
+            <MudTextField @bind-Value="@context.Name" Required/>
+        </MudTd>
+        <MudTd DataLabel="Location">
+            <MudSelect @bind-Value="@context.Location">
+                @foreach (LocationType location in Enum.GetValues(typeof(LocationType)))
+                {
+                    <MudSelectItem Value="@location">@location</MudSelectItem>
+                }
+            </MudSelect>
+        </MudTd>
+        <MudTd DataLabel="Price">
+            <MudTextField @bind-Value="@context.Price" Required/>
+        </MudTd>
+        <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+    </RowEditingTemplate>
+    <ChildRowContent>
+        <MudTr>
+            <td colspan="12">
+                <MudExpansionPanel Text="Properties"
+                                   Elevation="0"
+                                   Style="background-color: #31313b">
+                    <MudTable Items="@context.Properties"
+                              CanCancelEdit="@true"
+                              Context="PropContext"
+                              @bind-SelectedItem="_selectedProp"
+                              RowEditPreview="BackupProp"
+                              RowEditCancel="ResetProp"
+                              RowEditCommit="SaveProp">
+                        <HeaderContent>
+                            <MudTh>Property</MudTh>
+                            <MudTh>Value</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Property">@PropContext.Property</MudTd>
+                            <MudTd DataLabel="Value">@PropContext.Value</MudTd>
+                        </RowTemplate>
+                        <RowEditingTemplate>
+                            <MudTd DataLabel="Property">@PropContext.Property</MudTd>
+                            <MudTd DataLabel="Value">
+                                <MudTextField @bind-Value="@PropContext.Value" Required/>
+                            </MudTd>
+                        </RowEditingTemplate>
+                    </MudTable>
+                </MudExpansionPanel>
+            </td>
+        </MudTr>
+    </ChildRowContent>
+</MudTable>
 
 @code {
     private GatheringClient _client;
@@ -57,6 +80,9 @@ else
     private ICollection<GatheringDto> _gatherings;
     private GatheringDto _selected;
     private GatheringDto _backup;
+
+    private GatheringProperty _selectedProp;
+    private GatheringProperty _backupProp;
 
     protected override async Task OnInitializedAsync()
     {
@@ -105,11 +131,54 @@ else
     {
         var gathering = (GatheringDto) element;
 
+        if (gathering is null) return;
+
         gathering.Id = _backup.Id;
         gathering.AutoIncrementedId = _backup.AutoIncrementedId;
         gathering.Name = _backup.Name;
         gathering.Location = _backup.Location;
         gathering.Price = _backup.Price;
+    }
+
+    private void BackupProp(object element)
+    {
+        var prop = (GatheringProperty) element;
+
+        _backupProp = new GatheringProperty
+        {
+            Property = prop.Property,
+            Value = prop.Value
+        };
+    }
+
+    private async void SaveProp(object element)
+    {
+        var prop = (GatheringProperty) element;
+
+        try
+        {
+            await _client.UpdateGatheringPropertyAsync(new UpdateGatheringPropertyCommand
+            {
+                GatheringId = prop.GatheringId,
+                Property = prop.Property,
+                Value = prop.Value
+            });
+
+            _snackbar.Add("Свойство собирательского ресурса успешно обновлено");
+        }
+        catch (Exception e)
+        {
+            ResetProp(element);
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void ResetProp(object element)
+    {
+        var prop = (GatheringProperty) element;
+
+        prop.Property = _backupProp.Property;
+        prop.Value = _backupProp.Value;
     }
 
 }

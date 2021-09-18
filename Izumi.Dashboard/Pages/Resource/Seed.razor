@@ -2,71 +2,62 @@
 @inject HttpClient _http;
 @inject ISnackbar _snackbar;
 
-@if (_seeds is null)
-{
-    <p>
-        <em>Loading...</em>
-    </p>
-}
-else
-{
-    <MudTable Items="_seeds"
-              CanCancelEdit="@true"
-              @bind-SelectedItem="_selected"
-              RowEditPreview="Backup"
-              RowEditCancel="Reset"
-              RowEditCommit="Save">
-        <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>IncId</MudTh>
-            <MudTh>Name</MudTh>
-            <MudTh>Season</MudTh>
-            <MudTh>GrowthDays</MudTh>
-            <MudTh>ReGrowthDays</MudTh>
-            <MudTh>IsMultiply</MudTh>
-            <MudTh>Price</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Season">@context.Season</MudTd>
-            <MudTd DataLabel="GrowthDays">@context.GrowthDays</MudTd>
-            <MudTd DataLabel="ReGrowthDays">@context.ReGrowthDays</MudTd>
-            <MudTd DataLabel="IsMultiply">
-                <MudCheckBox ReadOnly="@true" @bind-Checked="@context.IsMultiply"/>
-            </MudTd>
-            <MudTd DataLabel="Price">@context.Price</MudTd>
-        </RowTemplate>
-        <RowEditingTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
-            <MudTd DataLabel="Name">
-                <MudTextField @bind-Value="@context.Name" Required/>
-            </MudTd>
-            <MudTd DataLabel="Season">
-                <MudSelect @bind-Value="@context.Season">
-                    @foreach (SeasonType season in Enum.GetValues(typeof(SeasonType)))
-                    {
-                        <MudSelectItem Value="@season">@season</MudSelectItem>
-                    }
-                </MudSelect>
-            </MudTd>
-            <MudTd DataLabel="GrowthDays">
-                <MudTextField @bind-Value="@context.GrowthDays" Required/>
-            </MudTd>
-            <MudTd DataLabel="ReGrowthDays">
-                <MudTextField @bind-Value="@context.ReGrowthDays" Required/>
-            </MudTd>
-            <MudTd DataLabel="IsMultiply">
-                <MudCheckBox @bind-Checked="@context.IsMultiply"/>
-            </MudTd>
-            <MudTd DataLabel="Price">
-                <MudTextField @bind-Value="@context.Price" Required/>
-            </MudTd>
-        </RowEditingTemplate>
-    </MudTable>
-}
+<MudTable Items="_seeds"
+          CanCancelEdit="@true"
+          @bind-SelectedItem="_selected"
+          RowEditPreview="Backup"
+          RowEditCancel="Reset"
+          RowEditCommit="Save">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Season</MudTh>
+        <MudTh>GrowthDays</MudTh>
+        <MudTh>ReGrowthDays</MudTh>
+        <MudTh>IsMultiply</MudTh>
+        <MudTh>Price</MudTh>
+        <MudTh>IncId</MudTh>
+        <MudTh>Id</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Season">@context.Season</MudTd>
+        <MudTd DataLabel="GrowthDays">@context.GrowthDays</MudTd>
+        <MudTd DataLabel="ReGrowthDays">@context.ReGrowthDays</MudTd>
+        <MudTd DataLabel="IsMultiply">
+            <MudCheckBox ReadOnly="@true" @bind-Checked="@context.IsMultiply"/>
+        </MudTd>
+        <MudTd DataLabel="Price">@context.Price</MudTd>
+        <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Name">
+            <MudTextField @bind-Value="@context.Name" Required/>
+        </MudTd>
+        <MudTd DataLabel="Season">
+            <MudSelect @bind-Value="@context.Season">
+                @foreach (SeasonType season in Enum.GetValues(typeof(SeasonType)))
+                {
+                    <MudSelectItem Value="@season">@season</MudSelectItem>
+                }
+            </MudSelect>
+        </MudTd>
+        <MudTd DataLabel="GrowthDays">
+            <MudTextField @bind-Value="@context.GrowthDays" Required/>
+        </MudTd>
+        <MudTd DataLabel="ReGrowthDays">
+            <MudTextField @bind-Value="@context.ReGrowthDays" Required/>
+        </MudTd>
+        <MudTd DataLabel="IsMultiply">
+            <MudCheckBox @bind-Checked="@context.IsMultiply"/>
+        </MudTd>
+        <MudTd DataLabel="Price">
+            <MudTextField @bind-Value="@context.Price" Required/>
+        </MudTd>
+        <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+    </RowEditingTemplate>
+</MudTable>
 
 @code {
     private SeedClient _client;

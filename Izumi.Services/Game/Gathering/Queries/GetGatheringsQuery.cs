@@ -27,6 +27,7 @@ namespace Izumi.Services.Game.Gathering.Queries
         public async Task<List<GatheringDto>> Handle(GetGatheringsQuery request, CancellationToken ct)
         {
             var entities = await _db.Gatherings
+                .Include(x => x.Properties)
                 .ToListAsync();
 
             return _mapper.Map<List<GatheringDto>>(entities);
