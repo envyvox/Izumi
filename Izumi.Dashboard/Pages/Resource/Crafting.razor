@@ -9,16 +9,23 @@
           RowEditCancel="Reset"
           RowEditCommit="Save">
     <HeaderContent>
+        <MudTh>Emote</MudTh>
         <MudTh>Name</MudTh>
         <MudTh>IncId</MudTh>
         <MudTh>Id</MudTh>
     </HeaderContent>
     <RowTemplate>
+        <MudTd>
+            <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Name)" alt="icon" width="30" height="30"/>
+        </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
         <MudTd DataLabel="Id">@context.Id</MudTd>
     </RowTemplate>
     <RowEditingTemplate>
+        <MudTd>
+            <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Name)" alt="icon" width="50" height="50"/>
+        </MudTd>
         <MudTd DataLabel="Name">
             <MudTextField @bind-Value="@context.Name" Required/>
         </MudTd>
@@ -79,19 +86,22 @@
 </MudTable>
 
 @code {
-    private CraftingClient _client;
-
+    private CraftingClient _craftingClient;
     private ICollection<CraftingDto> _craftings;
     private CraftingDto _selected;
     private CraftingDto _backup;
-
     private CraftingProperty _selectedProp;
     private CraftingProperty _backupProp;
 
+    private EmoteClient _emoteClient;
+    private IDictionary<string, EmoteDto> _emotes;
+
     protected override async Task OnInitializedAsync()
     {
-        _client = new CraftingClient(_http);
-        _craftings = await _client.GetCraftingsAsync();
+        _craftingClient = new CraftingClient(_http);
+        _craftings = await _craftingClient.GetCraftingsAsync();
+        _emoteClient = new EmoteClient(_http);
+        _emotes = await _emoteClient.GetEmotesAsync();
     }
 
     private void Backup(object element)
@@ -112,7 +122,7 @@
 
         try
         {
-            await _client.UpdateCraftingAsync(new UpdateCraftingCommand
+            await _craftingClient.UpdateCraftingAsync(new UpdateCraftingCommand
             {
                 Id = crafting.Id,
                 Name = crafting.Name
@@ -155,7 +165,7 @@
 
         try
         {
-            await _client.UpdateCraftingPropertyAsync(new UpdateCraftingPropertyCommand
+            await _craftingClient.UpdateCraftingPropertyAsync(new UpdateCraftingPropertyCommand
             {
                 CraftingId = prop.CraftingId,
                 Property = prop.Property,
@@ -174,6 +184,8 @@
     private void ResetProp(object element)
     {
         var prop = (CraftingProperty) element;
+
+        if (prop is null) return;
 
         prop.Property = _backupProp.Property;
         prop.Value = _backupProp.Value;

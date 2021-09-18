@@ -9,16 +9,23 @@
           RowEditCancel="Reset"
           RowEditCommit="Save">
     <HeaderContent>
+        <MudTh>Emote</MudTh>
         <MudTh>Name</MudTh>
         <MudTh>IncId</MudTh>
         <MudTh>Id</MudTh>
     </HeaderContent>
     <RowTemplate>
+        <MudTd>
+            <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Name)" alt="icon" width="30" height="30"/>
+        </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
         <MudTd DataLabel="Id">@context.Id</MudTd>
     </RowTemplate>
     <RowEditingTemplate>
+        <MudTd>
+            <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Name)" alt="icon" width="50" height="50"/>
+        </MudTd>
         <MudTd DataLabel="Name">
             <MudTextField @bind-Value="@context.Name" Required/>
         </MudTd>
@@ -79,19 +86,22 @@
 </MudTable>
 
 @code {
-    private AlcoholClient _client;
-
+    private AlcoholClient _alcoholClient;
     private ICollection<AlcoholDto> _alcohols;
     private AlcoholDto _selected;
     private AlcoholDto _backup;
-
     private AlcoholProperty _selectedProp;
     private AlcoholProperty _backupProp;
 
+    private EmoteClient _emoteClient;
+    private IDictionary<string, EmoteDto> _emotes;
+
     protected override async Task OnInitializedAsync()
     {
-        _client = new AlcoholClient(_http);
-        _alcohols = await _client.GetAlcoholsAsync();
+        _alcoholClient = new AlcoholClient(_http);
+        _alcohols = await _alcoholClient.GetAlcoholsAsync();
+        _emoteClient = new EmoteClient(_http);
+        _emotes = await _emoteClient.GetEmotesAsync();
     }
 
     private void Backup(object element)
@@ -112,7 +122,7 @@
 
         try
         {
-            await _client.UpdateAlcoholAsync(new UpdateAlcoholCommand
+            await _alcoholClient.UpdateAlcoholAsync(new UpdateAlcoholCommand
             {
                 Id = alcohol.Id,
                 Name = alcohol.Name
@@ -155,7 +165,7 @@
 
         try
         {
-            await _client.UpdateAlcoholPropertyAsync(new UpdateAlcoholPropertyCommand
+            await _alcoholClient.UpdateAlcoholPropertyAsync(new UpdateAlcoholPropertyCommand
             {
                 AlcoholId = prop.AlcoholId,
                 Property = prop.Property,
@@ -174,6 +184,8 @@
     private void ResetProp(object element)
     {
         var prop = (AlcoholProperty) element;
+
+        if (prop is null) return;
 
         prop.Property = _backupProp.Property;
         prop.Value = _backupProp.Value;

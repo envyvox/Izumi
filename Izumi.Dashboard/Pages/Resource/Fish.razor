@@ -9,6 +9,7 @@
           RowEditCancel="Reset"
           RowEditCommit="Save">
     <HeaderContent>
+        <MudTh>Emote</MudTh>
         <MudTh>Name</MudTh>
         <MudTh>Rarity</MudTh>
         <MudTh>CatchTimesDay</MudTh>
@@ -19,6 +20,9 @@
         <MudTh>Id</MudTh>
     </HeaderContent>
     <RowTemplate>
+        <MudTd>
+            <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Name)" alt="icon" width="30" height="30"/>
+        </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Rarity">@context.Rarity</MudTd>
         <MudTd DataLabel="CatchTimesDay">@context.CatchTimesDay</MudTd>
@@ -29,6 +33,9 @@
         <MudTd DataLabel="Id">@context.Id</MudTd>
     </RowTemplate>
     <RowEditingTemplate>
+        <MudTd>
+            <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Name)" alt="icon" width="50" height="50"/>
+        </MudTd>
         <MudTd DataLabel="Name">
             <MudTextField @bind-Value="@context.Name" Required/>
         </MudTd>
@@ -76,16 +83,20 @@
 </MudTable>
 
 @code {
-    private FishClient _client;
-
+    private FishClient _fishClient;
     private ICollection<FishDto> _fishes;
     private FishDto _selected;
     private FishDto _backup;
 
+    private EmoteClient _emoteClient;
+    private IDictionary<string, EmoteDto> _emotes;
+
     protected override async Task OnInitializedAsync()
     {
-        _client = new FishClient(_http);
-        _fishes = await _client.GetFishesAsync();
+        _fishClient = new FishClient(_http);
+        _fishes = await _fishClient.GetFishesAsync();
+        _emoteClient = new EmoteClient(_http);
+        _emotes = await _emoteClient.GetEmotesAsync();
     }
 
     private void Backup(object element)
@@ -111,7 +122,7 @@
 
         try
         {
-            await _client.UpdateFishAsync(new UpdateFishCommand
+            await _fishClient.UpdateFishAsync(new UpdateFishCommand
             {
                 Id = fish.Id,
                 Name = fish.Name,
@@ -134,6 +145,8 @@
     private void Reset(object element)
     {
         var fish = (FishDto) element;
+
+        if (fish is null) return;
 
         fish.Id = _backup.Id;
         fish.AutoIncrementedId = _backup.AutoIncrementedId;

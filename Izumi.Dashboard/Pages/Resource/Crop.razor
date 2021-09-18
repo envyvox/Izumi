@@ -9,18 +9,25 @@
           RowEditCancel="Reset"
           RowEditCommit="Save">
     <HeaderContent>
+        <MudTh>Emote</MudTh>
         <MudTh>Name</MudTh>
         <MudTh>Price</MudTh>
         <MudTh>IncId</MudTh>
         <MudTh>Id</MudTh>
     </HeaderContent>
     <RowTemplate>
+        <MudTd>
+            <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Name)" alt="icon" width="30" height="30"/>
+        </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Price">@context.Price</MudTd>
         <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
         <MudTd DataLabel="Id">@context.Id</MudTd>
     </RowTemplate>
     <RowEditingTemplate>
+        <MudTd>
+            <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Name)" alt="icon" width="50" height="50"/>
+        </MudTd>
         <MudTd DataLabel="Name">
             <MudTextField @bind-Value="@context.Name" Required/>
         </MudTd>
@@ -33,16 +40,20 @@
 </MudTable>
 
 @code {
-    private CropClient _client;
-
+    private CropClient _cropClient;
     private ICollection<CropDto> _crops;
     private CropDto _selected;
     private CropDto _backup;
 
+    private EmoteClient _emoteClient;
+    private IDictionary<string, EmoteDto> _emotes;
+
     protected override async Task OnInitializedAsync()
     {
-        _client = new CropClient(_http);
-        _crops = await _client.GetCropsAsync();
+        _cropClient = new CropClient(_http);
+        _crops = await _cropClient.GetCropsAsync();
+        _emoteClient = new EmoteClient(_http);
+        _emotes = await _emoteClient.GetEmotesAsync();
     }
 
     private void Backup(object element)
@@ -64,7 +75,7 @@
 
         try
         {
-            await _client.UpdateCropAsync(new UpdateCropCommand
+            await _cropClient.UpdateCropAsync(new UpdateCropCommand
             {
                 Id = crop.Id,
                 Name = crop.Name,
@@ -83,6 +94,8 @@
     private void Reset(object element)
     {
         var crop = (CropDto) element;
+
+        if (crop is null) return;
 
         crop.Id = _backup.Id;
         crop.AutoIncrementedId = _backup.AutoIncrementedId;

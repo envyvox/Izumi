@@ -9,6 +9,7 @@
           RowEditCancel="Reset"
           RowEditCommit="Save">
     <HeaderContent>
+        <MudTh>Emote</MudTh>
         <MudTh>Name</MudTh>
         <MudTh>Season</MudTh>
         <MudTh>GrowthDays</MudTh>
@@ -19,6 +20,9 @@
         <MudTh>Id</MudTh>
     </HeaderContent>
     <RowTemplate>
+        <MudTd>
+            <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Name)" alt="icon" width="30" height="30"/>
+        </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Season">@context.Season</MudTd>
         <MudTd DataLabel="GrowthDays">@context.GrowthDays</MudTd>
@@ -31,6 +35,9 @@
         <MudTd DataLabel="Id">@context.Id</MudTd>
     </RowTemplate>
     <RowEditingTemplate>
+        <MudTd>
+            <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Name)" alt="icon" width="50" height="50"/>
+        </MudTd>
         <MudTd DataLabel="Name">
             <MudTextField @bind-Value="@context.Name" Required/>
         </MudTd>
@@ -60,16 +67,20 @@
 </MudTable>
 
 @code {
-    private SeedClient _client;
-
+    private SeedClient _seedClient;
     private ICollection<SeedDto> _seeds;
     private SeedDto _selected;
     private SeedDto _backup;
 
+    private EmoteClient _emoteClient;
+    private IDictionary<string, EmoteDto> _emotes;
+
     protected override async Task OnInitializedAsync()
     {
-        _client = new SeedClient(_http);
-        _seeds = await _client.GetSeedsAsync();
+        _seedClient = new SeedClient(_http);
+        _seeds = await _seedClient.GetSeedsAsync();
+        _emoteClient = new EmoteClient(_http);
+        _emotes = await _emoteClient.GetEmotesAsync();
     }
 
     private void Backup(object element)
@@ -95,7 +106,7 @@
 
         try
         {
-            await _client.UpdateSeedAsync(new UpdateSeedCommand
+            await _seedClient.UpdateSeedAsync(new UpdateSeedCommand
             {
                 Id = seed.Id,
                 Name = seed.Name,
@@ -118,6 +129,8 @@
     private void Reset(object element)
     {
         var seed = (SeedDto) element;
+
+        if (seed is null) return;
 
         seed.Id = _backup.Id;
         seed.AutoIncrementedId = _backup.AutoIncrementedId;

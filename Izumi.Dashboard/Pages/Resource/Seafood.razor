@@ -9,18 +9,25 @@
           RowEditCancel="Reset"
           RowEditCommit="Save">
     <HeaderContent>
+        <MudTh>Emote</MudTh>
         <MudTh>Name</MudTh>
         <MudTh>Price</MudTh>
         <MudTh>IncId</MudTh>
         <MudTh>Id</MudTh>
     </HeaderContent>
     <RowTemplate>
+        <MudTd>
+            <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Name)" alt="icon" width="30" height="30"/>
+        </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Price">@context.Price</MudTd>
         <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
         <MudTd DataLabel="Id">@context.Id</MudTd>
     </RowTemplate>
     <RowEditingTemplate>
+        <MudTd>
+            <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Name)" alt="icon" width="50" height="50"/>
+        </MudTd>
         <MudTd DataLabel="Name">
             <MudTextField @bind-Value="@context.Name" Required/>
         </MudTd>
@@ -33,16 +40,20 @@
 </MudTable>
 
 @code {
-    private SeafoodClient _client;
-
+    private SeafoodClient _seafoodClient;
     private ICollection<SeafoodDto> _seafoods;
     private SeafoodDto _selected;
     private SeafoodDto _backup;
 
+    private EmoteClient _emoteClient;
+    private IDictionary<string, EmoteDto> _emotes;
+
     protected override async Task OnInitializedAsync()
     {
-        _client = new SeafoodClient(_http);
-        _seafoods = await _client.GetSeafoodsAsync();
+        _seafoodClient = new SeafoodClient(_http);
+        _seafoods = await _seafoodClient.GetSeafoodsAsync();
+        _emoteClient = new EmoteClient(_http);
+        _emotes = await _emoteClient.GetEmotesAsync();
     }
 
     private void Backup(object element)
@@ -64,7 +75,7 @@
 
         try
         {
-            await _client.UpdateSeafoodAsync(new UpdateSeafoodCommand
+            await _seafoodClient.UpdateSeafoodAsync(new UpdateSeafoodCommand
             {
                 Id = seafood.Id,
                 Name = seafood.Name,
@@ -83,6 +94,8 @@
     private void Reset(object element)
     {
         var seafood = (SeafoodDto) element;
+
+        if (seafood is null) return;
 
         seafood.Id = _backup.Id;
         seafood.AutoIncrementedId = _backup.AutoIncrementedId;

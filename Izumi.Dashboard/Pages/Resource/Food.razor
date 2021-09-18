@@ -1,8 +1,8 @@
-﻿@page "/resource/drink"
+﻿@page "/resource/food"
 @inject HttpClient _http;
 @inject ISnackbar _snackbar;
 
-<MudTable Items="_drinks"
+<MudTable Items="_foods"
           CanCancelEdit="@true"
           @bind-SelectedItem="_selected"
           RowEditPreview="Backup"
@@ -11,6 +11,9 @@
     <HeaderContent>
         <MudTh>Emote</MudTh>
         <MudTh>Name</MudTh>
+        <MudTh>Category</MudTh>
+        <MudTh>RecipeSellable</MudTh>
+        <MudTh>IsSpecial</MudTh>
         <MudTh>IncId</MudTh>
         <MudTh>Id</MudTh>
     </HeaderContent>
@@ -19,6 +22,13 @@
             <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Name)" alt="icon" width="30" height="30"/>
         </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Category">@context.Category</MudTd>
+        <MudTd DataLabel="RecipeSellable">
+            <MudCheckBox ReadOnly="@true" @bind-Checked="@context.RecipeSellable"/>
+        </MudTd>
+        <MudTd DataLabel="IsSpecial">
+            <MudCheckBox ReadOnly="@true" @bind-Checked="@context.IsSpecial"/>
+        </MudTd>
         <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
         <MudTd DataLabel="Id">@context.Id</MudTd>
     </RowTemplate>
@@ -28,6 +38,20 @@
         </MudTd>
         <MudTd DataLabel="Name">
             <MudTextField @bind-Value="@context.Name" Required/>
+        </MudTd>
+        <MudTd DataLabel="Category">
+            <MudSelect @bind-Value="@context.Category">
+                @foreach (FoodCategoryType category in Enum.GetValues(typeof(FoodCategoryType)))
+                {
+                    <MudSelectItem Value="@category">@category</MudSelectItem>
+                }
+            </MudSelect>
+        </MudTd>
+        <MudTd DataLabel="RecipeSellable">
+            <MudCheckBox @bind-Checked="@context.RecipeSellable"/>
+        </MudTd>
+        <MudTd DataLabel="IsSpecial">
+            <MudCheckBox @bind-Checked="@context.IsSpecial"/>
         </MudTd>
         <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
         <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -58,47 +82,53 @@
 </MudTable>
 
 @code {
-    private DrinkClient _drinkClient;
-    private ICollection<DrinkDto> _drinks;
-    private DrinkDto _selected;
-    private DrinkDto _backup;
+    private FoodClient _foodClient;
+    private ICollection<FoodDto> _foods;
+    private FoodDto _selected;
+    private FoodDto _backup;
 
     private EmoteClient _emoteClient;
     private IDictionary<string, EmoteDto> _emotes;
 
     protected override async Task OnInitializedAsync()
     {
-        _drinkClient = new DrinkClient(_http);
-        _drinks = await _drinkClient.GetDrinksAsync();
+        _foodClient = new FoodClient(_http);
+        _foods = await _foodClient.GetFoodsAsync();
         _emoteClient = new EmoteClient(_http);
         _emotes = await _emoteClient.GetEmotesAsync();
     }
 
     private void Backup(object element)
     {
-        var drink = (DrinkDto) element;
+        var food = (FoodDto) element;
 
-        _backup = new DrinkDto
+        _backup = new FoodDto
         {
-            Id = drink.Id,
-            AutoIncrementedId = drink.AutoIncrementedId,
-            Name = drink.Name
+            Id = food.Id,
+            AutoIncrementedId = food.AutoIncrementedId,
+            Name = food.Name,
+            Category = food.Category,
+            RecipeSellable = food.RecipeSellable,
+            IsSpecial = food.IsSpecial
         };
     }
 
     private async void Save(object element)
     {
-        var drink = (DrinkDto) element;
+        var food = (FoodDto) element;
 
         try
         {
-            await _drinkClient.UpdateDrinkAsync(new UpdateDrinkCommand
+            await _foodClient.UpdateFoodAsync(new UpdateFoodCommand
             {
-                Id = drink.Id,
-                Name = drink.Name
+                Id = food.Id,
+                Name = food.Name,
+                Category = food.Category,
+                RecipeSellable = food.RecipeSellable,
+                IsSpecial = food.IsSpecial
             });
 
-            _snackbar.Add("Напиток успешно обновлен");
+            _snackbar.Add("Блюдо успешно обновлено");
         }
         catch (Exception e)
         {
@@ -109,13 +139,16 @@
 
     private void Reset(object element)
     {
-        var drink = (DrinkDto) element;
+        var food = (FoodDto) element;
 
-        if (drink is null) return;
+        if (food is null) return;
 
-        drink.Id = _backup.Id;
-        drink.AutoIncrementedId = _backup.AutoIncrementedId;
-        drink.Name = _backup.Name;
+        food.Id = _backup.Id;
+        food.AutoIncrementedId = _backup.AutoIncrementedId;
+        food.Name = _backup.Name;
+        food.Category = _backup.Category;
+        food.RecipeSellable = _backup.RecipeSellable;
+        food.IsSpecial = _backup.IsSpecial;
     }
 
 }

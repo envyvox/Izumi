@@ -9,6 +9,7 @@
           RowEditCancel="Reset"
           RowEditCommit="Save">
     <HeaderContent>
+        <MudTh>Emote</MudTh>
         <MudTh>Name</MudTh>
         <MudTh>Location</MudTh>
         <MudTh>Price</MudTh>
@@ -16,6 +17,9 @@
         <MudTh>Id</MudTh>
     </HeaderContent>
     <RowTemplate>
+        <MudTd>
+            <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Name)" alt="icon" width="30" height="30"/>
+        </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Location">@context.Location</MudTd>
         <MudTd DataLabel="Price">@context.Price</MudTd>
@@ -23,6 +27,9 @@
         <MudTd DataLabel="Id">@context.Id</MudTd>
     </RowTemplate>
     <RowEditingTemplate>
+        <MudTd>
+            <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Name)" alt="icon" width="50" height="50"/>
+        </MudTd>
         <MudTd DataLabel="Name">
             <MudTextField @bind-Value="@context.Name" Required/>
         </MudTd>
@@ -75,19 +82,22 @@
 </MudTable>
 
 @code {
-    private GatheringClient _client;
-
+    private GatheringClient _gatheringClient;
     private ICollection<GatheringDto> _gatherings;
     private GatheringDto _selected;
     private GatheringDto _backup;
-
     private GatheringProperty _selectedProp;
     private GatheringProperty _backupProp;
 
+    private EmoteClient _emoteClient;
+    private IDictionary<string, EmoteDto> _emotes;
+
     protected override async Task OnInitializedAsync()
     {
-        _client = new GatheringClient(_http);
-        _gatherings = await _client.GetGatheringsAsync();
+        _gatheringClient = new GatheringClient(_http);
+        _gatherings = await _gatheringClient.GetGatheringsAsync();
+        _emoteClient = new EmoteClient(_http);
+        _emotes = await _emoteClient.GetEmotesAsync();
     }
 
     private void Backup(object element)
@@ -110,7 +120,7 @@
 
         try
         {
-            await _client.UpdateGatheringAsync(new UpdateGatheringCommand
+            await _gatheringClient.UpdateGatheringAsync(new UpdateGatheringCommand
             {
                 Id = gathering.Id,
                 Name = gathering.Name,
@@ -157,7 +167,7 @@
 
         try
         {
-            await _client.UpdateGatheringPropertyAsync(new UpdateGatheringPropertyCommand
+            await _gatheringClient.UpdateGatheringPropertyAsync(new UpdateGatheringPropertyCommand
             {
                 GatheringId = prop.GatheringId,
                 Property = prop.Property,
@@ -176,6 +186,8 @@
     private void ResetProp(object element)
     {
         var prop = (GatheringProperty) element;
+
+        if (prop is null) return;
 
         prop.Property = _backupProp.Property;
         prop.Value = _backupProp.Value;

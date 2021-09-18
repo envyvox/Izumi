@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Izumi.Services.Discord.Client;
 using Izumi.Services.Discord.Emote.Commands;
 using MediatR;
@@ -31,9 +30,9 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes
                     {
                         await _mediator.Send(new CreateEmoteCommand((long) emote.Id, emote.Name, emote.ToString()));
                     }
-                    catch (Exception e)
+                    catch
                     {
-                        Console.WriteLine(e);
+                        // ignored
                     }
                 }
             }
