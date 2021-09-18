@@ -1,10 +1,8 @@
 using System;
-using System.Linq;
 using Discord.Commands;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Izumi.Data;
-using Izumi.Extensions;
 using Izumi.Framework.Hangfire;
 using Izumi.Services.Discord.Client;
 using Izumi.Services.Discord.Client.Impl;
@@ -106,7 +104,11 @@ namespace Izumi
 
             app.UseRouting();
 
-            app.UseCorsMiddleware();
+            app.UseCors(options => options
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .Build());
 
             app.UseOpenApi();
             app.UseSwaggerUi3();
