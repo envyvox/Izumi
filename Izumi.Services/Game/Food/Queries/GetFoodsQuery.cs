@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -28,6 +29,7 @@ namespace Izumi.Services.Game.Food.Queries
         {
             var entities = await _db.Foods
                 .Include(x => x.Ingredients)
+                .OrderBy(x => x.AutoIncrementedId)
                 .ToListAsync();
 
             return _mapper.Map<List<FoodDto>>(entities);

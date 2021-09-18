@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -27,6 +28,8 @@ namespace Izumi.Services.Game.Seafood.Queries
         public async Task<List<SeafoodDto>> Handle(GetSeafoodsQuery request, CancellationToken ct)
         {
             var entities = await _db.Seafoods
+                .AsQueryable()
+                .OrderBy(x => x.AutoIncrementedId)
                 .ToListAsync();
 
             return _mapper.Map<List<SeafoodDto>>(entities);

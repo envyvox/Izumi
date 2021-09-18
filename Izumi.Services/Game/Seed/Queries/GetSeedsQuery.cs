@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -27,6 +28,8 @@ namespace Izumi.Services.Game.Seed.Queries
         public async Task<List<SeedDto>> Handle(GetSeedsQuery request, CancellationToken ct)
         {
             var entities = await _db.Seeds
+                .AsQueryable()
+                .OrderBy(x => x.AutoIncrementedId)
                 .ToListAsync();
 
             return _mapper.Map<List<SeedDto>>(entities);
