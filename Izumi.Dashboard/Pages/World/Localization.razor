@@ -1,0 +1,117 @@
+﻿@page "/localization"
+@inject HttpClient _http;
+@inject ISnackbar _snackbar;
+
+<MudTable Items="_localizations"
+          GroupBy="_groupDefinition"
+          GroupHeaderStyle="background-color:var(--mud-palette-background-grey)"
+          Height="800px"
+          FixedHeader="true"
+          CanCancelEdit="@true"
+          @bind-SelectedItem="_selected"
+          RowEditPreview="Backup"
+          RowEditCancel="Reset"
+          RowEditCommit="Save">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Single</MudTh>
+        <MudTh>Double</MudTh>
+        <MudTh>Multiply</MudTh>
+    </HeaderContent>
+    <GroupHeaderTemplate>
+        <MudTh colspan="4">@($"{context.GroupName}: {context.Key}")</MudTh>
+    </GroupHeaderTemplate>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Single">@context.Single</MudTd>
+        <MudTd DataLabel="Double">@context.Double</MudTd>
+        <MudTd DataLabel="Multiply">@context.Multiply</MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Single">
+            <MudTextField @bind-Value="@context.Single" Required/>
+        </MudTd>
+        <MudTd DataLabel="Double">
+            <MudTextField @bind-Value="@context.Double" Required/>
+        </MudTd>
+        <MudTd DataLabel="Multiply">
+            <MudTextField @bind-Value="@context.Multiply" Required/>
+        </MudTd>
+    </RowEditingTemplate>
+    <GroupFooterTemplate>
+        <MudTh colspan="4">Записей в категории: @context.Items.Count()</MudTh>
+    </GroupFooterTemplate>
+</MudTable>
+
+@code {
+    private LocalizationClient _localizationClient;
+    private ICollection<LocalizationDto> _localizations;
+    private LocalizationDto _selected;
+    private LocalizationDto _backup;
+
+    private readonly TableGroupDefinition<LocalizationDto> _groupDefinition = new()
+    {
+        GroupName = "Категория",
+        Indentation = false,
+        Expandable = true,
+        IsInitiallyExpanded = false,
+        Selector = e => e.Category
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        _localizationClient = new LocalizationClient(_http);
+        _localizations = await _localizationClient.GetLocalizationsAsync();
+    }
+
+    private void Backup(object element)
+    {
+        var localization = (LocalizationDto) element;
+
+        _backup = new LocalizationDto
+        {
+            Id = localization.Id,
+            Category = localization.Category,
+            Name = localization.Name,
+            Single = localization.Single,
+            Double = localization.Double,
+            Multiply = localization.Multiply
+        };
+    }
+
+    private async void Save(object element)
+    {
+        var localization = (LocalizationDto) element;
+
+        try
+        {
+            await _localizationClient.UpdateLocalizationAsync(new UpdateLocalizationCommand
+            {
+                Id = localization.Id,
+                Single = localization.Single,
+                Double = localization.Double,
+                Multiply = localization.Multiply
+            });
+
+            _snackbar.Add("Локализация успешно обновлена");
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void Reset(object element)
+    {
+        var localization = (LocalizationDto) element;
+
+        localization.Id = _backup.Id;
+        localization.Category = _backup.Category;
+        localization.Name = _backup.Name;
+        localization.Single = _backup.Single;
+        localization.Double = _backup.Double;
+        localization.Multiply = _backup.Multiply;
+    }
+
+}
