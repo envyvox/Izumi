@@ -49,19 +49,19 @@ namespace Izumi.Services.Discord.Commands.Slash.User
                     $"\n{StringExtensions.EmptyChar}")
                 .AddField("Текущее время",
                     "*Время суток влияет на виды рыб, которые можно поймать.*" +
-                    $"\n\n{emotes.GetEmote("Arrow")} Сейчас {timeNow:t}, **{timesDay.Localize()}**")
+                    $"\n\n{emotes.GetEmote("Arrow")} Сейчас {timeNow:t}, {emotes.GetEmote(timesDay.ToString())} **{timesDay.Localize()}**")
                 .AddField("Погода сегодня",
                     "*Ежедневная погода влияет на виды рыб, которые можно поймать, " +
                     "а так же в дождливую погоду не нужно поливать урожай.*" +
-                    $"\n\n{emotes.GetEmote("Arrow")} Сегодня погода будет **{weatherToday.Localize()}**")
+                    $"\n\n{emotes.GetEmote("Arrow")} Сегодня погода будет {emotes.GetEmote(weatherToday.EmoteName())} **{weatherToday.Localize()}**")
                 .AddField("Предсказательница",
                     "*C вами предсказательница, ваш источник прогнозов погоды номер один. А сейчас - прогноз погоды на завтра...*" +
-                    $"\n\n{emotes.GetEmote("Arrow")} Погода обещает быть **{weatherTomorrow.Localize()}**")
+                    $"\n\n{emotes.GetEmote("Arrow")} Погода обещает быть {emotes.GetEmote(weatherTomorrow.EmoteName())} **{weatherTomorrow.Localize()}**")
                 .AddField("Сезон",
                     "*Текущий сезон определяет ассортимент семян в магазине, ведь у каждого урожая есть свой сезон роста. " +
                     "Посаженные на ячейки семена умирают при смене сезона, поэтому будь дальновидным. " +
                     "Так же влияет на виды рыб, которые можно поймать.*" +
-                    $"\n\n{emotes.GetEmote("Arrow")} Сейчас **{currentSeason.Localize().ToLower()}**")
+                    $"\n\n{emotes.GetEmote("Arrow")} Сейчас {emotes.GetEmote(currentSeason.EmoteName())} **{currentSeason.Localize().ToLower()}**")
                 .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.WorldInfo)));
 
             await _mediator.Send(new CheckUserTutorialStepCommand(user.Id, TutorialStepType.CheckWorldInfo));

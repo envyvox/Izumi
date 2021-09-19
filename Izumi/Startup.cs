@@ -15,6 +15,7 @@ using Izumi.Services.Hangfire.BackgroundJobs.CompleteFishing;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteMaking;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteMaking.Impl;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit;
+using Izumi.Services.Hangfire.BackgroundJobs.GenerateWeather;
 using Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -84,6 +85,7 @@ namespace Izumi
             services.AddScoped<ICompleteCraftingItemJob, CompleteCraftingItemJob>();
             services.AddScoped<ICompleteCraftingAlcoholJob, CompleteCraftingAlcoholJob>();
             services.AddScoped<ICompleteCraftingDrinkJob, CompleteCraftingDrinkJob>();
+            services.AddScoped<IGenerateWeatherJob, GenerateWeatherJob>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

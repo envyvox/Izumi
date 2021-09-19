@@ -22,5 +22,7 @@ namespace Izumi.Data.Enums
             SeasonType.Winter => "Зима",
             _ => throw new ArgumentOutOfRangeException(nameof(season), season, null)
         };
+
+        public static string EmoteName(this SeasonType season) => "Season" + season;
     }
 }

@@ -18,5 +18,7 @@ namespace Izumi.Data.Enums
             WeatherType.Rain => "дождливой",
             _ => throw new ArgumentOutOfRangeException(nameof(weather), weather, null)
         };
+
+        public static string EmoteName(this WeatherType weather) => "Weather" + weather;
     }
 }
