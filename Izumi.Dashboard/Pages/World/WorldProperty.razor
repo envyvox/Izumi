@@ -2,36 +2,28 @@
 @inject HttpClient _http;
 @inject ISnackbar _snackbar;
 
-@if (_properties is null)
-{
-    <p>
-        <em>Loading...</em>
-    </p>
-}
-else
-{
-    <MudTable Items="@_properties"
-              CanCancelEdit="@true"
-              @bind-SelectedItem="_selected"
-              RowEditPreview="Backup"
-              RowEditCancel="Reset"
-              RowEditCommit="Save">
-        <HeaderContent>
-            <MudTh>Type</MudTh>
-            <MudTh>Value</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Type">@context.Type.ToString()</MudTd>
-            <MudTd DataLabel="Value">@context.Value</MudTd>
-        </RowTemplate>
-        <RowEditingTemplate>
-            <MudTd DataLabel="Type">@context.Type.ToString()</MudTd>
-            <MudTd DataLabel="Value">
-                <MudTextField @bind-Value="@context.Value" Required Min="1"/>
-            </MudTd>
-        </RowEditingTemplate>
-    </MudTable>
-}
+<MudTable Items="@_properties"
+          CanCancelEdit="@true"
+          @bind-SelectedItem="_selected"
+          RowEditPreview="Backup"
+          RowEditCancel="Reset"
+          RowEditCommit="Save">
+    <HeaderContent>
+        <MudTh>Type</MudTh>
+        <MudTh>Value</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Type">@context.Type.ToString()</MudTd>
+        <MudTd DataLabel="Value">@context.Value</MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Type">@context.Type.ToString()</MudTd>
+        <MudTd DataLabel="Value">
+            <MudTextField @bind-Value="@context.Value" Required Min="1"/>
+        </MudTd>
+    </RowEditingTemplate>
+</MudTable>
+
 
 @code {
     private WorldClient _client;

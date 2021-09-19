@@ -1,0 +1,93 @@
+﻿@page "/transit"
+@inject HttpClient _http;
+@inject ISnackbar _snackbar;
+
+<MudTable Items="@_transits"
+          CanCancelEdit="@true"
+          @bind-SelectedItem="_selected"
+          RowEditPreview="Backup"
+          RowEditCancel="Reset"
+          RowEditCommit="Save">
+    <HeaderContent>
+        <MudTh>Departure</MudTh>
+        <MudTh>Destination</MudTh>
+        <MudTh>Duration</MudTh>
+        <MudTh>Price</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Departure">@context.Departure</MudTd>
+        <MudTd DataLabel="Destination">@context.Destination</MudTd>
+        <MudTd DataLabel="Duration">@context.Duration</MudTd>
+        <MudTd DataLabel="Price">@context.Price</MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Departure">@context.Departure</MudTd>
+        <MudTd DataLabel="Destination">@context.Destination</MudTd>
+        <MudTd DataLabel="Duration">
+            <MudTextField @bind-Value="@context.Duration" Required/>
+        </MudTd>
+        <MudTd DataLabel="Price">
+            <MudTextField @bind-Value="@context.Price" Required/>
+        </MudTd>
+    </RowEditingTemplate>
+</MudTable>
+
+@code {
+    private TransitClient _transitClient;
+    private ICollection<TransitDto> _transits;
+    private TransitDto _selected;
+    private TransitDto _backup;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _transitClient = new TransitClient(_http);
+        _transits = await _transitClient.GetTransitsAsync();
+    }
+
+    private void Backup(object element)
+    {
+        var transit = (TransitDto) element;
+
+        _backup = new TransitDto
+        {
+            Id = transit.Id,
+            Departure = transit.Departure,
+            Destination = transit.Destination,
+            Duration = transit.Duration,
+            Price = transit.Price
+        };
+    }
+
+    private async void Save(object element)
+    {
+        var transit = (TransitDto) element;
+
+        try
+        {
+            await _transitClient.UpdateTransitAsync(new UpdateTransitCommand
+            {
+                Id = transit.Id,
+                Duration = transit.Duration,
+                Price = transit.Price
+            });
+
+            _snackbar.Add("Отправление успешно обновлено");
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void Reset(object element)
+    {
+        var transit = (TransitDto) element;
+
+        transit.Id = _backup.Id;
+        transit.Departure = _backup.Departure;
+        transit.Destination = _backup.Destination;
+        transit.Duration = _backup.Duration;
+        transit.Price = _backup.Price;
+    }
+
+}

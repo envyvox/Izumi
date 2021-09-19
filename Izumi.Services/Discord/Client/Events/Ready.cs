@@ -50,7 +50,7 @@ namespace Izumi.Services.Discord.Client.Events
                 _lifetime.StopApplication();
             }
 
-            return Unit.Value;
+            return await Unit.Task;
         }
     }
 }

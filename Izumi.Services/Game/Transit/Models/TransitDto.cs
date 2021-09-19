@@ -5,6 +5,7 @@ using Izumi.Data.Enums;
 namespace Izumi.Services.Game.Transit.Models
 {
     public record TransitDto(
+        Guid Id,
         LocationType Departure,
         LocationType Destination,
         TimeSpan Duration,
