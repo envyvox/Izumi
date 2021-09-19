@@ -38,8 +38,6 @@ namespace Izumi.Data.Extensions
         {
             var updated = db.Update(entity);
 
-            updated.State = EntityState.Modified;
-
             await db.SaveChangesAsync();
 
             updated.State = EntityState.Detached;

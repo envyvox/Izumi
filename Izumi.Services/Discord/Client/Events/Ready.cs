@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Hangfire;
+using Izumi.Services.Hangfire.BackgroundJobs.GenerateWeather;
 using Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes;
 using MediatR;
 using Microsoft.Extensions.Hosting;
@@ -31,8 +32,6 @@ namespace Izumi.Services.Discord.Client.Events
 
         public async Task<Unit> Handle(Ready request, CancellationToken cancellationToken)
         {
-            await request.SocketClient.SetGameAsync("...", null, ActivityType.Watching);
-
             try
             {
                 _logger.LogInformation("Bot started");
@@ -40,6 +39,10 @@ namespace Izumi.Services.Discord.Client.Events
                 RecurringJob.AddOrUpdate<IUploadEmotesJob>("upload-emotes",
                     x => x.Execute(),
                     Cron.Hourly, _timeZoneInfo);
+
+                RecurringJob.AddOrUpdate<IGenerateWeatherJob>("generate-weather",
+                    x => x.Execute(),
+                    Cron.Daily, _timeZoneInfo);
             }
             catch (Exception e)
             {
