@@ -66,7 +66,6 @@ namespace Izumi.Services.Game.User.Commands
             var startup = await _mediator.Send(new GetWorldPropertyValueQuery(
                 WorldPropertyType.EconomyStartup));
 
-            await _mediator.Send(new AddRoleToGuildUserCommand((ulong) entity.Id, DiscordRoleType.LocationCapital));
             await _mediator.Send(new AddBannerToUserCommand(entity.Id, banner.Id, true));
             await _mediator.Send(new AddTitleToUserCommand(entity.Id, TitleType.Newbie));
             await _mediator.Send(new AddCurrencyToUserCommand(entity.Id, CurrencyType.Ien, startup));
