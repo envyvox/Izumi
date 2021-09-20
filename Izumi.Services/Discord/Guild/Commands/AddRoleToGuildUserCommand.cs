@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Guild.Queries;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Discord.Guild.Commands
 {
@@ -12,10 +13,14 @@ namespace Izumi.Services.Discord.Guild.Commands
     public class AddRoleToGuildUserHandler : IRequestHandler<AddRoleToGuildUserCommand>
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<AddRoleToGuildUserHandler> _logger;
 
-        public AddRoleToGuildUserHandler(IMediator mediator)
+        public AddRoleToGuildUserHandler(
+            IMediator mediator,
+            ILogger<AddRoleToGuildUserHandler> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(AddRoleToGuildUserCommand request, CancellationToken ct)
@@ -30,7 +35,7 @@ namespace Izumi.Services.Discord.Guild.Commands
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, "Can't add role to user");
                 throw;
             }
 

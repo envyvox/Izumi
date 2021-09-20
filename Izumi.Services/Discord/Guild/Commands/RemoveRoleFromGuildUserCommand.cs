@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Guild.Queries;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Discord.Guild.Commands
 {
@@ -12,10 +13,14 @@ namespace Izumi.Services.Discord.Guild.Commands
     public class RemoveRoleFromGuildUserHandler : IRequestHandler<RemoveRoleFromGuildUserCommand>
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<RemoveRoleFromGuildUserHandler> _logger;
 
-        public RemoveRoleFromGuildUserHandler(IMediator mediator)
+        public RemoveRoleFromGuildUserHandler(
+            IMediator mediator,
+            ILogger<RemoveRoleFromGuildUserHandler> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(RemoveRoleFromGuildUserCommand request, CancellationToken ct)
@@ -30,8 +35,7 @@ namespace Izumi.Services.Discord.Guild.Commands
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                _logger.LogError(e, "Can't remove role from user");
             }
 
             return Unit.Value;

@@ -6,6 +6,7 @@ using Discord;
 using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Discord.Embed
 {
@@ -14,10 +15,14 @@ namespace Izumi.Services.Discord.Embed
     public class SendEmbedToUserHandler : IRequestHandler<SendEmbedToUserCommand>
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<SendEmbedToUserHandler> _logger;
 
-        public SendEmbedToUserHandler(IMediator mediator)
+        public SendEmbedToUserHandler(
+            IMediator mediator,
+            ILogger<SendEmbedToUserHandler> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(SendEmbedToUserCommand request, CancellationToken ct)
@@ -35,8 +40,7 @@ namespace Izumi.Services.Discord.Embed
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                _logger.LogError(e, "Can't send message to user");
             }
 
             return Unit.Value;

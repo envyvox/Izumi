@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord.WebSocket;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Discord.Guild.Queries
 {
@@ -11,10 +12,14 @@ namespace Izumi.Services.Discord.Guild.Queries
     public class GetSocketTextChannelHandler : IRequestHandler<GetSocketTextChannelQuery, SocketTextChannel>
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<GetSocketTextChannelHandler> _logger;
 
-        public GetSocketTextChannelHandler(IMediator mediator)
+        public GetSocketTextChannelHandler(
+            IMediator mediator,
+            ILogger<GetSocketTextChannelHandler> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         public async Task<SocketTextChannel> Handle(GetSocketTextChannelQuery request, CancellationToken ct)
@@ -27,7 +32,7 @@ namespace Izumi.Services.Discord.Guild.Queries
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, "Can't get text channel");
                 throw;
             }
         }

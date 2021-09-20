@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Discord.Guild.Queries
 {
@@ -11,10 +12,14 @@ namespace Izumi.Services.Discord.Guild.Queries
     public class GetUserMessageHandler : IRequestHandler<GetUserMessageQuery, IUserMessage>
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<GetUserMessageHandler> _logger;
 
-        public GetUserMessageHandler(IMediator mediator)
+        public GetUserMessageHandler(
+            IMediator mediator,
+            ILogger<GetUserMessageHandler> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         public async Task<IUserMessage> Handle(GetUserMessageQuery request, CancellationToken ct)
@@ -27,7 +32,7 @@ namespace Izumi.Services.Discord.Guild.Queries
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, "Can't get user message");
                 throw;
             }
         }
