@@ -107,7 +107,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
                             $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString(), transit.Price)}",
                             true)
                         .AddField("Длительность",
-                            $"{transitTime.Humanize(2, new CultureInfo("ru-RU"))}*",
+                            $"{transitTime.Humanize(2, new CultureInfo("ru-RU"))}",
                             true)
                         .AddField("Расход энергии",
                             $"{emotes.GetEmote("Energy")} {energyCost} {_local.Localize(LocalizationCategoryType.Bar, "Energy", energyCost)}",
