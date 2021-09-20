@@ -9,6 +9,7 @@ using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
+using Izumi.Services.Game.Calculation;
 using Izumi.Services.Game.Localization;
 using Izumi.Services.Game.Transit.Queries;
 using Izumi.Services.Game.Tutorial.Commands;
@@ -53,10 +54,12 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
             {
                 counter++;
 
+                var transitTime = await _mediator.Send(new GetActionTimeQuery(transit.Duration, user.Energy));
+
                 embed.AddField(transit.Destination.Localize(),
                     $"Стоимость: {emotes.GetEmote(CurrencyType.Ien.ToString())} {transit.Price} " +
                     $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString(), transit.Price)}" +
-                    $"\nДлительность: {transit.Duration.Humanize(2, new CultureInfo("ru-RU"))}", true);
+                    $"\nДлительность: {transitTime.Humanize(2, new CultureInfo("ru-RU"))}*", true);
 
                 if (counter == 2)
                 {
@@ -65,6 +68,8 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
                     embed.AddField(StringExtensions.EmptyChar, StringExtensions.EmptyChar, true);
                 }
             }
+
+            embed.WithFooter("* Длительность указана с учетом твоей текущей энергии.");
 
             await _mediator.Send(new CheckUserTutorialStepCommand(user.Id, TutorialStepType.CheckTransits));
             return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
