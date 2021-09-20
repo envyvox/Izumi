@@ -48,8 +48,7 @@ namespace Izumi.Services.Discord.Client.Events
                 }
                 else
                 {
-                    await Task.Delay(1000);
-                    await request.SocketMessage.DeleteAsync();
+                    await DeleteMessage(request.SocketMessage);
                 }
             }
 
@@ -66,6 +65,11 @@ namespace Izumi.Services.Discord.Client.Events
                 await _mediator.Send(new CheckAchievementInUserCommand(user.Id, AchievementType.FirstMessage));
             }
 
+            if (request.SocketMessage.Channel.Id == (ulong) channels[DiscordChannelType.Commands].Id)
+            {
+                await DeleteMessage(request.SocketMessage);
+            }
+
             return Unit.Value;
         }
 
@@ -78,6 +82,13 @@ namespace Izumi.Services.Discord.Client.Events
                 global::Discord.Emote.Parse(emotes.GetEmote("Like")),
                 global::Discord.Emote.Parse(emotes.GetEmote("Dislike"))
             });
+        }
+
+        private async Task DeleteMessage(SocketMessage message)
+        {
+            // delay cuz discord cache
+            await Task.Delay(1000);
+            await message.DeleteAsync();
         }
     }
 }
