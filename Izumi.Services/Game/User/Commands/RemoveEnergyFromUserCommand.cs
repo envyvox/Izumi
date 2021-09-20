@@ -24,7 +24,7 @@ namespace Izumi.Services.Game.User.Commands
             var entity = await _db.Users
                 .SingleOrDefaultAsync(x => x.Id == request.UserId);
 
-            entity.Energy -= request.Amount;
+            entity.Energy = request.Amount > entity.Energy ? 0 : entity.Energy - request.Amount;
             entity.UpdatedAt = DateTimeOffset.UtcNow;
 
             await _db.UpdateEntity(entity);
