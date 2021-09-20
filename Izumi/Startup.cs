@@ -26,6 +26,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Izumi
 {
@@ -103,6 +104,8 @@ namespace Izumi
             {
                 Authorization = new[] { new AllowAllAuthorizationFilter() }
             });
+
+            app.UseSerilogRequestLogging();
 
             app.UseRouting();
 

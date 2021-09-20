@@ -1,7 +1,8 @@
+using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace Izumi
 {
@@ -9,20 +10,35 @@ namespace Izumi
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var configuration = new ConfigurationBuilder()
+                .AddEnvironmentVariables("Izumi_")
+                .Build();
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
+
+            try
+            {
+                Log.Information("Application starting up");
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e, "The application failed to start correctly");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
-        private static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>().ConfigureLogging((c, l) =>
-                    {
-                        l.ClearProviders();
-                        l.AddConfiguration(c.Configuration);
-                        l.AddConsole();
-                    });
-                })
+        private static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                .UseSerilog()
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
                 .ConfigureAppConfiguration(x => x.AddEnvironmentVariables("Izumi_"));
+        }
     }
 }
