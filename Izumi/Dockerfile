@@ -3,7 +3,6 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
 # Copy everything else and build
 COPY Izumi ./Izumi
 COPY Izumi.Data ./Izumi.Data
-COPY Izumi.Framework ./Izumi.Framework
 COPY Izumi.Services ./Izumi.Services
 
 RUN dotnet restore Izumi/Izumi.csproj

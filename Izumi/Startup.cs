@@ -3,7 +3,6 @@ using Discord.Commands;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Izumi.Data;
-using Izumi.Framework.Hangfire;
 using Izumi.Services.Discord.Client;
 using Izumi.Services.Discord.Client.Impl;
 using Izumi.Services.Discord.Client.Options;
@@ -100,10 +99,7 @@ namespace Izumi
             }
 
             app.UseHangfireServer();
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions
-            {
-                Authorization = new[] { new AllowAllAuthorizationFilter() }
-            });
+            app.UseHangfireDashboard();
 
             app.UseSerilogRequestLogging();
 
