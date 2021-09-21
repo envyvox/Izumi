@@ -6,6 +6,7 @@ using Izumi.Data.Enums;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Discord.Image.Commands
 {
@@ -13,10 +14,14 @@ namespace Izumi.Services.Discord.Image.Commands
 
     public class CreateImageHandler : IRequestHandler<CreateImageCommand>
     {
+        private readonly ILogger<CreateImageHandler> _logger;
         private readonly AppDbContext _db;
 
-        public CreateImageHandler(DbContextOptions options)
+        public CreateImageHandler(
+            DbContextOptions options,
+            ILogger<CreateImageHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -38,6 +43,10 @@ namespace Izumi.Services.Discord.Image.Commands
                 Type = request.Type,
                 Url = request.Url
             });
+
+            _logger.LogInformation(
+                "Created image with type {Type} and Url {Url}",
+                request.Type.ToString(), request.Url);
 
             return Unit.Value;
         }

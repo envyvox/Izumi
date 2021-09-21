@@ -31,7 +31,7 @@ namespace Izumi.Services.Game.Ingredient.Queries
 
                     if (entity is null)
                     {
-                        throw new Exception($"gathering with id {request.Id} not found");
+                        throw new Exception($"gathering {request.Id} not found");
                     }
 
                     return new IngredientDto(request.Category, entity.Id, entity.Name);
@@ -44,7 +44,7 @@ namespace Izumi.Services.Game.Ingredient.Queries
 
                     if (entity is null)
                     {
-                        throw new Exception($"product with id {request.Id} not found");
+                        throw new Exception($"product {request.Id} not found");
                     }
 
                     return new IngredientDto(request.Category, entity.Id, entity.Name);
@@ -56,7 +56,7 @@ namespace Izumi.Services.Game.Ingredient.Queries
 
                     if (entity is null)
                     {
-                        throw new Exception($"crafting with id {request.Id} not found");
+                        throw new Exception($"crafting {request.Id} not found");
                     }
 
                     return new IngredientDto(request.Category, entity.Id, entity.Name);
@@ -68,7 +68,7 @@ namespace Izumi.Services.Game.Ingredient.Queries
 
                     if (entity is null)
                     {
-                        throw new Exception($"alcohol with id {request.Id} not found");
+                        throw new Exception($"alcohol {request.Id} not found");
                     }
 
                     return new IngredientDto(request.Category, entity.Id, entity.Name);
@@ -80,7 +80,7 @@ namespace Izumi.Services.Game.Ingredient.Queries
 
                     if (entity is null)
                     {
-                        throw new Exception($"drink with id {request.Id} not found");
+                        throw new Exception($"drink {request.Id} not found");
                     }
 
                     return new IngredientDto(request.Category, entity.Id, entity.Name);
@@ -92,7 +92,7 @@ namespace Izumi.Services.Game.Ingredient.Queries
 
                     if (entity is null)
                     {
-                        throw new Exception($"crop with id {request.Id} not found");
+                        throw new Exception($"crop {request.Id} not found");
                     }
 
                     return new IngredientDto(request.Category, entity.Id, entity.Name);
@@ -104,7 +104,7 @@ namespace Izumi.Services.Game.Ingredient.Queries
 
                     if (entity is null)
                     {
-                        throw new Exception($"food with id {request.Id} not found");
+                        throw new Exception($"food {request.Id} not found");
                     }
 
                     return new IngredientDto(request.Category, entity.Id, entity.Name);
@@ -116,7 +116,7 @@ namespace Izumi.Services.Game.Ingredient.Queries
 
                     if (entity is null)
                     {
-                        throw new Exception($"saefood with id {request.Id} not found");
+                        throw new Exception($"saefood {request.Id} not found");
                     }
 
                     return new IngredientDto(request.Category, entity.Id, entity.Name);

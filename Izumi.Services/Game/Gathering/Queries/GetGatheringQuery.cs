@@ -32,7 +32,7 @@ namespace Izumi.Services.Game.Gathering.Queries
 
             if (entity is null)
             {
-                throw new Exception($"gathering with id {request.Id} not found");
+                throw new Exception($"gathering {request.Id} not found");
             }
 
             return _mapper.Map<GatheringDto>(entity);

@@ -5,6 +5,7 @@ using Izumi.Data;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Banner.Commands
 {
@@ -12,10 +13,14 @@ namespace Izumi.Services.Game.Banner.Commands
 
     public class DeactivateUserBannerHandler : IRequestHandler<DeactivateUserBannerCommand>
     {
+        private readonly ILogger<DeactivateUserBannerHandler> _logger;
         private readonly AppDbContext _db;
 
-        public DeactivateUserBannerHandler(DbContextOptions options)
+        public DeactivateUserBannerHandler(
+            DbContextOptions options,
+            ILogger<DeactivateUserBannerHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -30,6 +35,10 @@ namespace Izumi.Services.Game.Banner.Commands
             entity.UpdatedAt = DateTimeOffset.UtcNow;
 
             await _db.UpdateEntity(entity);
+
+            _logger.LogInformation(
+                "Deactivated user {UserId} banner {BannerId}",
+                request.UserId, request.BannerId);
 
             return Unit.Value;
         }

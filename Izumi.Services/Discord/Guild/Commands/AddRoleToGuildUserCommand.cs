@@ -32,10 +32,17 @@ namespace Izumi.Services.Discord.Guild.Commands
             try
             {
                 await user.AddRoleAsync(guild.GetRole((ulong) roles[request.Role].Id));
+
+                _logger.LogInformation(
+                    "Added role {Role} to user {UserId}",
+                    request.Role.ToString(), request.UserId);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Can't add role to user");
+                _logger.LogError(e,
+                    "Can't add role {Role} to user {UserId}",
+                    request.Role.ToString(), request.UserId);
+
                 throw;
             }
 

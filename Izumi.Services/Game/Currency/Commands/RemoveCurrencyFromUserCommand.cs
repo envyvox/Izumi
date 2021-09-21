@@ -7,6 +7,7 @@ using Izumi.Data.Extensions;
 using Izumi.Services.Game.Statistic.Commands;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Currency.Commands
 {
@@ -15,13 +16,16 @@ namespace Izumi.Services.Game.Currency.Commands
     public class RemoveCurrencyFromUserHandler : IRequestHandler<RemoveCurrencyFromUserCommand>
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<RemoveCurrencyFromUserHandler> _logger;
         private readonly AppDbContext _db;
 
         public RemoveCurrencyFromUserHandler(
             DbContextOptions options,
-            IMediator mediator)
+            IMediator mediator,
+            ILogger<RemoveCurrencyFromUserHandler> logger)
         {
             _mediator = mediator;
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -41,6 +45,10 @@ namespace Izumi.Services.Game.Currency.Commands
             entity.UpdatedAt = DateTimeOffset.UtcNow;
 
             await _db.UpdateEntity(entity);
+
+            _logger.LogInformation(
+                "Removed from user {UserId} currency {Currency} amount {Amount}",
+                request.UserId, request.Currency, request.Amount);
 
             return await _mediator.Send(new AddStatisticToUserCommand(
                 request.UserId, StatisticType.CurrencySpent, request.Amount));

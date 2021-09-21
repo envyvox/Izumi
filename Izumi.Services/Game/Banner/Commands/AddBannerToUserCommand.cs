@@ -6,6 +6,7 @@ using Izumi.Data.Entities.User;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Banner.Commands
 {
@@ -13,10 +14,14 @@ namespace Izumi.Services.Game.Banner.Commands
 
     public class AddBannerToUserHandler : IRequestHandler<AddBannerToUserCommand>
     {
+        private readonly ILogger<AddBannerToUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public AddBannerToUserHandler(DbContextOptions options)
+        public AddBannerToUserHandler(
+            DbContextOptions options,
+            ILogger<AddBannerToUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -41,6 +46,10 @@ namespace Izumi.Services.Game.Banner.Commands
                 CreatedAt = DateTimeOffset.UtcNow,
                 UpdatedAt = DateTimeOffset.UtcNow
             });
+
+            _logger.LogInformation(
+                "Added user {UserId} banner {BannerId} with active {Active}",
+                request.UserId, request.BannerId, request.IsActive);
 
             return Unit.Value;
         }

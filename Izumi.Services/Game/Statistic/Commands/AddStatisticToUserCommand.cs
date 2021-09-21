@@ -7,6 +7,7 @@ using Izumi.Data.Enums;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Statistic.Commands
 {
@@ -14,10 +15,14 @@ namespace Izumi.Services.Game.Statistic.Commands
 
     public class AddStatisticToUserHandler : IRequestHandler<AddStatisticToUserCommand>
     {
+        private readonly ILogger<AddStatisticToUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public AddStatisticToUserHandler(DbContextOptions options)
+        public AddStatisticToUserHandler(
+            DbContextOptions options,
+            ILogger<AddStatisticToUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -39,6 +44,10 @@ namespace Izumi.Services.Game.Statistic.Commands
                     CreatedAt = DateTimeOffset.UtcNow,
                     UpdatedAt = DateTimeOffset.UtcNow
                 });
+
+                _logger.LogInformation(
+                    "Created user statistic entity for user {UserId} with type {Type} and amount {Amount}",
+                    request.UserId, request.Type.ToString(), request.Amount);
             }
             else
             {
@@ -46,6 +55,10 @@ namespace Izumi.Services.Game.Statistic.Commands
                 entity.UpdatedAt = DateTimeOffset.UtcNow;
 
                 await _db.UpdateEntity(entity);
+
+                _logger.LogInformation(
+                    "Added user {UserId} statistic {Type} amount {Amount}",
+                    request.UserId, request.Type.ToString(), request.Amount);
             }
 
             return Unit.Value;

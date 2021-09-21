@@ -5,6 +5,7 @@ using Izumi.Data;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Crafting.Commands
 {
@@ -12,10 +13,14 @@ namespace Izumi.Services.Game.Crafting.Commands
 
     public class RemoveCraftingFromUserHandler : IRequestHandler<RemoveCraftingFromUserCommand>
     {
+        private readonly ILogger<RemoveCraftingFromUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public RemoveCraftingFromUserHandler(DbContextOptions options)
+        public RemoveCraftingFromUserHandler(
+            DbContextOptions options,
+            ILogger<RemoveCraftingFromUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -35,6 +40,10 @@ namespace Izumi.Services.Game.Crafting.Commands
             entity.UpdatedAt = DateTimeOffset.UtcNow;
 
             await _db.UpdateEntity(entity);
+
+            _logger.LogInformation(
+                "Removed from user {UserId} crafting {CraftingId} amount {Amount}",
+                request.UserId, request.CraftingId, request.Amount);
 
             return Unit.Value;
         }

@@ -5,6 +5,7 @@ using Izumi.Data;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Transit.Commands
 {
@@ -12,10 +13,14 @@ namespace Izumi.Services.Game.Transit.Commands
 
     public class DeleteUserMovementHandler : IRequestHandler<DeleteUserMovementCommand>
     {
+        private readonly ILogger<DeleteUserMovementHandler> _logger;
         private readonly AppDbContext _db;
 
-        public DeleteUserMovementHandler(DbContextOptions options)
+        public DeleteUserMovementHandler(
+            DbContextOptions options,
+            ILogger<DeleteUserMovementHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -30,6 +35,10 @@ namespace Izumi.Services.Game.Transit.Commands
             }
 
             await _db.DeleteEntity(entity);
+
+            _logger.LogInformation(
+                "Deleted user movement entity for user {UserId}",
+                request.UserId);
 
             return Unit.Value;
         }

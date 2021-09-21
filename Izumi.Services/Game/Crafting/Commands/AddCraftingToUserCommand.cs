@@ -6,6 +6,7 @@ using Izumi.Data.Entities.User;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Crafting.Commands
 {
@@ -13,10 +14,14 @@ namespace Izumi.Services.Game.Crafting.Commands
 
     public class AddCraftingToUserHandler : IRequestHandler<AddCraftingToUserCommand>
     {
+        private readonly ILogger<AddCraftingToUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public AddCraftingToUserHandler(DbContextOptions options)
+        public AddCraftingToUserHandler(
+            DbContextOptions options,
+            ILogger<AddCraftingToUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -38,6 +43,10 @@ namespace Izumi.Services.Game.Crafting.Commands
                     CreatedAt = DateTimeOffset.UtcNow,
                     UpdatedAt = DateTimeOffset.UtcNow
                 });
+
+                _logger.LogInformation(
+                    "Create user crafting entity for user {UserId} with crafting {CraftingId} and amount {Amount}",
+                    request.UserId, request.CraftingId, request.Amount);
             }
             else
             {
@@ -45,6 +54,10 @@ namespace Izumi.Services.Game.Crafting.Commands
                 entity.UpdatedAt = DateTimeOffset.UtcNow;
 
                 await _db.UpdateEntity(entity);
+
+                _logger.LogInformation(
+                    "Added user {UserId} crafting {CraftingId} amount {Amount}",
+                    request.UserId, request.CraftingId, request.Amount);
             }
 
             return Unit.Value;

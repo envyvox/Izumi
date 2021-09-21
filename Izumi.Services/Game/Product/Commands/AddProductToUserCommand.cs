@@ -6,6 +6,7 @@ using Izumi.Data.Entities.User;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Product.Commands
 {
@@ -13,10 +14,14 @@ namespace Izumi.Services.Game.Product.Commands
 
     public class AddProductToUserHandler : IRequestHandler<AddProductToUserCommand>
     {
+        private readonly ILogger<AddProductToUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public AddProductToUserHandler(DbContextOptions options)
+        public AddProductToUserHandler(
+            DbContextOptions options,
+            ILogger<AddProductToUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -38,6 +43,10 @@ namespace Izumi.Services.Game.Product.Commands
                     CreatedAt = DateTimeOffset.UtcNow,
                     UpdatedAt = DateTimeOffset.UtcNow
                 });
+
+                _logger.LogInformation(
+                    "Created user product entity for user {UserId} with product {ProductId} and amount {Amount}",
+                    request.UserId, request.ProductId, request.Amount);
             }
             else
             {
@@ -45,6 +54,10 @@ namespace Izumi.Services.Game.Product.Commands
                 entity.UpdatedAt = DateTimeOffset.UtcNow;
 
                 await _db.UpdateEntity(entity);
+
+                _logger.LogInformation(
+                    "Added user {UserId} product {ProductId} amount {Amount}",
+                    request.UserId, request.ProductId, request.Amount);
             }
 
             return Unit.Value;

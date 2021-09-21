@@ -6,6 +6,7 @@ using Izumi.Data.Entities.User;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Seafood.Commands
 {
@@ -13,10 +14,14 @@ namespace Izumi.Services.Game.Seafood.Commands
 
     public class AddSeafoodToUserHandler : IRequestHandler<AddSeafoodToUserCommand>
     {
+        private readonly ILogger<AddSeafoodToUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public AddSeafoodToUserHandler(DbContextOptions options)
+        public AddSeafoodToUserHandler(
+            DbContextOptions options,
+            ILogger<AddSeafoodToUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -38,6 +43,10 @@ namespace Izumi.Services.Game.Seafood.Commands
                     CreatedAt = DateTimeOffset.UtcNow,
                     UpdatedAt = DateTimeOffset.UtcNow
                 });
+
+                _logger.LogInformation(
+                    "Created user seafood entity for user {UserId} with seafood {SeafoodId} and amount {Amount}",
+                    request.UserId, request.SeafoodId, request.Amount);
             }
             else
             {
@@ -45,6 +54,10 @@ namespace Izumi.Services.Game.Seafood.Commands
                 entity.UpdatedAt = DateTimeOffset.UtcNow;
 
                 await _db.UpdateEntity(entity);
+
+                _logger.LogInformation(
+                    "Added user {UserId} seafood {SeafoodId} amount {Amount}",
+                    request.UserId, request.SeafoodId, request.Amount);
             }
 
             return Unit.Value;

@@ -18,6 +18,7 @@ using Izumi.Services.Game.Title.Commands;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Referral.Commands
 {
@@ -27,15 +28,18 @@ namespace Izumi.Services.Game.Referral.Commands
     {
         private readonly IMediator _mediator;
         private readonly ILocalizationService _local;
+        private readonly ILogger<CreateUserReferrerHandler> _logger;
         private readonly AppDbContext _db;
 
         public CreateUserReferrerHandler(
             DbContextOptions options,
             IMediator mediator,
-            ILocalizationService local)
+            ILocalizationService local,
+            ILogger<CreateUserReferrerHandler> logger)
         {
             _mediator = mediator;
             _local = local;
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -56,6 +60,10 @@ namespace Izumi.Services.Game.Referral.Commands
                 ReferrerId = request.ReferrerId,
                 CreatedAt = DateTimeOffset.UtcNow
             });
+
+            _logger.LogInformation(
+                "Created user referrer entity for user {UserId} with referrer {ReferrerId}",
+                request.UserId, request.ReferrerId);
 
             await _mediator.Send(new AddBoxToUserCommand(request.UserId, BoxType.Capital, 1));
             await AddRewardsToReferrer(request.UserId, request.ReferrerId);

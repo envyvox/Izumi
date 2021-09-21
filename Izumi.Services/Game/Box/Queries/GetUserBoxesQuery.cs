@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Izumi.Data;
 using Izumi.Data.Enums;
-using Izumi.Data.Extensions;
 using Izumi.Services.Game.Box.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

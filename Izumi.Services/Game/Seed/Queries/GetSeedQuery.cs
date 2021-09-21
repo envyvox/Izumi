@@ -31,7 +31,7 @@ namespace Izumi.Services.Game.Seed.Queries
 
             if (entity is null)
             {
-                throw new Exception($"seed with id {request.Id} not found");
+                throw new Exception($"seed {request.Id} not found");
             }
 
             return _mapper.Map<SeedDto>(entity);

@@ -4,8 +4,6 @@ using Discord;
 using Izumi.Data.Enums;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Embed;
-using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Commands;
 using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Discord.Image.Queries;
@@ -17,21 +15,29 @@ using Izumi.Services.Game.Tutorial.Commands;
 using Izumi.Services.Game.User.Commands;
 using Izumi.Services.Hangfire.Commands;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit
 {
     public class CompleteUserTransitJob : ICompleteUserTransitJob
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<CompleteUserTransitJob> _logger;
 
-        public CompleteUserTransitJob(IMediator mediator)
+        public CompleteUserTransitJob(
+            IMediator mediator,
+            ILogger<CompleteUserTransitJob> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         public async Task Execute(long userId, LocationType destination)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            _logger.LogInformation(
+                "Complete user transit job executed for user {UserId} and destination {Destination}",
+                userId, destination.ToString());
+
             var channels = await _mediator.Send(new GetChannelsQuery());
             DiscordChannelType descChannel;
             DiscordChannelType whatToDoChannel;

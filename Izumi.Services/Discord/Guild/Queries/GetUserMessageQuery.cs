@@ -32,7 +32,10 @@ namespace Izumi.Services.Discord.Guild.Queries
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Can't get user message");
+                _logger.LogError(e,
+                    "Can't get user message {MessageId}",
+                    request.MessageId);
+
                 throw;
             }
         }

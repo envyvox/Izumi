@@ -5,6 +5,7 @@ using Izumi.Data;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Crop.Commands
 {
@@ -12,10 +13,14 @@ namespace Izumi.Services.Game.Crop.Commands
 
     public class RemoveCropFromUserHandler : IRequestHandler<RemoveCropFromUserCommand>
     {
+        private readonly ILogger<RemoveCropFromUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public RemoveCropFromUserHandler(DbContextOptions options)
+        public RemoveCropFromUserHandler(
+            DbContextOptions options,
+            ILogger<RemoveCropFromUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -35,6 +40,10 @@ namespace Izumi.Services.Game.Crop.Commands
             entity.UpdatedAt = DateTimeOffset.UtcNow;
 
             await _db.UpdateEntity(entity);
+
+            _logger.LogInformation(
+                "Removed from user {UserId} crop {CropId} amount {Amount}",
+                request.UserId, request.CropId, request.Amount);
 
             return Unit.Value;
         }

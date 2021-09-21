@@ -7,6 +7,7 @@ using Izumi.Data.Enums;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Box.Commands
 {
@@ -14,10 +15,14 @@ namespace Izumi.Services.Game.Box.Commands
 
     public class AddBoxToUserHandler : IRequestHandler<AddBoxToUserCommand>
     {
+        private readonly ILogger<AddBoxToUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public AddBoxToUserHandler(DbContextOptions options)
+        public AddBoxToUserHandler(
+            DbContextOptions options,
+            ILogger<AddBoxToUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -39,6 +44,10 @@ namespace Izumi.Services.Game.Box.Commands
                     CreatedAt = DateTimeOffset.UtcNow,
                     UpdatedAt = DateTimeOffset.UtcNow
                 });
+
+                _logger.LogInformation(
+                    "Created user box entity for user {UserId} with box {Box} and amount {Amount}",
+                    request.UserId, request.Box.ToString(), request.Amount);
             }
             else
             {
@@ -46,6 +55,10 @@ namespace Izumi.Services.Game.Box.Commands
                 entity.UpdatedAt = DateTimeOffset.UtcNow;
 
                 await _db.UpdateEntity(entity);
+
+                _logger.LogInformation(
+                    "Added user {UserId} box {Box} amount {Amount}",
+                    request.UserId, request.Box.ToString(), request.Amount);
             }
 
             return Unit.Value;

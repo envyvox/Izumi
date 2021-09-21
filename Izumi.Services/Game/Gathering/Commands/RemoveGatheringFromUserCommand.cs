@@ -5,6 +5,7 @@ using Izumi.Data;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Gathering.Commands
 {
@@ -12,10 +13,14 @@ namespace Izumi.Services.Game.Gathering.Commands
 
     public class RemoveGatheringFromUserHandler : IRequestHandler<RemoveGatheringFromUserCommand>
     {
+        private readonly ILogger<RemoveGatheringFromUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public RemoveGatheringFromUserHandler(DbContextOptions options)
+        public RemoveGatheringFromUserHandler(
+            DbContextOptions options,
+            ILogger<RemoveGatheringFromUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -35,6 +40,10 @@ namespace Izumi.Services.Game.Gathering.Commands
             entity.UpdatedAt = DateTimeOffset.UtcNow;
 
             await _db.UpdateEntity(entity);
+
+            _logger.LogInformation(
+                "Removed from user {UserId} gathering {GatheringId} amount {Amount}",
+                request.UserId, request.GatheringId, request.Amount);
 
             return Unit.Value;
         }

@@ -32,10 +32,16 @@ namespace Izumi.Services.Discord.Guild.Commands
             try
             {
                 await user.RemoveRoleAsync(guild.GetRole((ulong) roles[request.Role].Id));
+
+                _logger.LogInformation(
+                    "Removed role {Role} from user {UserId}",
+                    request.Role.ToString(), request.UserId);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Can't remove role from user");
+                _logger.LogError(e,
+                    "Can't remove role {Role} from user {UserId}",
+                    request.Role.ToString(), request.UserId);
             }
 
             return Unit.Value;

@@ -18,6 +18,7 @@ using Izumi.Services.Game.Tutorial.Commands;
 using Izumi.Services.Game.User.Commands;
 using Izumi.Services.Hangfire.Commands;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteExploreGarden
 {
@@ -25,17 +26,24 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteExploreGarden
     {
         private readonly IMediator _mediator;
         private readonly ILocalizationService _local;
+        private readonly ILogger<CompleteExploreGardenJob> _logger;
 
         public CompleteExploreGardenJob(
             IMediator mediator,
-            ILocalizationService local)
+            ILocalizationService local,
+            ILogger<CompleteExploreGardenJob> logger)
         {
             _mediator = mediator;
             _local = local;
+            _logger = logger;
         }
 
         public async Task Execute(long userId)
         {
+            _logger.LogInformation(
+                "Complete explore garden job executed for user {UserId}",
+                userId);
+
             var emotes = await _mediator.Send(new GetEmotesQuery());
             var gatherings = await _mediator.Send(new GetGatheringsInLocationQuery(
                 LocationType.ExploreGarden));

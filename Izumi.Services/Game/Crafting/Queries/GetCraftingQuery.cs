@@ -33,7 +33,7 @@ namespace Izumi.Services.Game.Crafting.Queries
 
             if (entity is null)
             {
-                throw new Exception($"crafting with id {request.Id} not found");
+                throw new Exception($"crafting {request.Id} not found");
             }
 
             return _mapper.Map<CraftingDto>(entity);

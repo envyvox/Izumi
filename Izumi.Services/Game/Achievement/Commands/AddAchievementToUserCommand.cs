@@ -7,6 +7,7 @@ using Izumi.Data.Enums;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Achievement.Commands
 {
@@ -15,14 +16,17 @@ namespace Izumi.Services.Game.Achievement.Commands
     public class AddAchievementToUserHandler : IRequestHandler<AddAchievementToUserCommand>
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<AddAchievementToUserHandler> _logger;
         private readonly AppDbContext _db;
 
         public AddAchievementToUserHandler(
             DbContextOptions options,
-            IMediator mediator)
+            IMediator mediator,
+            ILogger<AddAchievementToUserHandler> logger)
         {
             _db = new AppDbContext(options);
             _mediator = mediator;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(AddAchievementToUserCommand request, CancellationToken ct)
@@ -44,6 +48,10 @@ namespace Izumi.Services.Game.Achievement.Commands
                 Type = request.Type,
                 CreatedAt = DateTimeOffset.UtcNow
             });
+
+            _logger.LogInformation(
+                "Added achievement with type {Type} to user {UserId}",
+                request.Type.ToString(), request.UserId);
 
             return await _mediator.Send(new AddAchievementRewardToUserCommand(request.UserId, request.Type));
         }

@@ -6,6 +6,7 @@ using Izumi.Data.Entities.User;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Seed.Commands
 {
@@ -13,10 +14,14 @@ namespace Izumi.Services.Game.Seed.Commands
 
     public class AddSeedToUserHandler : IRequestHandler<AddSeedToUserCommand>
     {
+        private readonly ILogger<AddSeedToUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public AddSeedToUserHandler(DbContextOptions options)
+        public AddSeedToUserHandler(
+            DbContextOptions options,
+            ILogger<AddSeedToUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -38,6 +43,10 @@ namespace Izumi.Services.Game.Seed.Commands
                     CreatedAt = DateTimeOffset.UtcNow,
                     UpdatedAt = DateTimeOffset.UtcNow
                 });
+
+                _logger.LogInformation(
+                    "Created user seed entity for user {UserId} with seed {SeedId} and amount {Amount}",
+                    request.UserId, request.SeedId, request.Amount);
             }
             else
             {
@@ -45,6 +54,10 @@ namespace Izumi.Services.Game.Seed.Commands
                 entity.UpdatedAt = DateTimeOffset.UtcNow;
 
                 await _db.UpdateEntity(entity);
+
+                _logger.LogInformation(
+                    "Added user {UserId} seed {SeedId} amount {Amount}",
+                    request.UserId, request.SeedId, request.Amount);
             }
 
             return Unit.Value;

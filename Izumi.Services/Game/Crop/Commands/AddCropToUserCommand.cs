@@ -6,6 +6,7 @@ using Izumi.Data.Entities.User;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Crop.Commands
 {
@@ -13,10 +14,14 @@ namespace Izumi.Services.Game.Crop.Commands
 
     public class AddCropToUserHandler : IRequestHandler<AddCropToUserCommand>
     {
+        private readonly ILogger<AddCropToUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public AddCropToUserHandler(DbContextOptions options)
+        public AddCropToUserHandler(
+            DbContextOptions options,
+            ILogger<AddCropToUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -38,6 +43,10 @@ namespace Izumi.Services.Game.Crop.Commands
                     CreatedAt = DateTimeOffset.UtcNow,
                     UpdatedAt = DateTimeOffset.UtcNow
                 });
+
+                _logger.LogInformation(
+                    "Created user crop entity for user {UserId} with crop {CropId} and amount {Amount}",
+                    request.UserId, request.CropId, request.Amount);
             }
             else
             {
@@ -45,6 +54,10 @@ namespace Izumi.Services.Game.Crop.Commands
                 entity.UpdatedAt = DateTimeOffset.UtcNow;
 
                 await _db.UpdateEntity(entity);
+
+                _logger.LogInformation(
+                    "Added user {UserId} crop {CropId} amount {Amount}",
+                    request.UserId, request.CropId, request.Amount);
             }
 
             return Unit.Value;

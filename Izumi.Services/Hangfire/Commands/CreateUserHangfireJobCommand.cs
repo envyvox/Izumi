@@ -7,6 +7,7 @@ using Izumi.Data.Enums;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Hangfire.Commands
 {
@@ -20,9 +21,13 @@ namespace Izumi.Services.Hangfire.Commands
     public class CreateUserHangfireJobHandler : IRequestHandler<CreateUserHangfireJobCommand>
     {
         private readonly AppDbContext _db;
+        private readonly ILogger<CreateUserHangfireJobHandler> _logger;
 
-        public CreateUserHangfireJobHandler(DbContextOptions options)
+        public CreateUserHangfireJobHandler(
+            DbContextOptions options,
+            ILogger<CreateUserHangfireJobHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -48,6 +53,10 @@ namespace Izumi.Services.Hangfire.Commands
                 CreatedAt = DateTimeOffset.UtcNow,
                 Expiration = request.Expiration
             });
+
+            _logger.LogInformation(
+                "Create hangfire job entity for user {UserId} and type {Type}",
+                request.UserId, request.Type.ToString());
 
             return Unit.Value;
         }

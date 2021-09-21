@@ -32,7 +32,7 @@ namespace Izumi.Services.Discord.CommunityDesc.Queries
 
             if (entity is null)
             {
-                throw new Exception($"content message with id {request.Id} not found");
+                throw new Exception($"content message {request.Id} not found");
             }
 
             return _mapper.Map<ContentMessageDto>(entity);

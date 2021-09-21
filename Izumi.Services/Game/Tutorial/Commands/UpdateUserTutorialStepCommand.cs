@@ -6,6 +6,7 @@ using Izumi.Data.Enums;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Tutorial.Commands
 {
@@ -13,10 +14,14 @@ namespace Izumi.Services.Game.Tutorial.Commands
 
     public class UpdateUserTutorialStepHandler : IRequestHandler<UpdateUserTutorialStepCommand>
     {
+        private readonly ILogger<UpdateUserTutorialStepHandler> _logger;
         private readonly AppDbContext _db;
 
-        public UpdateUserTutorialStepHandler(DbContextOptions options)
+        public UpdateUserTutorialStepHandler(
+            DbContextOptions options,
+            ILogger<UpdateUserTutorialStepHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -34,6 +39,10 @@ namespace Izumi.Services.Game.Tutorial.Commands
             entity.UpdatedAt = DateTimeOffset.UtcNow;
 
             await _db.UpdateEntity(entity);
+
+            _logger.LogInformation(
+                "Updated user {UserId} tutorial step to {Step}",
+                request.UserId, request.Step.ToString());
 
             return Unit.Value;
         }

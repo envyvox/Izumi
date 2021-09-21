@@ -37,10 +37,16 @@ namespace Izumi.Services.Discord.Embed
             try
             {
                 await socketUser.SendMessageAsync(request.Message, false, embed);
+
+                _logger.LogInformation(
+                    "Sended a direct message to user {UserId}",
+                    request.UserId);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Can't send message to user");
+                _logger.LogError(e,
+                    "Can't send message to user {UserId}",
+                    request.UserId);
             }
 
             return Unit.Value;

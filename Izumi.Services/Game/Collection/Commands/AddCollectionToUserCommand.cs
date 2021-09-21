@@ -8,6 +8,7 @@ using Izumi.Data.Extensions;
 using Izumi.Services.Game.Achievement.Commands;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Collection.Commands
 {
@@ -16,13 +17,16 @@ namespace Izumi.Services.Game.Collection.Commands
     public class AddCollectionToUserHandler : IRequestHandler<AddCollectionToUserCommand>
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<AddCollectionToUserHandler> _logger;
         private readonly AppDbContext _db;
 
         public AddCollectionToUserHandler(
             DbContextOptions options,
-            IMediator mediator)
+            IMediator mediator,
+            ILogger<AddCollectionToUserHandler> logger)
         {
             _mediator = mediator;
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -44,6 +48,10 @@ namespace Izumi.Services.Game.Collection.Commands
                 ItemId = request.ItemId,
                 CreatedAt = DateTimeOffset.UtcNow
             });
+
+            _logger.LogInformation(
+                "Added collection to user {UserId} with type {Type} and item {ItemId}",
+                request.UserId, request.Type.ToString(), request.ItemId);
 
             return await _mediator.Send(new CheckAchievementInUserCommand(request.UserId, request.Type switch
             {

@@ -1,50 +1,57 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using Izumi.Data;
 using Izumi.Data.Extensions;
-using Izumi.Services.Discord.Emote.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Discord.Emote.Commands
 {
-    public record CreateEmoteCommand(long Id, string Name, string Code) : IRequest<EmoteDto>;
+    public record CreateEmoteCommand(long Id, string Name, string Code) : IRequest;
 
-    public class CreateEmoteHandler : IRequestHandler<CreateEmoteCommand, EmoteDto>
+    public class CreateEmoteHandler : IRequestHandler<CreateEmoteCommand>
     {
-        private readonly IMapper _mapper;
+        private readonly ILogger<CreateEmoteHandler> _logger;
         private readonly AppDbContext _db;
 
         public CreateEmoteHandler(
             DbContextOptions options,
-            IMapper mapper)
+            ILogger<CreateEmoteHandler> logger)
         {
-            _mapper = mapper;
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
-        public async Task<EmoteDto> Handle(CreateEmoteCommand request, CancellationToken ct)
+        public async Task<Unit> Handle(CreateEmoteCommand request, CancellationToken ct)
         {
-            var exist = await _db.Emotes
-                .AnyAsync(x => x.Name == request.Name);
+            var entity = await _db.Emotes
+                .SingleOrDefaultAsync(x => x.Name == request.Name);
 
-            if (exist)
+            if (entity is null)
             {
-                throw new Exception($"emote with name {request.Name} already exist");
+                await _db.CreateEntity(new Data.Entities.Discord.Emote
+                {
+                    Id = request.Id,
+                    Name = request.Name,
+                    Code = request.Code,
+                    CreatedAt = DateTimeOffset.UtcNow,
+                    UpdatedAt = DateTimeOffset.UtcNow
+                });
+
+                _logger.LogInformation(
+                    "Added new emote {Code}",
+                    request.Code);
+            }
+            else
+            {
+                entity.UpdatedAt = DateTimeOffset.UtcNow;
+
+                await _db.UpdateEntity(entity);
             }
 
-            var created = await _db.CreateEntity(new Data.Entities.Discord.Emote
-            {
-                Id = request.Id,
-                Name = request.Name,
-                Code = request.Code,
-                CreatedAt = DateTimeOffset.UtcNow,
-                UpdatedAt = DateTimeOffset.UtcNow
-            });
-
-            return _mapper.Map<EmoteDto>(created);
+            return Unit.Value;
         }
     }
 }

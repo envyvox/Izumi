@@ -32,7 +32,10 @@ namespace Izumi.Services.Discord.Guild.Queries
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Can't get text channel");
+                _logger.LogError(e,
+                    "Can't get text channel {ChannelId}",
+                    request.Id);
+
                 throw;
             }
         }

@@ -37,7 +37,7 @@ namespace Izumi.Services.Game.Localization.Commands
 
             if (entity is null)
             {
-                throw new Exception($"localization with id {request.Id} not found");
+                throw new Exception($"localization {request.Id} not found");
             }
 
             entity.Single = request.Single;

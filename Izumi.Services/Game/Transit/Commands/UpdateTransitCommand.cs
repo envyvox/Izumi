@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -37,7 +36,7 @@ namespace Izumi.Services.Game.Transit.Commands
 
             if (entity is null)
             {
-                throw new Exception($"transit with id {request.Id} not found");
+                throw new Exception($"transit {request.Id} not found");
             }
 
             entity.Duration = request.Duration;

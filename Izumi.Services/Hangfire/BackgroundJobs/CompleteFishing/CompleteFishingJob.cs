@@ -18,6 +18,7 @@ using Izumi.Services.Game.User.Commands;
 using Izumi.Services.Game.World.Queries;
 using Izumi.Services.Hangfire.Commands;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteFishing
 {
@@ -25,17 +26,24 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteFishing
     {
         private readonly IMediator _mediator;
         private readonly ILocalizationService _local;
+        private readonly ILogger<CompleteFishingJob> _logger;
 
         public CompleteFishingJob(
             IMediator mediator,
-            ILocalizationService local)
+            ILocalizationService local,
+            ILogger<CompleteFishingJob> logger)
         {
             _mediator = mediator;
             _local = local;
+            _logger = logger;
         }
 
         public async Task Execute(long userId)
         {
+            _logger.LogInformation(
+                "Complete fishing job executed for user {UserId}",
+                userId);
+
             var emotes = await _mediator.Send(new GetEmotesQuery());
             var timesDay = await _mediator.Send(new GetCurrentTimesDayQuery());
             var weather = await _mediator.Send(new GetWeatherTodayQuery());

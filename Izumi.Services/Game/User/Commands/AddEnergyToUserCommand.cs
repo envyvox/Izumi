@@ -5,6 +5,7 @@ using Izumi.Data;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.User.Commands
 {
@@ -12,10 +13,14 @@ namespace Izumi.Services.Game.User.Commands
 
     public class AddEnergyToUserHandler : IRequestHandler<AddEnergyToUserCommand>
     {
+        private readonly ILogger<AddEnergyToUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public AddEnergyToUserHandler(DbContextOptions options)
+        public AddEnergyToUserHandler(
+            DbContextOptions options,
+            ILogger<AddEnergyToUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -31,6 +36,10 @@ namespace Izumi.Services.Game.User.Commands
             entity.UpdatedAt = DateTimeOffset.UtcNow;
 
             await _db.UpdateEntity(entity);
+
+            _logger.LogInformation(
+                "Added user {UserId} energy amount {Amount}",
+                request.UserId, request.Amount);
 
             return Unit.Value;
         }

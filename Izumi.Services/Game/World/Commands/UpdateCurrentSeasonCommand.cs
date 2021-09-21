@@ -5,6 +5,7 @@ using Izumi.Data.Enums;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.World.Commands
 {
@@ -12,10 +13,14 @@ namespace Izumi.Services.Game.World.Commands
 
     public class UpdateCurrentSeasonHandler : IRequestHandler<UpdateCurrentSeasonCommand>
     {
+        private readonly ILogger<UpdateCurrentSeasonHandler> _logger;
         private readonly AppDbContext _db;
 
-        public UpdateCurrentSeasonHandler(DbContextOptions options)
+        public UpdateCurrentSeasonHandler(
+            DbContextOptions options,
+            ILogger<UpdateCurrentSeasonHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -26,6 +31,10 @@ namespace Izumi.Services.Game.World.Commands
             entity.CurrentSeason = request.Season;
 
             await _db.UpdateEntity(entity);
+
+            _logger.LogInformation(
+                "Updated current season to {Season}",
+                request.Season.ToString());
 
             return Unit.Value;
         }

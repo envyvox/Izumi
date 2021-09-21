@@ -5,6 +5,7 @@ using Izumi.Data;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.User.Commands
 {
@@ -12,10 +13,14 @@ namespace Izumi.Services.Game.User.Commands
 
     public class RemoveEnergyFromUserHandler : IRequestHandler<RemoveEnergyFromUserCommand>
     {
+        private readonly ILogger<RemoveEnergyFromUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public RemoveEnergyFromUserHandler(DbContextOptions options)
+        public RemoveEnergyFromUserHandler(
+            DbContextOptions options,
+            ILogger<RemoveEnergyFromUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -28,6 +33,10 @@ namespace Izumi.Services.Game.User.Commands
             entity.UpdatedAt = DateTimeOffset.UtcNow;
 
             await _db.UpdateEntity(entity);
+
+            _logger.LogInformation(
+                "Removed energy from user {UserId} amount {Amount}",
+                request.UserId, request.Amount);
 
             return Unit.Value;
         }

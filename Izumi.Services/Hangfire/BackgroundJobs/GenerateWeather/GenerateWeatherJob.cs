@@ -4,21 +4,29 @@ using Izumi.Data.Enums;
 using Izumi.Services.Game.World.Commands;
 using Izumi.Services.Game.World.Queries;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Hangfire.BackgroundJobs.GenerateWeather
 {
     public class GenerateWeatherJob : IGenerateWeatherJob
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<GenerateWeatherJob> _logger;
         private readonly Random _random = new();
 
-        public GenerateWeatherJob(IMediator mediator)
+        public GenerateWeatherJob(
+            IMediator mediator,
+            ILogger<GenerateWeatherJob> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         public async Task Execute()
         {
+            _logger.LogInformation(
+                "Generate weather job executed");
+
             var chance = _random.Next(1, 101);
             var oldWeatherToday = await _mediator.Send(new GetWeatherTodayQuery());
             var newWeatherToday = await _mediator.Send(new GetWeatherTomorrowQuery());

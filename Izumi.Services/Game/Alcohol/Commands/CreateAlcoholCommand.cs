@@ -7,6 +7,7 @@ using Izumi.Data.Extensions;
 using Izumi.Services.Game.Alcohol.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Alcohol.Commands
 {
@@ -15,13 +16,16 @@ namespace Izumi.Services.Game.Alcohol.Commands
     public class CreateAlcoholHandler : IRequestHandler<CreateAlcoholCommand, AlcoholDto>
     {
         private readonly IMapper _mapper;
+        private readonly ILogger<CreateAlcoholHandler> _logger;
         private readonly AppDbContext _db;
 
         public CreateAlcoholHandler(
             DbContextOptions options,
-            IMapper mapper)
+            IMapper mapper,
+            ILogger<CreateAlcoholHandler> logger)
         {
             _mapper = mapper;
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -40,6 +44,10 @@ namespace Izumi.Services.Game.Alcohol.Commands
                 Id = Guid.NewGuid(),
                 Name = request.Name
             });
+
+            _logger.LogInformation(
+                "Created alcohol with name {Name}",
+                request.Name);
 
             return _mapper.Map<AlcoholDto>(created);
         }

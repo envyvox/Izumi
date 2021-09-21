@@ -32,7 +32,7 @@ namespace Izumi.Services.Game.Crop.Queries
 
             if (entity is null)
             {
-                throw new Exception($"crop with id {request.Id} not found");
+                throw new Exception($"crop {request.Id} not found");
             }
 
             return _mapper.Map<CropDto>(entity);

@@ -34,7 +34,7 @@ namespace Izumi.Services.Discord.Guild.Queries
 
             if (guild is null)
             {
-                throw new Exception($"socket guild with id {guildId} was not found.");
+                throw new Exception($"socket guild {guildId} was not found.");
             }
 
             return guild;

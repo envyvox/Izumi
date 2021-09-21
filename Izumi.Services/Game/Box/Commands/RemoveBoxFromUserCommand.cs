@@ -6,6 +6,7 @@ using Izumi.Data.Enums;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Box.Commands
 {
@@ -13,10 +14,14 @@ namespace Izumi.Services.Game.Box.Commands
 
     public class RemoveBoxFromUserHandler : IRequestHandler<RemoveBoxFromUserCommand>
     {
+        private readonly ILogger<RemoveBoxFromUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public RemoveBoxFromUserHandler(DbContextOptions options)
+        public RemoveBoxFromUserHandler(
+            DbContextOptions options,
+            ILogger<RemoveBoxFromUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -36,6 +41,10 @@ namespace Izumi.Services.Game.Box.Commands
             entity.UpdatedAt = DateTimeOffset.UtcNow;
 
             await _db.UpdateEntity(entity);
+
+            _logger.LogInformation(
+                "Removed from user {UserId} box {Box} amount {Amount}",
+                request.UserId, request.Box.ToString(), request.Amount);
 
             return Unit.Value;
         }

@@ -6,6 +6,7 @@ using Izumi.Data.Entities.User;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Gathering.Commands
 {
@@ -13,10 +14,14 @@ namespace Izumi.Services.Game.Gathering.Commands
 
     public class AddGatheringToUserHandler : IRequestHandler<AddGatheringToUserCommand>
     {
+        private readonly ILogger<AddGatheringToUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public AddGatheringToUserHandler(DbContextOptions options)
+        public AddGatheringToUserHandler(
+            DbContextOptions options,
+            ILogger<AddGatheringToUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -38,6 +43,10 @@ namespace Izumi.Services.Game.Gathering.Commands
                     CreatedAt = DateTimeOffset.UtcNow,
                     UpdatedAt = DateTimeOffset.UtcNow
                 });
+
+                _logger.LogInformation(
+                    "Created user gathering entity for user {UserId} with gathering {GatheringId} and amount {Amount}",
+                    request.UserId, request.GatheringId, request.Amount);
             }
             else
             {
@@ -45,6 +54,10 @@ namespace Izumi.Services.Game.Gathering.Commands
                 entity.UpdatedAt = DateTimeOffset.UtcNow;
 
                 await _db.UpdateEntity(entity);
+
+                _logger.LogInformation(
+                    "Added user {UserId} gathering {GatheringId} amount {Amount}",
+                    request.UserId, request.GatheringId, request.Amount);
             }
 
             return Unit.Value;

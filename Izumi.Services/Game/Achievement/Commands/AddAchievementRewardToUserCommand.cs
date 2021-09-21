@@ -6,7 +6,6 @@ using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
-using Izumi.Services.Extensions;
 using Izumi.Services.Game.Achievement.Queries;
 using Izumi.Services.Game.Currency.Commands;
 using Izumi.Services.Game.Localization;

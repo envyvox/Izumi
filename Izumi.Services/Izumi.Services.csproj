@@ -6,7 +6,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Izumi.Data\Izumi.Data.csproj" />
-      <ProjectReference Include="..\Izumi.Framework\Izumi.Framework.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -14,6 +13,8 @@
       <PackageReference Include="CoordinateSharp" Version="2.11.1.1" />
       <PackageReference Include="Discord.Net.Labs" Version="3.0.0" />
       <PackageReference Include="Discord.Net.Labs.Commands" Version="3.0.0" />
+      <PackageReference Include="Hangfire" Version="1.7.25" />
+      <PackageReference Include="Hangfire.Core" Version="1.7.25" />
       <PackageReference Include="Humanizer.Core.ru" Version="2.11.10" />
       <PackageReference Include="MediatR" Version="9.0.0" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />

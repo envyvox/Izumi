@@ -31,7 +31,7 @@ namespace Izumi.Services.Game.Fish.Queries
 
             if (entity is null)
             {
-                throw new Exception($"fish with id {request.Id} not found");
+                throw new Exception($"fish {request.Id} not found");
             }
 
             return _mapper.Map<FishDto>(entity);

@@ -5,6 +5,7 @@ using Izumi.Data;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Food.Commands
 {
@@ -12,10 +13,14 @@ namespace Izumi.Services.Game.Food.Commands
 
     public class RemoveFoodFromUserHandler : IRequestHandler<RemoveFoodFromUserCommand>
     {
+        private readonly ILogger<RemoveFoodFromUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public RemoveFoodFromUserHandler(DbContextOptions options)
+        public RemoveFoodFromUserHandler(
+            DbContextOptions options,
+            ILogger<RemoveFoodFromUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -35,6 +40,10 @@ namespace Izumi.Services.Game.Food.Commands
             entity.UpdatedAt = DateTimeOffset.UtcNow;
 
             await _db.UpdateEntity(entity);
+
+            _logger.LogInformation(
+                "Removed from user {UserId} food {FoodId} amount {Amount}",
+                request.UserId, request.FoodId, request.Amount);
 
             return Unit.Value;
         }

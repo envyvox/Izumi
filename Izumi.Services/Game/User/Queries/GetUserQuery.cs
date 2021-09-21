@@ -40,7 +40,7 @@ namespace Izumi.Services.Game.User.Queries
 
                 if (socketUser.IsBot)
                 {
-                    throw new Exception($"user with id {request.UserId} are bot");
+                    throw new Exception($"user {request.UserId} are bot");
                 }
 
                 return await _mediator.Send(new CreateUserCommand(request.UserId));

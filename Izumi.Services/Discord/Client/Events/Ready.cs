@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Discord;
 using Discord.WebSocket;
 using Hangfire;
+using Izumi.Services.Hangfire.BackgroundJobs.EnergyRecovery;
 using Izumi.Services.Hangfire.BackgroundJobs.GenerateWeather;
 using Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes;
 using MediatR;
@@ -34,9 +34,13 @@ namespace Izumi.Services.Discord.Client.Events
         {
             try
             {
-                _logger.LogInformation("Bot started");
+                _logger.LogInformation(
+                    "Bot started");
 
                 RecurringJob.AddOrUpdate<IUploadEmotesJob>("upload-emotes",
+                    x => x.Execute(),
+                    Cron.Hourly, _timeZoneInfo);
+                RecurringJob.AddOrUpdate<IEnergyRecoveryJob>("recovery-energy",
                     x => x.Execute(),
                     Cron.Hourly, _timeZoneInfo);
 
@@ -46,7 +50,9 @@ namespace Izumi.Services.Discord.Client.Events
             }
             catch (Exception e)
             {
-                _logger.LogCritical(e, "Unable to startup the bot. Application will now exit");
+                _logger.LogCritical(e,
+                    "Unable to startup the bot. Application will now exit");
+
                 _lifetime.StopApplication();
             }
 

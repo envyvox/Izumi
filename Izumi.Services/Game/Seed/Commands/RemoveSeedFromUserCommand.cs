@@ -5,6 +5,7 @@ using Izumi.Data;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Seed.Commands
 {
@@ -12,10 +13,14 @@ namespace Izumi.Services.Game.Seed.Commands
 
     public class RemoveSeedFromUserHandler : IRequestHandler<RemoveSeedFromUserCommand>
     {
+        private readonly ILogger<RemoveSeedFromUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public RemoveSeedFromUserHandler(DbContextOptions options)
+        public RemoveSeedFromUserHandler(
+            DbContextOptions options,
+            ILogger<RemoveSeedFromUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -35,6 +40,10 @@ namespace Izumi.Services.Game.Seed.Commands
             entity.UpdatedAt = DateTimeOffset.UtcNow;
 
             await _db.UpdateEntity(entity);
+
+            _logger.LogInformation(
+                "Removed from user {UserId} seed {SeedId} amount {Amount}",
+                request.UserId, request.SeedId, request.Amount);
 
             return Unit.Value;
         }

@@ -33,7 +33,7 @@ namespace Izumi.Services.Game.Alcohol.Queries
 
             if (entity is null)
             {
-                throw new Exception($"alcohol with id {request.Id} not found");
+                throw new Exception($"alcohol {request.Id} not found");
             }
 
             return _mapper.Map<AlcoholDto>(entity);

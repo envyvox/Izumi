@@ -6,6 +6,7 @@ using Izumi.Data.Entities.User;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Drink.Commands
 {
@@ -13,10 +14,14 @@ namespace Izumi.Services.Game.Drink.Commands
 
     public class AddDrinkToUserHandler : IRequestHandler<AddDrinkToUserCommand>
     {
+        private readonly ILogger<AddDrinkToUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public AddDrinkToUserHandler(DbContextOptions options)
+        public AddDrinkToUserHandler(
+            DbContextOptions options,
+            ILogger<AddDrinkToUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -38,6 +43,10 @@ namespace Izumi.Services.Game.Drink.Commands
                     CreatedAt = DateTimeOffset.UtcNow,
                     UpdatedAt = DateTimeOffset.UtcNow
                 });
+
+                _logger.LogInformation(
+                    "Create user drink entity for user {UserId} with drink {DrinkId} and amount {Amount}",
+                    request.UserId, request.DrinkId, request.Amount);
             }
             else
             {
@@ -45,6 +54,10 @@ namespace Izumi.Services.Game.Drink.Commands
                 entity.UpdatedAt = DateTimeOffset.UtcNow;
 
                 await _db.UpdateEntity(entity);
+
+                _logger.LogInformation(
+                    "Added user {UserId} drink {DrinkId} amount {Amount}",
+                    request.UserId, request.DrinkId, request.Amount);
             }
 
             return Unit.Value;

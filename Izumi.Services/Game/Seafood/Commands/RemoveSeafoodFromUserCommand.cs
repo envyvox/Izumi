@@ -5,6 +5,7 @@ using Izumi.Data;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Seafood.Commands
 {
@@ -12,10 +13,14 @@ namespace Izumi.Services.Game.Seafood.Commands
 
     public class RemoveSeafoodFromUserHandler : IRequestHandler<RemoveSeafoodFromUserCommand>
     {
+        private readonly ILogger<RemoveSeafoodFromUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public RemoveSeafoodFromUserHandler(DbContextOptions options)
+        public RemoveSeafoodFromUserHandler(
+            DbContextOptions options,
+            ILogger<RemoveSeafoodFromUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -35,6 +40,10 @@ namespace Izumi.Services.Game.Seafood.Commands
             entity.UpdatedAt = DateTimeOffset.UtcNow;
 
             await _db.UpdateEntity(entity);
+
+            _logger.LogInformation(
+                "Removed from user {UserId} seafood {SeafoodId} amount {Amount}",
+                request.UserId, request.SeafoodId, request.Amount);
 
             return Unit.Value;
         }

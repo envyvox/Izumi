@@ -5,6 +5,7 @@ using Izumi.Data;
 using Izumi.Data.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Game.Product.Commands
 {
@@ -12,10 +13,14 @@ namespace Izumi.Services.Game.Product.Commands
 
     public class RemoveProductFromUserHandler : IRequestHandler<RemoveProductFromUserCommand>
     {
+        private readonly ILogger<RemoveProductFromUserHandler> _logger;
         private readonly AppDbContext _db;
 
-        public RemoveProductFromUserHandler(DbContextOptions options)
+        public RemoveProductFromUserHandler(
+            DbContextOptions options,
+            ILogger<RemoveProductFromUserHandler> logger)
         {
+            _logger = logger;
             _db = new AppDbContext(options);
         }
 
@@ -35,6 +40,10 @@ namespace Izumi.Services.Game.Product.Commands
             entity.UpdatedAt = DateTimeOffset.UtcNow;
 
             await _db.UpdateEntity(entity);
+
+            _logger.LogInformation(
+                "Removed from user {UserId} product {ProductId} amount {Amount}",
+                request.UserId, request.ProductId, request.Amount);
 
             return Unit.Value;
         }

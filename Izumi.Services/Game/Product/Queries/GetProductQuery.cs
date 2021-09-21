@@ -31,7 +31,7 @@ namespace Izumi.Services.Game.Product.Queries
 
             if (entity is null)
             {
-                throw new Exception($"product with id {request.Id} not found");
+                throw new Exception($"product {request.Id} not found");
             }
 
             return _mapper.Map<ProductDto>(entity);
