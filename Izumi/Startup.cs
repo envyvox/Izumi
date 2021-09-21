@@ -1,6 +1,7 @@
 using System;
 using Discord.Commands;
 using Hangfire;
+using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
 using Izumi.Data;
 using Izumi.Services.Discord.Client;
@@ -14,6 +15,7 @@ using Izumi.Services.Hangfire.BackgroundJobs.CompleteFishing;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteMaking;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteMaking.Impl;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit;
+using Izumi.Services.Hangfire.BackgroundJobs.EnergyRecovery;
 using Izumi.Services.Hangfire.BackgroundJobs.GenerateWeather;
 using Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes;
 using MediatR;
@@ -48,9 +50,9 @@ namespace Izumi
                 o.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 o.UseNpgsql(_config.GetConnectionString("main"),
                     s => { s.MigrationsAssembly(typeof(AppDbContext).Assembly.GetName().Name); });
-                o.EnableSensitiveDataLogging();
             });
 
+            services.AddHangfireServer();
             services.AddHangfire(config =>
             {
                 GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
@@ -86,6 +88,7 @@ namespace Izumi
             services.AddScoped<ICompleteCraftingAlcoholJob, CompleteCraftingAlcoholJob>();
             services.AddScoped<ICompleteCraftingDrinkJob, CompleteCraftingDrinkJob>();
             services.AddScoped<IGenerateWeatherJob, GenerateWeatherJob>();
+            services.AddScoped<IEnergyRecoveryJob, EnergyRecoveryJob>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -98,8 +101,10 @@ namespace Izumi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHangfireServer();
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new AllowAllAuthorizationFilter() }
+            });
 
             app.UseSerilogRequestLogging();
 
@@ -124,6 +129,14 @@ namespace Izumi
             using var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
             context.Database.Migrate();
+        }
+
+        private class AllowAllAuthorizationFilter : IDashboardAuthorizationFilter
+        {
+            public bool Authorize(DashboardContext context)
+            {
+                return true;
+            }
         }
     }
 }
