@@ -11,7 +11,6 @@ namespace Izumi.Services.Discord.Embed
     public record RespondEmbedCommand(
             SocketSlashCommand Command,
             EmbedBuilder Builder,
-            bool Ephemeral = false,
             MessageComponent Component = null,
             string Text = null)
         : IRequest;
@@ -38,7 +37,6 @@ namespace Izumi.Services.Discord.Embed
                 text: request.Text,
                 embeds: new[] { embed },
                 isTTS: false,
-                ephemeral: request.Ephemeral,
                 allowedMentions: AllowedMentions.None,
                 options: null,
                 component: request.Component);

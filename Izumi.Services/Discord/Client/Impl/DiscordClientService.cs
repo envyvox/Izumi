@@ -34,7 +34,6 @@ namespace Izumi.Services.Discord.Client.Impl
                 LogLevel = LogSeverity.Info,
                 MessageCacheSize = 100,
                 AlwaysDownloadUsers = true,
-                AlwaysAcknowledgeInteractions = false,
                 GatewayIntents =
                     GatewayIntents.Guilds |
                     GatewayIntents.GuildMembers |

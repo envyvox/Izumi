@@ -46,12 +46,6 @@ namespace Izumi.Services.Discord.Client.Events
 
         public async Task<Unit> Handle(InteractionCreated request, CancellationToken ct)
         {
-            await request.Interaction.DeferAsync(true, new RequestOptions
-            {
-                RetryMode = RetryMode.Retry502,
-                Timeout = 10000
-            });
-
             try
             {
                 switch (request.Interaction)
@@ -65,39 +59,74 @@ namespace Izumi.Services.Discord.Client.Events
 
                         return command.Data.Name switch
                         {
-                            "доска-сообщества" => await _mediator.Send(new CommunityDescCommand(command)),
-                            "мир" => await _mediator.Send(new WorldInfoCommand(command)),
-                            "профиль" => await _mediator.Send(new ProfileCommand(command)),
-                            "информация" => await _mediator.Send(new UpdateAboutCommand(command)),
-                            "инвентарь" => await _mediator.Send(new InventoryCommand(command)),
-                            "коллекция" => await _mediator.Send(new CollectionCommand(command)),
-                            "титулы" => await _mediator.Send(new TitlesCommand(command)),
-                            "титул" => await _mediator.Send(new UpdateTitleCommand(command)),
-                            "баннеры" => await _mediator.Send(new BannersCommand(command)),
-                            "баннер" => await _mediator.Send(new UpdateBannerCommand(command)),
-                            "приглашения" => await _mediator.Send(new ReferralListCommand(command)),
-                            "пригласил" => await _mediator.Send(new ReferralSetCommand(command)),
-                            "отправления" => await _mediator.Send(new TransitListCommand(command)),
-                            "отправиться" => await _mediator.Send(new TransitMakeCommand(command)),
-                            "исследовать" => await _mediator.Send(new ExploreGardenCommand(command)),
-                            "копать" => await _mediator.Send(new ExploreCastleCommand(command)),
-                            "рыбачить" => await _mediator.Send(new FishingCommand(command)),
-                            "открыть" => await _mediator.Send(new OpenBoxCommand(command)),
-                            "магазин" => await _mediator.Send(new ShopCommand(command)),
-                            "контракты" => await _mediator.Send(new ContractListCommand(command)),
-                            "контракт" => await _mediator.Send(new ContractAcceptCommand(command)),
-                            "съесть" => await _mediator.Send(new EatFoodCommand(command)),
-                            "репутация" => await _mediator.Send(new ReputationsCommand(command)),
-                            "участок" => await _mediator.Send(new FieldCommand(command)),
-                            "изготовление" => await _mediator.Send(new CraftingListCommand(command)),
-                            "изготовить" => await _mediator.Send(new CraftingStartCommand(command)),
-                            "приготовление" => await _mediator.Send(new CookingListCommand(command)),
-                            "приготовить" => await _mediator.Send(new CookingStartCommand(command)),
-                            "лотерея" => await _mediator.Send(new LotteryCommand(command)),
-                            "ставка" => await _mediator.Send(new BetCommand(command)),
-                            "обучение" => await _mediator.Send(new TutorialCommand(command)),
-                            "рынок" => await _mediator.Send(new MarketCommand(command)),
-                            "достижения" => await _mediator.Send(new AchievementsCommand(command)),
+                            "доска-сообщества" =>
+                                await HandleInteraction(request.Interaction, new CommunityDescCommand(command), true),
+                            "мир" =>
+                                await HandleInteraction(request.Interaction, new WorldInfoCommand(command), true),
+                            "профиль" =>
+                                await HandleInteraction(request.Interaction, new ProfileCommand(command), true),
+                            "информация" =>
+                                await HandleInteraction(request.Interaction, new UpdateAboutCommand(command), false),
+                            "инвентарь" =>
+                                await HandleInteraction(request.Interaction, new InventoryCommand(command), true),
+                            "коллекция" =>
+                                await HandleInteraction(request.Interaction, new CollectionCommand(command), true),
+                            "титулы" =>
+                                await HandleInteraction(request.Interaction, new TitlesCommand(command), true),
+                            "титул" =>
+                                await HandleInteraction(request.Interaction, new UpdateTitleCommand(command), false),
+                            "баннеры" =>
+                                await HandleInteraction(request.Interaction, new BannersCommand(command), true),
+                            "баннер" =>
+                                await HandleInteraction(request.Interaction, new UpdateBannerCommand(command), false),
+                            "приглашения" =>
+                                await HandleInteraction(request.Interaction, new ReferralListCommand(command), true),
+                            "пригласил" =>
+                                await HandleInteraction(request.Interaction, new ReferralSetCommand(command), false),
+                            "отправления" =>
+                                await HandleInteraction(request.Interaction, new TransitListCommand(command), true),
+                            "отправиться" =>
+                                await HandleInteraction(request.Interaction, new TransitMakeCommand(command), false),
+                            "исследовать" =>
+                                await HandleInteraction(request.Interaction, new ExploreGardenCommand(command), false),
+                            "копать" =>
+                                await HandleInteraction(request.Interaction, new ExploreCastleCommand(command), false),
+                            "рыбачить" =>
+                                await HandleInteraction(request.Interaction, new FishingCommand(command), false),
+                            "открыть" =>
+                                await HandleInteraction(request.Interaction, new OpenBoxCommand(command), false),
+                            "магазин-посмотреть" =>
+                                await HandleInteraction(request.Interaction, new ShopListCommand(command), true),
+                            "магазин-купить" =>
+                                await HandleInteraction(request.Interaction, new ShopBuyCommand(command), false),
+                            "контракты" =>
+                                await HandleInteraction(request.Interaction, new ContractListCommand(command), true),
+                            "контракт" =>
+                                await HandleInteraction(request.Interaction, new ContractAcceptCommand(command), false),
+                            "съесть" =>
+                                await HandleInteraction(request.Interaction, new EatFoodCommand(command), false),
+                            "репутация" =>
+                                await HandleInteraction(request.Interaction, new ReputationsCommand(command), true),
+                            "участок" =>
+                                await HandleInteraction(request.Interaction, new FieldCommand(command), true),
+                            "изготовление" =>
+                                await HandleInteraction(request.Interaction, new CraftingListCommand(command), true),
+                            "изготовить" =>
+                                await HandleInteraction(request.Interaction, new CraftingStartCommand(command), false),
+                            "приготовление" =>
+                                await HandleInteraction(request.Interaction, new CookingListCommand(command), true),
+                            "приготовить" =>
+                                await HandleInteraction(request.Interaction, new CookingStartCommand(command), false),
+                            "лотерея" =>
+                                await HandleInteraction(request.Interaction, new LotteryCommand(command), true),
+                            "ставка" =>
+                                await HandleInteraction(request.Interaction, new BetCommand(command), false),
+                            "обучение" =>
+                                await HandleInteraction(request.Interaction, new TutorialCommand(command), true),
+                            "рынок" =>
+                                await HandleInteraction(request.Interaction, new MarketCommand(command), true),
+                            "достижения" =>
+                                await HandleInteraction(request.Interaction, new AchievementsCommand(command), true),
                             _ => Unit.Value
                         };
                 }
@@ -111,13 +140,26 @@ namespace Izumi.Services.Discord.Client.Events
                     .WithColor(new Color(uint.Parse("202225", NumberStyles.HexNumber)))
                     .WithAuthor("Ой, кажется что-то пошло не так...")
                     .WithDescription(
-                        $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Interaction.User.Mention}, {e.Message}")
+                        $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} " +
+                        $"{request.Interaction.User.Mention}, {e.Message}")
                     .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.CommandError)));
 
-                await request.Interaction.FollowupAsync("", new[] { embed.Build() }, false, true);
+                await request.Interaction.FollowupAsync("", new[] { embed.Build() });
             }
 
             return Unit.Value;
+        }
+
+        private async Task<Unit> HandleInteraction<T>(SocketInteraction interaction, T implementation, bool ephemeral)
+            where T : IRequest
+        {
+            await interaction.DeferAsync(ephemeral, new RequestOptions
+            {
+                RetryMode = RetryMode.Retry502,
+                Timeout = 10000
+            });
+
+            return await _mediator.Send(implementation);
         }
     }
 }
