@@ -7,7 +7,8 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteMaking.Impl
     {
         public async Task Execute(long userId, Guid alcoholId, uint amount)
         {
-            throw new NotImplementedException();
+            // todo implement
+            await Task.CompletedTask;
         }
     }
 }
