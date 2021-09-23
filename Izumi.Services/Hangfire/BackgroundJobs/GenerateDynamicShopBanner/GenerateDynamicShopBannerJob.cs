@@ -27,7 +27,7 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.GenerateDynamicShopBanner
             _logger.LogInformation(
                 "Generate dynamic shop banner job executed");
 
-            await _db.Database.ExecuteSqlRawAsync("truncate dynamic_shop_banners restart identity;");
+            await _db.Database.ExecuteSqlRawAsync("truncate dynamic_shop_banners;");
 
             var banners = await _db.Banners
                 .OrderByRandom()

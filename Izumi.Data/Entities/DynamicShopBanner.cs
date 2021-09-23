@@ -5,10 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Izumi.Data.Entities
 {
-    public class DynamicShopBanner : IUniqueIdentifiedEntity, IAutoIncrementedEntity
+    public class DynamicShopBanner : IUniqueIdentifiedEntity
     {
         public Guid Id { get; set; }
-        public long AutoIncrementedId { get; set; }
 
         public Guid BannerId { get; set; }
         public Banner Banner { get; set; }
@@ -22,7 +21,6 @@ namespace Izumi.Data.Entities
             builder.HasIndex(x => x.BannerId).IsUnique();
 
             builder.Property(x => x.Id).IsRequired().ValueGeneratedNever();
-            builder.Property(x => x.AutoIncrementedId).IsRequired().ValueGeneratedOnAdd();
 
             builder
                 .HasOne(x => x.Banner)
