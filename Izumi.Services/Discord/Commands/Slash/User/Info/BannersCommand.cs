@@ -52,7 +52,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info
                 {
                     counter = 0;
 
-                    embed.AddField(StringExtensions.EmptyChar, StringExtensions.EmptyChar, true);
+                    embed.AddEmptyField(true);
                 }
 
                 if (userBanners.Count > 16) embed.WithFooter("Тут отображаются только первые 16 твоих баннеров.");

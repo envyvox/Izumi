@@ -9,6 +9,7 @@ using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Calculation;
 using Izumi.Services.Game.Localization;
 using Izumi.Services.Game.Transit.Queries;
@@ -64,8 +65,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
                 if (counter == 2)
                 {
                     counter = 0;
-
-                    embed.AddField(StringExtensions.EmptyChar, StringExtensions.EmptyChar, true);
+                    embed.AddEmptyField(true);
                 }
             }
 
