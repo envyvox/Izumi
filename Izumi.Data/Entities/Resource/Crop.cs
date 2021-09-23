@@ -30,7 +30,7 @@ namespace Izumi.Data.Entities.Resource
 
             builder
                 .HasOne(x => x.Seed)
-                .WithOne()
+                .WithOne(x => x.Crop)
                 .HasForeignKey<Crop>(x => x.SeedId);
         }
     }

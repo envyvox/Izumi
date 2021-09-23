@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Izumi.Services.Game.Seed.Queries
 {
-    public record GetSeedQuery(Guid Id) : IRequest<SeedDto>;
+    public record GetSeedByIncIdQuery(long IncId) : IRequest<SeedDto>;
 
-    public class GetSeedHandler : IRequestHandler<GetSeedQuery, SeedDto>
+    public class GetSeedByIncIdHandler : IRequestHandler<GetSeedByIncIdQuery, SeedDto>
     {
         private readonly IMapper _mapper;
         private readonly AppDbContext _db;
 
-        public GetSeedHandler(
+        public GetSeedByIncIdHandler(
             DbContextOptions options,
             IMapper mapper)
         {
@@ -24,15 +24,15 @@ namespace Izumi.Services.Game.Seed.Queries
             _mapper = mapper;
         }
 
-        public async Task<SeedDto> Handle(GetSeedQuery request, CancellationToken ct)
+        public async Task<SeedDto> Handle(GetSeedByIncIdQuery request, CancellationToken ct)
         {
             var entity = await _db.Seeds
                 .Include(x => x.Crop)
-                .SingleOrDefaultAsync(x => x.Id == request.Id);
+                .SingleOrDefaultAsync(x => x.AutoIncrementedId == request.IncId);
 
             if (entity is null)
             {
-                throw new Exception($"seed {request.Id} not found");
+                throw new Exception("никогда не слышала о семенах с таким номером.");
             }
 
             return _mapper.Map<SeedDto>(entity);

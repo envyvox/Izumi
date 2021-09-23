@@ -12,7 +12,8 @@ namespace Izumi.Services.Game.Seed.Models
         uint GrowthDays,
         uint ReGrowthDays,
         bool IsMultiply,
-        uint Price);
+        uint Price,
+        Data.Entities.Resource.Crop Crop);
 
     public class SeedProfile : Profile
     {

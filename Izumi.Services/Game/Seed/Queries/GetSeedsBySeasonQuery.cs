@@ -4,20 +4,21 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Izumi.Data;
+using Izumi.Data.Enums;
 using Izumi.Services.Game.Seed.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Izumi.Services.Game.Seed.Queries
 {
-    public record GetSeedsQuery : IRequest<List<SeedDto>>;
+    public record GetSeedsBySeasonQuery(SeasonType Season) : IRequest<List<SeedDto>>;
 
-    public class GetSeedsHandler : IRequestHandler<GetSeedsQuery, List<SeedDto>>
+    public class GetSeedsBySeasonHandler : IRequestHandler<GetSeedsBySeasonQuery, List<SeedDto>>
     {
         private readonly IMapper _mapper;
         private readonly AppDbContext _db;
 
-        public GetSeedsHandler(
+        public GetSeedsBySeasonHandler(
             DbContextOptions options,
             IMapper mapper)
         {
@@ -25,11 +26,12 @@ namespace Izumi.Services.Game.Seed.Queries
             _mapper = mapper;
         }
 
-        public async Task<List<SeedDto>> Handle(GetSeedsQuery request, CancellationToken ct)
+        public async Task<List<SeedDto>> Handle(GetSeedsBySeasonQuery request, CancellationToken cancellationToken)
         {
             var entities = await _db.Seeds
                 .Include(x => x.Crop)
                 .OrderBy(x => x.AutoIncrementedId)
+                .Where(x => x.Season == request.Season)
                 .ToListAsync();
 
             return _mapper.Map<List<SeedDto>>(entities);

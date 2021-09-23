@@ -16,6 +16,7 @@ namespace Izumi.Data.Entities.Resource
         public uint ReGrowthDays { get; set; }
         public bool IsMultiply { get; set; }
         public uint Price { get; set; }
+        public Crop Crop { get; set; }
     }
 
     public class SeedConfiguration : IEntityTypeConfiguration<Seed>
