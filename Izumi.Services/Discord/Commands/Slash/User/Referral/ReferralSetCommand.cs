@@ -38,11 +38,13 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Referral
             if (user.Id == (long) tSocketUser.Id)
             {
                 embed.WithDescription(
+                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     "ты не можешь указать самого себя как пригласившего тебя пользователя.");
             }
             else if (tSocketUser.IsBot)
             {
                 embed.WithDescription(
+                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     "ты не можешь указать бота как пригласившего тебя пользователя.");
             }
             else
@@ -55,6 +57,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Referral
                     var rSocketUser = await _mediator.Send(new GetSocketGuildUserQuery((ulong) rUser.Id));
 
                     embed.WithDescription(
+                        $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                         $"ты уже указал {emotes.GetEmote(rUser.Title.EmoteName())} {rUser.Title.Localize()} {rSocketUser.Mention} " +
                         "как пригласившего тебя пользователя.");
                 }

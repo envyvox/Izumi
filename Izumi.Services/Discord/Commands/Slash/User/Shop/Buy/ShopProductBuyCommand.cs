@@ -54,6 +54,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Shop.Buy
             if (userCurrency.Amount < price)
             {
                 embed.WithDescription(
+                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     $"у тебя недостаточно {emotes.GetEmote(CurrencyType.Ien.ToString())} " +
                     $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString())} " +
                     $"для приобретения {emotes.GetEmote(product.Name)} {amount} " +

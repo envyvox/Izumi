@@ -58,11 +58,13 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
             if (hasMovement)
             {
                 embed.WithDescription(
+                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     "ты находишься в пути и не можешь отправиться в другую локацию до прибытия.");
             }
             else if (destination == user.Location)
             {
                 embed.WithDescription(
+                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     "ты уже находишься в данной локации, не нужно никуда отправляться.");
             }
             else
@@ -73,6 +75,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
                 if (userCurrency.Amount < transit.Price)
                 {
                     embed.WithDescription(
+                        $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                         $"для оплаты этого транспорта необходимо {emotes.GetEmote(CurrencyType.Ien.ToString())} {transit.Price} " +
                         $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString(), transit.Price)}, которых у тебя нет.");
                 }

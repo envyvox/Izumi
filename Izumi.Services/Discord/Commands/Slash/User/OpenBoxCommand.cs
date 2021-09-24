@@ -62,6 +62,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User
             if (userBox.Amount < boxAmount)
             {
                 embed.WithDescription(
+                    $"{_emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     $"у тебя нет столько {_emotes.GetEmote(boxType.EmoteName())} " +
                     $"{_local.Localize(LocalizationCategoryType.Box, boxType.ToString())} сколько ты хочешь открыть.");
             }

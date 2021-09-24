@@ -38,6 +38,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info.Interaction
             if (!hasTitle)
             {
                 embed.WithDescription(
+                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     $"у тебя нет титула {emotes.GetEmote(title.EmoteName())} {title.Localize()}.");
             }
             else

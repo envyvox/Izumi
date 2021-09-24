@@ -33,6 +33,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info.Interaction
         {
             var newInfo = (string) request.Command.Data.Options.First().Value;
 
+            var emotes = await _mediator.Send(new GetEmotesQuery());
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
             var userCooldown = await _mediator.Send(new GetUserCooldownQuery(user.Id, CooldownType.UpdateAbout));
 
@@ -42,18 +43,18 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info.Interaction
             if (userCooldown.Expiration > DateTimeOffset.UtcNow)
             {
                 embed.WithDescription(
+                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     "обновление информации в профиле доступно через " +
                     $"{(userCooldown.Expiration - DateTimeOffset.UtcNow).TotalHours.Hours().Humanize(2, new CultureInfo("ru-RU"))}.");
             }
             else if (newInfo.Length is < 2 or > 1024)
             {
                 embed.WithDescription(
+                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     "информация профиля должна быть длинее 1 и короче 1024 символов");
             }
             else
             {
-                var emotes = await _mediator.Send(new GetEmotesQuery());
-
                 await _mediator.Send(new UpdateUserAboutCommand(user.Id, newInfo));
                 await _mediator.Send(new CreateUserCooldownCommand(
                     user.Id, CooldownType.UpdateAbout, TimeSpan.FromDays(3)));

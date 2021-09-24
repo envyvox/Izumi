@@ -51,11 +51,15 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Shop.Buy
 
             if (hasBanner)
             {
-                embed.WithDescription("");
+                embed.WithDescription(
+                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
+                    "");
             }
             else if (userCurrency.Amount < banner.Price)
             {
-                embed.WithDescription("");
+                embed.WithDescription(
+                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
+                    "");
             }
             else
             {

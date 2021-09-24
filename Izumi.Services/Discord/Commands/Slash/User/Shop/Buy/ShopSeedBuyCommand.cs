@@ -56,12 +56,14 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Shop.Buy
             if (seed.Season != season)
             {
                 embed.WithDescription(
+                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     $"купить можно только семена текущего {emotes.GetEmote(season.EmoteName())} сезона, " +
                     "никаких других на полках магазина не найти.");
             }
             else if (userCurrency.Amount < price)
             {
                 embed.WithDescription(
+                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     $"у тебя недостаточно {emotes.GetEmote(CurrencyType.Ien.ToString())} " +
                     $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString())} " +
                     $"для приобретения {emotes.GetEmote(seed.Name)} {amount} " +
