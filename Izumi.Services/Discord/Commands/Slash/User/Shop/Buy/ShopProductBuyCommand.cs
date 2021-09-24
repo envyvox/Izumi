@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -47,23 +46,25 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Shop.Buy
             var product = await _mediator.Send(new GetProductByIncIdQuery(incId));
             var userCurrency = await _mediator.Send(new GetUserCurrencyQuery(user.Id, CurrencyType.Ien));
 
+            var embed = new EmbedBuilder()
+                .WithAuthor("Магазин продуктов");
+
             var price = product.Price * amount;
 
             if (userCurrency.Amount < price)
             {
-                await Task.FromException(new Exception(
+                embed.WithDescription(
                     $"у тебя недостаточно {emotes.GetEmote(CurrencyType.Ien.ToString())} " +
                     $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString())} " +
                     $"для приобретения {emotes.GetEmote(product.Name)} {amount} " +
-                    $"{_local.Localize(LocalizationCategoryType.Product, product.Name, amount)}."));
+                    $"{_local.Localize(LocalizationCategoryType.Product, product.Name, amount)}.");
             }
             else
             {
                 await _mediator.Send(new RemoveCurrencyFromUserCommand(user.Id, CurrencyType.Ien, price));
                 await _mediator.Send(new AddProductToUserCommand(user.Id, product.Id, amount));
 
-                var embed = new EmbedBuilder()
-                    .WithAuthor("Магазин продуктов")
+                embed
                     .WithDescription(
                         $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                         $"ты успешно приобрел {emotes.GetEmote(product.Name)} {amount} " +
@@ -71,11 +72,9 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Shop.Buy
                         $"{emotes.GetEmote(CurrencyType.Ien.ToString())} {price} " +
                         $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString(), price)}.")
                     .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.ShopProduct)));
-
-                return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
             }
 
-            return Unit.Value;
+            return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
         }
     }
 }

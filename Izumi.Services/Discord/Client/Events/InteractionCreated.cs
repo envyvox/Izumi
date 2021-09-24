@@ -25,6 +25,7 @@ using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using static Izumi.Services.Extensions.ExceptionExtensions;
 using JsonSerializerOptions = Izumi.Services.Extensions.JsonSerializerOptions;
 
 namespace Izumi.Services.Discord.Client.Events
@@ -131,7 +132,7 @@ namespace Izumi.Services.Discord.Client.Events
                         };
                 }
             }
-            catch (Exception e)
+            catch (GameUserExpectedException e)
             {
                 var emotes = await _mediator.Send(new GetEmotesQuery());
                 var user = await _mediator.Send(new GetUserQuery((long) request.Interaction.User.Id));
@@ -145,6 +146,24 @@ namespace Izumi.Services.Discord.Client.Events
                     .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.CommandError)));
 
                 await request.Interaction.FollowupAsync("", new[] { embed.Build() });
+            }
+            catch (Exception e)
+            {
+                var emotes = await _mediator.Send(new GetEmotesQuery());
+                var user = await _mediator.Send(new GetUserQuery((long) request.Interaction.User.Id));
+
+                var embed = new EmbedBuilder()
+                    .WithColor(new Color(uint.Parse("202225", NumberStyles.HexNumber)))
+                    .WithAuthor("Ой, кажется что-то пошло не так...")
+                    .WithDescription(
+                        $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} " +
+                        $"{request.Interaction.User.Mention}, произошло что-то необычное и я уже сообщила об " +
+                        "этом команде разработки. Приношу извинения за моих глупых создателей, они обязательно исправятся.")
+                    .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.CommandError)));
+
+                await request.Interaction.FollowupAsync("", new[] { embed.Build() });
+
+                _logger.LogError(e, "Interaction ended with unexpected exception");
             }
 
             return Unit.Value;

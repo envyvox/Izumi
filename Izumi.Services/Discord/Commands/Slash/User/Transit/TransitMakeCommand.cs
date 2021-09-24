@@ -52,15 +52,18 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
             var destination = (LocationType) (long) request.Command.Data.Options.First().Value;
             var hasMovement = await _mediator.Send(new CheckUserHasMovementQuery(user.Id));
 
+            var embed = new EmbedBuilder()
+                .WithAuthor("Отправление");
+
             if (hasMovement)
             {
-                await Task.FromException(new Exception(
-                    "ты находишься в пути и не можешь отправиться в другую локацию до прибытия."));
+                embed.WithDescription(
+                    "ты находишься в пути и не можешь отправиться в другую локацию до прибытия.");
             }
             else if (destination == user.Location)
             {
-                await Task.FromException(new Exception(
-                    "ты уже находишься в данной локации, не нужно никуда отправляться."));
+                embed.WithDescription(
+                    "ты уже находишься в данной локации, не нужно никуда отправляться.");
             }
             else
             {
@@ -69,9 +72,9 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
 
                 if (userCurrency.Amount < transit.Price)
                 {
-                    await Task.FromException(new Exception(
+                    embed.WithDescription(
                         $"для оплаты этого транспорта необходимо {emotes.GetEmote(CurrencyType.Ien.ToString())} {transit.Price} " +
-                        $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString(), transit.Price)}, которых у тебя нет."));
+                        $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString(), transit.Price)}, которых у тебя нет.");
                 }
                 else
                 {
@@ -96,8 +99,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
                     await _mediator.Send(new CreateUserHangfireJobCommand(
                         user.Id, HangfireJobType.Transit, jobId, DateTimeOffset.UtcNow.Add(transitTime)));
 
-                    var embed = new EmbedBuilder()
-                        .WithAuthor("Отправление")
+                    embed
                         .WithDescription(
                             $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                             $"ты отправляешься в **{transit.Destination.Localize()}**, хорошей дороги!" +
@@ -113,12 +115,10 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
                             $"{emotes.GetEmote("Energy")} {energyCost} {_local.Localize(LocalizationCategoryType.Bar, "Energy", energyCost)}",
                             true)
                         .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.InTransit)));
-
-                    return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
                 }
             }
 
-            return Unit.Value;
+            return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
         }
     }
 }

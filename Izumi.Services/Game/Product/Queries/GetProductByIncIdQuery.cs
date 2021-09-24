@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Izumi.Data;
 using Izumi.Services.Game.Product.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using static Izumi.Services.Extensions.ExceptionExtensions;
 
 namespace Izumi.Services.Game.Product.Queries
 {
@@ -31,7 +31,7 @@ namespace Izumi.Services.Game.Product.Queries
 
             if (entity is null)
             {
-                throw new Exception("никогда не слышала о продукте с таким номером");
+                throw new GameUserExpectedException("никогда не слышала о продукте с таким номером");
             }
 
             return _mapper.Map<ProductDto>(entity);

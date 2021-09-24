@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Izumi.Data;
 using Izumi.Services.Game.Seed.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using static Izumi.Services.Extensions.ExceptionExtensions;
 
 namespace Izumi.Services.Game.Seed.Queries
 {
@@ -32,7 +32,7 @@ namespace Izumi.Services.Game.Seed.Queries
 
             if (entity is null)
             {
-                throw new Exception("никогда не слышала о семенах с таким номером.");
+                throw new GameUserExpectedException("никогда не слышала о семенах с таким номером.");
             }
 
             return _mapper.Map<SeedDto>(entity);

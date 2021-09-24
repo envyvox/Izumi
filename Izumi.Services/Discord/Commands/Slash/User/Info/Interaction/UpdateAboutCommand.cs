@@ -31,42 +31,39 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info.Interaction
 
         public async Task<Unit> Handle(UpdateAboutCommand request, CancellationToken ct)
         {
+            var newInfo = (string) request.Command.Data.Options.First().Value;
+
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
             var userCooldown = await _mediator.Send(new GetUserCooldownQuery(user.Id, CooldownType.UpdateAbout));
 
+            var embed = new EmbedBuilder()
+                .WithAuthor("Обновление информации профиля");
+
             if (userCooldown.Expiration > DateTimeOffset.UtcNow)
             {
-                await Task.FromException(new Exception(
+                embed.WithDescription(
                     "обновление информации в профиле доступно через " +
-                    $"{(userCooldown.Expiration - DateTimeOffset.UtcNow).TotalHours.Hours().Humanize(2, new CultureInfo("ru-RU"))}."));
+                    $"{(userCooldown.Expiration - DateTimeOffset.UtcNow).TotalHours.Hours().Humanize(2, new CultureInfo("ru-RU"))}.");
+            }
+            else if (newInfo.Length is < 2 or > 1024)
+            {
+                embed.WithDescription(
+                    "информация профиля должна быть длинее 1 и короче 1024 символов");
             }
             else
             {
-                var newInfo = (string) request.Command.Data.Options.First().Value;
+                var emotes = await _mediator.Send(new GetEmotesQuery());
 
-                if (newInfo.Length is < 2 or > 1024)
-                {
-                    await Task.FromException(new Exception(
-                        "информация профиля должна быть длинее 1 и короче 1024 символов"));
-                }
-                else
-                {
-                    var emotes = await _mediator.Send(new GetEmotesQuery());
+                await _mediator.Send(new UpdateUserAboutCommand(user.Id, newInfo));
+                await _mediator.Send(new CreateUserCooldownCommand(
+                    user.Id, CooldownType.UpdateAbout, TimeSpan.FromDays(3)));
 
-                    await _mediator.Send(new UpdateUserAboutCommand(user.Id, newInfo));
-                    await _mediator.Send(new CreateUserCooldownCommand(
-                        user.Id, CooldownType.UpdateAbout, TimeSpan.FromDays(3)));
-
-                    var embed = new EmbedBuilder()
-                        .WithDescription(
-                            $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
-                            "информация в твоем профиле успешно обновлена.");
-
-                    return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
-                }
+                embed.WithDescription(
+                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
+                    "информация в твоем профиле успешно обновлена.");
             }
 
-            return Unit.Value;
+            return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
         }
     }
 }

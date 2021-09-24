@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -33,25 +32,24 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info.Interaction
             var title = (TitleType) (long) request.Command.Data.Options.First().Value;
             var hasTitle = await _mediator.Send(new CheckTitleInUserQuery(user.Id, title));
 
+            var embed = new EmbedBuilder()
+                .WithAuthor("Обновление титула");
+
             if (!hasTitle)
             {
-                await Task.FromException(new Exception(
-                    $"у тебя нет титула {emotes.GetEmote(title.EmoteName())} {title.Localize()}."));
+                embed.WithDescription(
+                    $"у тебя нет титула {emotes.GetEmote(title.EmoteName())} {title.Localize()}.");
             }
             else
             {
                 await _mediator.Send(new UpdateUserTitleCommand(user.Id, title));
 
-                var embed = new EmbedBuilder()
-                    .WithAuthor("Обновление титула")
-                    .WithDescription(
-                        $"{emotes.GetEmote(title.EmoteName())} {title.Localize()} {request.Command.User.Mention}, " +
-                        "твой титул успешно обновлен.");
-
-                await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
+                embed.WithDescription(
+                    $"{emotes.GetEmote(title.EmoteName())} {title.Localize()} {request.Command.User.Mention}, " +
+                    "твой титул успешно обновлен.");
             }
 
-            return Unit.Value;
+            return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
         }
     }
 }

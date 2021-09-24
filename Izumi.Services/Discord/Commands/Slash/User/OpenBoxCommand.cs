@@ -56,11 +56,14 @@ namespace Izumi.Services.Discord.Commands.Slash.User
             var boxType = (BoxType) (long) request.Command.Data.Options.Last().Value;
             var userBox = await _mediator.Send(new GetUserBoxQuery(user.Id, boxType));
 
+            var embed = new EmbedBuilder()
+                .WithAuthor("Открытие коробок");
+
             if (userBox.Amount < boxAmount)
             {
-                await Task.FromException(new Exception(
+                embed.WithDescription(
                     $"у тебя нет столько {_emotes.GetEmote(boxType.EmoteName())} " +
-                    $"{_local.Localize(LocalizationCategoryType.Box, boxType.ToString())} сколько ты хочешь открыть."));
+                    $"{_local.Localize(LocalizationCategoryType.Box, boxType.ToString())} сколько ты хочешь открыть.");
             }
             else
             {
@@ -76,8 +79,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
-                var embed = new EmbedBuilder()
-                    .WithAuthor("Открытие коробок")
+                embed
                     .WithDescription(
                         $"{_emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                         $"ты успешно открыл {_emotes.GetEmote(boxType.EmoteName())} {boxAmount} " +
@@ -88,11 +90,9 @@ namespace Izumi.Services.Discord.Commands.Slash.User
                             ? reward
                             : "Ты открыл так много коробок, что ни один писарь не соглалился составлять полный список. " +
                               "Однако не стоит переживать, все предметы доставлены в твой инвентарь.");
-
-                return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
             }
 
-            return Unit.Value;
+            return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
         }
 
         private async Task<string> OpenCapitalBox(long userId, uint boxAmount)

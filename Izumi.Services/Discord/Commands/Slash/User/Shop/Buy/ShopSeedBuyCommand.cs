@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -51,27 +50,29 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Shop.Buy
 
             var price = seed.Price * amount;
 
+            var embed = new EmbedBuilder()
+                .WithAuthor("Магазин семян");
+
             if (seed.Season != season)
             {
-                await Task.FromException(new Exception(
+                embed.WithDescription(
                     $"купить можно только семена текущего {emotes.GetEmote(season.EmoteName())} сезона, " +
-                    "никаких других на полках магазина не найти."));
+                    "никаких других на полках магазина не найти.");
             }
             else if (userCurrency.Amount < price)
             {
-                await Task.FromException(new Exception(
+                embed.WithDescription(
                     $"у тебя недостаточно {emotes.GetEmote(CurrencyType.Ien.ToString())} " +
                     $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString())} " +
                     $"для приобретения {emotes.GetEmote(seed.Name)} {amount} " +
-                    $"{_local.Localize(LocalizationCategoryType.Seed, seed.Name, amount)}."));
+                    $"{_local.Localize(LocalizationCategoryType.Seed, seed.Name, amount)}.");
             }
             else
             {
                 await _mediator.Send(new RemoveCurrencyFromUserCommand(user.Id, CurrencyType.Ien, price));
                 await _mediator.Send(new AddSeedToUserCommand(user.Id, seed.Id, amount));
 
-                var embed = new EmbedBuilder()
-                    .WithAuthor("Магазин семян")
+                embed
                     .WithDescription(
                         $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                         $"ты успешно приобрел {emotes.GetEmote(seed.Name)} {amount} " +
@@ -79,11 +80,9 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Shop.Buy
                         $"{emotes.GetEmote(CurrencyType.Ien.ToString())} {price} " +
                         $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString(), price)}.")
                     .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.ShopSeed)));
-
-                return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
             }
 
-            return Unit.Value;
+            return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
         }
     }
 }
