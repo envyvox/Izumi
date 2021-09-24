@@ -53,13 +53,15 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Shop.Buy
             {
                 embed.WithDescription(
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
-                    "");
+                    "у тебя уже есть этот баннер, зачем тебе покупать его еще раз?");
             }
             else if (userCurrency.Amount < banner.Price)
             {
                 embed.WithDescription(
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
-                    "");
+                    $"у тебя недостаточно {emotes.GetEmote(CurrencyType.Ien.ToString())} " +
+                    $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString())} " +
+                    $"для приобретения баннера «{banner.Name}»");
             }
             else
             {

@@ -15,11 +15,11 @@ namespace Izumi.Data.Enums
     {
         public static string Localize(this BannerRarityType rarity) => rarity switch
         {
-            BannerRarityType.Common => "Обычный баннер",
-            BannerRarityType.Rare => "Редкий баннер",
-            BannerRarityType.Animated => "Анимированный баннер",
-            BannerRarityType.Event => "Баннер события",
-            BannerRarityType.Personal => "Персональный баннер",
+            BannerRarityType.Common => "Обычный",
+            BannerRarityType.Rare => "Редкий",
+            BannerRarityType.Animated => "Анимированный",
+            BannerRarityType.Event => "Баннер",
+            BannerRarityType.Personal => "Персональный",
             _ => throw new ArgumentOutOfRangeException(nameof(rarity), rarity, null)
         };
     }

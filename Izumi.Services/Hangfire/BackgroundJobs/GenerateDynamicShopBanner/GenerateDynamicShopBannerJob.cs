@@ -31,6 +31,7 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.GenerateDynamicShopBanner
 
             var banners = await _db.Banners
                 .OrderByRandom()
+                .Where(x => x.AutoIncrementedId != 1) // ignore default banner
                 .Take(6)
                 .ToListAsync();
 
