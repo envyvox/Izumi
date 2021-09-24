@@ -220,7 +220,7 @@ namespace Izumi.Services.Seeder.Discord
                         .WithDescription("Номер товара, который ты хочешь приобрести"))
                     .AddOption(new SlashCommandOptionBuilder()
                         .WithType(ApplicationCommandOptionType.Integer)
-                        .WithRequired(true)
+                        .WithRequired(false)
                         .WithName("количество")
                         .WithDescription("Количество товара, который ты хочешь приобрести")),
 

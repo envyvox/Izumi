@@ -36,7 +36,9 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Shop.Buy
         public async Task<Unit> Handle(ShopProductBuyCommand request, CancellationToken ct)
         {
             var incId = (long) request.Command.Data.Options.Single(x => x.Name == "номер").Value;
-            var amount = (uint) (long) request.Command.Data.Options.Single(x => x.Name == "количество").Value;
+            var amount = request.Command.Data.Options.Any(x => x.Name == "количество")
+                ? (uint) (long) request.Command.Data.Options.Single(x => x.Name == "количество").Value
+                : 1;
 
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
 
