@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using System.Text.Json;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -22,11 +22,13 @@ using Izumi.Services.Discord.Commands.Slash.User.Transit;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using static Izumi.Services.Extensions.ExceptionExtensions;
-using JsonSerializerOptions = Izumi.Services.Extensions.JsonSerializerOptions;
+
 
 namespace Izumi.Services.Discord.Client.Events
 {
@@ -52,12 +54,6 @@ namespace Izumi.Services.Discord.Client.Events
                 switch (request.Interaction)
                 {
                     case SocketSlashCommand command:
-
-                        _logger.LogInformation(
-                            "{UserName} {UserId} executed slash command /{CommandName} with options: {Options}",
-                            command.User.Username, command.User.Id, command.Data.Name,
-                            JsonSerializer.Serialize(command.Data.Options, JsonSerializerOptions.CyrillicEncoder()));
-
                         return command.Data.Name switch
                         {
                             "доска-сообщества" =>
@@ -177,6 +173,19 @@ namespace Izumi.Services.Discord.Client.Events
                 RetryMode = RetryMode.Retry502,
                 Timeout = 10000
             });
+
+            switch (interaction)
+            {
+                case SocketSlashCommand command:
+
+                    _logger.LogInformation(
+                        "{UserName} {UserId} executed slash command /{CommandName} with options: {Options}",
+                        command.User.Username, command.User.Id, command.Data.Name, command.Data.Options?
+                            .Aggregate(string.Empty, (s, v) => s + $"{v.Name}: {v.Value}, ")
+                            .RemoveFromEnd(2));
+
+                    break;
+            }
 
             return await _mediator.Send(implementation);
         }
