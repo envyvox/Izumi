@@ -10,6 +10,7 @@ using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Localization;
 using Izumi.Services.Game.Seed.Queries;
 using Izumi.Services.Game.Tutorial.Commands;

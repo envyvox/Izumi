@@ -8,6 +8,7 @@ using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Banner.Commands;
 using Izumi.Services.Game.Banner.Queries;
 using Izumi.Services.Game.Currency.Commands;
