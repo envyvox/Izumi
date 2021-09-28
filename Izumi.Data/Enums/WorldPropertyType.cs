@@ -4,7 +4,7 @@
     {
         EnergyCostExplore = 1,
         EnergyCostTransit = 2,
-        EnergyCostMaking= 3,
+        EnergyCostMaking = 3,
         EnergyCostFieldPlant = 4,
         EnergyCostFieldCollect = 5,
         EnergyCostFieldWater = 6,
@@ -36,6 +36,7 @@
         FishFailChanceRare = 32,
         FishFailChanceEpic = 33,
         FishFailChanceMythical = 34,
-        FishFailChanceLegendary = 35
+        FishFailChanceLegendary = 35,
+        EconomyFieldPrice = 36
     }
 }

@@ -58,12 +58,14 @@ namespace Izumi.Data
         public DbSet<UserAlcohol> UserAlcohols { get; set; }
         public DbSet<UserBanner> UserBanners { get; set; }
         public DbSet<UserBox> UserBoxes { get; set; }
+        public DbSet<UserBuilding> UserBuildings { get; set; }
         public DbSet<UserCollection> UserCollections { get; set; }
         public DbSet<UserCooldown> UserCooldowns { get; set; }
         public DbSet<UserCrafting> UserCraftings { get; set; }
         public DbSet<UserCrop> UserCrops { get; set; }
         public DbSet<UserCurrency> UserCurrencies { get; set; }
         public DbSet<UserDrink> UserDrinks { get; set; }
+        public DbSet<UserField> UserFields { get; set; }
         public DbSet<UserFish> UserFishes { get; set; }
         public DbSet<UserFood> UserFoods { get; set; }
         public DbSet<UserGathering> UserGatherings { get; set; }
@@ -79,6 +81,8 @@ namespace Izumi.Data
 
         public DbSet<Achievement> Achievements { get; set; }
         public DbSet<Banner> Banners { get; set; }
+        public DbSet<Building> Buildings { get; set; }
+        public DbSet<BuildingIngredient> BuildingIngredients { get; set; }
         public DbSet<DynamicShopBanner> DynamicShopBanners { get; set; }
         public DbSet<Localization> Localizations { get; set; }
         public DbSet<Transit> Transits { get; set; }

@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Izumi.Data.Enums;
+using Izumi.Services.Game.Field.Commands;
 using Izumi.Services.Game.World.Commands;
 using Izumi.Services.Game.World.Queries;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Izumi.Services.Hangfire.BackgroundJobs.GenerateWeather
+namespace Izumi.Services.Hangfire.BackgroundJobs.StartNewDay
 {
-    public class GenerateWeatherJob : IGenerateWeatherJob
+    public class StartNewDayJob : IStartNewDayJob
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<GenerateWeatherJob> _logger;
+        private readonly ILogger<StartNewDayJob> _logger;
         private readonly Random _random = new();
 
-        public GenerateWeatherJob(
+        public StartNewDayJob(
             IMediator mediator,
-            ILogger<GenerateWeatherJob> logger)
+            ILogger<StartNewDayJob> logger)
         {
             _mediator = mediator;
             _logger = logger;
@@ -24,8 +25,19 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.GenerateWeather
 
         public async Task Execute()
         {
+            await _mediator.Send(new MoveAllFieldsProgressCommand());
+
+            var weatherToday = await GenerateWeather();
+
+            await _mediator.Send(new UpdateAllFieldsStateCommand(weatherToday == WeatherType.Rain
+                ? FieldStateType.Watered
+                : FieldStateType.Planted));
+        }
+
+        private async Task<WeatherType> GenerateWeather()
+        {
             _logger.LogInformation(
-                "Generate weather job executed");
+                "Generate weather executed");
 
             var chance = _random.Next(1, 101);
             var oldWeatherToday = await _mediator.Send(new GetWeatherTodayQuery());
@@ -41,6 +53,8 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.GenerateWeather
 
             await _mediator.Send(new UpdateWeatherTodayCommand(newWeatherToday));
             await _mediator.Send(new UpdateWeatherTomorrowCommand(newWeatherTomorrow));
+
+            return newWeatherToday;
         }
     }
 }

@@ -29,6 +29,12 @@ namespace Izumi.Controllers.Seeder.Game
             return Ok(await _mediator.Send(request));
         }
 
+        [HttpPost, Route("buildings")]
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadBuildings(SeederUploadBuildingsCommand request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
         [HttpPost, Route("localizations")]
         public async Task<ActionResult<TotalAndAffectedCountDto>> UploadLocalizations(
             SeederUploadLocalizationsCommand request)

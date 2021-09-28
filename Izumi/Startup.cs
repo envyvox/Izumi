@@ -17,7 +17,7 @@ using Izumi.Services.Hangfire.BackgroundJobs.CompleteMaking.Impl;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit;
 using Izumi.Services.Hangfire.BackgroundJobs.EnergyRecovery;
 using Izumi.Services.Hangfire.BackgroundJobs.GenerateDynamicShopBanner;
-using Izumi.Services.Hangfire.BackgroundJobs.GenerateWeather;
+using Izumi.Services.Hangfire.BackgroundJobs.StartNewDay;
 using Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -88,7 +88,7 @@ namespace Izumi
             services.AddScoped<ICompleteCraftingItemJob, CompleteCraftingItemJob>();
             services.AddScoped<ICompleteCraftingAlcoholJob, CompleteCraftingAlcoholJob>();
             services.AddScoped<ICompleteCraftingDrinkJob, CompleteCraftingDrinkJob>();
-            services.AddScoped<IGenerateWeatherJob, GenerateWeatherJob>();
+            services.AddScoped<IStartNewDayJob, StartNewDayJob>();
             services.AddScoped<IEnergyRecoveryJob, EnergyRecoveryJob>();
             services.AddScoped<IGenerateDynamicShopBannerJob, GenerateDynamicShopBannerJob>();
         }

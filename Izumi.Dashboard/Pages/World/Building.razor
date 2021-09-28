@@ -1,0 +1,129 @@
+﻿@page "/building"
+@inject HttpClient _http;
+@inject ISnackbar _snackbar;
+
+<MudTable Items="_buildings"
+          CanCancelEdit="@true"
+          @bind-SelectedItem="_selected"
+          RowEditPreview="Backup"
+          RowEditCancel="Reset"
+          RowEditCommit="Save">
+    <HeaderContent>
+        <MudTh>Emote</MudTh>
+        <MudTh>Category</MudTh>
+        <MudTh>Type</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Description</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>
+            <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Type.ToString())" alt="icon" width="30" height="30"/>
+        </MudTd>
+        <MudTd DataLabel="Category">@context.Category</MudTd>
+        <MudTd DataLabel="Type">@context.Type</MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Description">@context.Description</MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd>
+            <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Type.ToString())" alt="icon" width="50" height="50"/>
+        </MudTd>
+        <MudTd DataLabel="Category">@context.Category</MudTd>
+        <MudTd DataLabel="Type">@context.Type</MudTd>
+        <MudTd DataLabel="Name">
+            <MudTextField @bind-Value="@context.Name" Required/>
+        </MudTd>
+        <MudTd DataLabel="Description">
+            <MudTextField @bind-Value="@context.Description" Required/>
+        </MudTd>
+    </RowEditingTemplate>
+    <ChildRowContent>
+        <MudTr>
+            <td colspan="12">
+                <MudExpansionPanel Text="Ingredients"
+                                   Elevation="0"
+                                   Style="background-color: #31313b">
+                    <MudTable Items="@context.Ingredients"
+                              Context="IngredientContext">
+                        <HeaderContent>
+                            <MudTh>Category</MudTh>
+                            <MudTh>Id</MudTh>
+                            <MudTh>Amount</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Category">@IngredientContext.Category</MudTd>
+                            <MudTd DataLabel="Property">@IngredientContext.Id</MudTd>
+                            <MudTd DataLabel="Amount">@IngredientContext.Amount</MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudExpansionPanel>
+            </td>
+        </MudTr>
+    </ChildRowContent>
+</MudTable>
+
+@code {
+    private BuildingClient _buildingClient;
+    private ICollection<BuildingDto> _buildings;
+    private BuildingDto _selected;
+    private BuildingDto _backup;
+
+    private EmoteClient _emoteClient;
+    private IDictionary<string, EmoteDto> _emotes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _buildingClient = new BuildingClient(_http);
+        _buildings = await _buildingClient.GetBuildingsAsync();
+        _emoteClient = new EmoteClient(_http);
+        _emotes = await _emoteClient.GetEmotesAsync();
+    }
+
+    private void Backup(object element)
+    {
+        var building = (BuildingDto) element;
+
+        _backup = new BuildingDto
+        {
+            Category = building.Category,
+            Type = building.Type,
+            Name = building.Name,
+            Description = building.Description
+        };
+    }
+
+    private async void Save(object element)
+    {
+        var building = (BuildingDto) element;
+
+        try
+        {
+            await _buildingClient.UpdateBuildingAsync(new UpdateBuildingCommand
+            {
+                Type = building.Type,
+                Name = building.Name,
+                Description = building.Description
+            });
+
+            _snackbar.Add("Постройка успешно обновлена");
+        }
+        catch (Exception e)
+        {
+            Reset(element);
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void Reset(object element)
+    {
+        var building = (BuildingDto) element;
+
+        if (building is null) return;
+
+        building.Category = _backup.Category;
+        building.Type = _backup.Type;
+        building.Name = _backup.Name;
+        building.Description = _backup.Description;
+    }
+
+}

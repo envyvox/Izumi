@@ -3,15 +3,17 @@ using System;
 using Izumi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Izumi.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210925113609_CreateUserFieldEntity")]
+    partial class CreateUserFieldEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,68 +92,6 @@ namespace Izumi.Data.Migrations
                         .HasDatabaseName("ix_banners_name");
 
                     b.ToTable("banners");
-                });
-
-            modelBuilder.Entity("Izumi.Data.Entities.Building", b =>
-                {
-                    b.Property<byte>("Type")
-                        .HasColumnType("smallint")
-                        .HasColumnName("type");
-
-                    b.Property<byte>("Category")
-                        .HasColumnType("smallint")
-                        .HasColumnName("category");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Type")
-                        .HasName("pk_buildings");
-
-                    b.HasIndex("Type")
-                        .IsUnique()
-                        .HasDatabaseName("ix_buildings_type");
-
-                    b.ToTable("buildings");
-                });
-
-            modelBuilder.Entity("Izumi.Data.Entities.BuildingIngredient", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<long>("Amount")
-                        .HasColumnType("bigint")
-                        .HasColumnName("amount");
-
-                    b.Property<byte>("BuildingType")
-                        .HasColumnType("smallint")
-                        .HasColumnName("building_type");
-
-                    b.Property<byte>("Category")
-                        .HasColumnType("smallint")
-                        .HasColumnName("category");
-
-                    b.Property<Guid>("IngredientId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("ingredient_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_building_ingredients");
-
-                    b.HasIndex("BuildingType", "Category", "IngredientId")
-                        .IsUnique()
-                        .HasDatabaseName("ix_building_ingredients_building_type_category_ingredient_id");
-
-                    b.ToTable("building_ingredients");
                 });
 
             modelBuilder.Entity("Izumi.Data.Entities.Discord.Channel", b =>
@@ -1217,45 +1157,6 @@ namespace Izumi.Data.Migrations
                     b.ToTable("user_boxes");
                 });
 
-            modelBuilder.Entity("Izumi.Data.Entities.User.UserBuilding", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<byte>("BuildingType")
-                        .HasColumnType("smallint")
-                        .HasColumnName("building_type");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<long>("Durability")
-                        .HasColumnType("bigint")
-                        .HasColumnName("durability");
-
-                    b.Property<DateTimeOffset>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_user_buildings");
-
-                    b.HasIndex("BuildingType")
-                        .HasDatabaseName("ix_user_buildings_building_type");
-
-                    b.HasIndex("UserId", "BuildingType")
-                        .IsUnique()
-                        .HasDatabaseName("ix_user_buildings_user_id_building_type");
-
-                    b.ToTable("user_buildings");
-                });
-
             modelBuilder.Entity("Izumi.Data.Entities.User.UserCollection", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2007,18 +1908,6 @@ namespace Izumi.Data.Migrations
                     b.ToTable("world_settings");
                 });
 
-            modelBuilder.Entity("Izumi.Data.Entities.BuildingIngredient", b =>
-                {
-                    b.HasOne("Izumi.Data.Entities.Building", "Building")
-                        .WithMany("Ingredients")
-                        .HasForeignKey("BuildingType")
-                        .HasConstraintName("fk_building_ingredients_buildings_building_type")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Building");
-                });
-
             modelBuilder.Entity("Izumi.Data.Entities.Discord.ContentMessage", b =>
                 {
                     b.HasOne("Izumi.Data.Entities.User.User", "User")
@@ -2252,27 +2141,6 @@ namespace Izumi.Data.Migrations
                         .HasConstraintName("fk_user_boxes_users_user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Izumi.Data.Entities.User.UserBuilding", b =>
-                {
-                    b.HasOne("Izumi.Data.Entities.Building", "Building")
-                        .WithMany()
-                        .HasForeignKey("BuildingType")
-                        .HasConstraintName("fk_user_buildings_buildings_building_type")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Izumi.Data.Entities.User.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("fk_user_buildings_users_user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Building");
 
                     b.Navigation("User");
                 });
@@ -2600,11 +2468,6 @@ namespace Izumi.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Izumi.Data.Entities.Building", b =>
-                {
-                    b.Navigation("Ingredients");
                 });
 
             modelBuilder.Entity("Izumi.Data.Entities.Resource.Alcohol", b =>

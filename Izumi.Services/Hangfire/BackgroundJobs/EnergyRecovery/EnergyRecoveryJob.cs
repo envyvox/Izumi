@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Izumi.Data;
 using Izumi.Data.Enums;
 using Izumi.Services.Game.World.Queries;
@@ -40,7 +41,7 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.EnergyRecovery
                     case when energy + {energyRecoveryNonPremium} <= 100 then energy + {energyRecoveryNonPremium}
                          else 100
                     end),
-                    updated_at = now()
+                    updated_at = {DateTimeOffset.UtcNow}
                 where is_premium = false;
 
                 update users
@@ -48,7 +49,7 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.EnergyRecovery
                     case when energy + {energyRecoveryPremium} <= 100 then energy + {energyRecoveryPremium}
                          else 100
                     end),
-                    updated_at = now()
+                    updated_at = {DateTimeOffset.UtcNow}
                 where is_premium = true;");
         }
     }

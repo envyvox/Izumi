@@ -5,7 +5,7 @@ using Discord.WebSocket;
 using Hangfire;
 using Izumi.Services.Hangfire.BackgroundJobs.EnergyRecovery;
 using Izumi.Services.Hangfire.BackgroundJobs.GenerateDynamicShopBanner;
-using Izumi.Services.Hangfire.BackgroundJobs.GenerateWeather;
+using Izumi.Services.Hangfire.BackgroundJobs.StartNewDay;
 using Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes;
 using MediatR;
 using Microsoft.Extensions.Hosting;
@@ -45,7 +45,7 @@ namespace Izumi.Services.Discord.Client.Events
                     x => x.Execute(),
                     Cron.Hourly, _timeZoneInfo);
 
-                RecurringJob.AddOrUpdate<IGenerateWeatherJob>("generate-weather",
+                RecurringJob.AddOrUpdate<IStartNewDayJob>("start-new-day",
                     x => x.Execute(),
                     Cron.Daily, _timeZoneInfo);
                 RecurringJob.AddOrUpdate<IGenerateDynamicShopBannerJob>("generate-dynamic-shop-banners",

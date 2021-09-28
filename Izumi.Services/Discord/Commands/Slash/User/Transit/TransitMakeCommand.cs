@@ -115,7 +115,8 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
                             $"{transitTime.Humanize(2, new CultureInfo("ru-RU"))}",
                             true)
                         .AddField("Расход энергии",
-                            $"{emotes.GetEmote("Energy")} {energyCost} {_local.Localize(LocalizationCategoryType.Bar, "Energy", energyCost)}",
+                            $"{emotes.GetEmote("Energy")} {energyCost} " +
+                            $"{_local.Localize(LocalizationCategoryType.Bar, "Energy", energyCost)}",
                             true)
                         .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.InTransit)));
                 }
