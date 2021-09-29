@@ -43,7 +43,9 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Field
 
         public async Task<Unit> Handle(FieldCollectCommand request, CancellationToken cancellationToken)
         {
-            var number = (uint) (long) request.Command.Data.Options.Single(x => x.Name == "номер").Value;
+            var number = (uint) (long) request.Command.Data
+                .Options.First()
+                .Options.Single(x => x.Name == "номер").Value;
 
             var emotes = await _mediator.Send(new GetEmotesQuery());
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));

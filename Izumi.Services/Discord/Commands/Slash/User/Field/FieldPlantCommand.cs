@@ -41,8 +41,12 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Field
 
         public async Task<Unit> Handle(FieldPlantCommand request, CancellationToken cancellationToken)
         {
-            var number = (uint) (long) request.Command.Data.Options.Single(x => x.Name == "номер").Value;
-            var seedName = (string) request.Command.Data.Options.Single(x => x.Name == "название").Value;
+            var number = (uint) (long) request.Command.Data
+                .Options.First()
+                .Options.Single(x => x.Name == "номер").Value;
+            var seedName = (string) request.Command.Data
+                .Options.First()
+                .Options.Single(x => x.Name == "название").Value;
 
             var localization = await _mediator.Send(new GetLocalizationByLocalizedNameQuery(
                 LocalizationCategoryType.Seed, seedName));
