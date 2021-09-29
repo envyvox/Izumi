@@ -34,9 +34,9 @@ namespace Izumi.Services.Game.Localization.Queries
             var entity = await _db.Localizations
                 .SingleOrDefaultAsync(x =>
                     x.Category == request.Category &&
-                    (x.Single == request.LocalizedName ||
-                     x.Double == request.LocalizedName ||
-                     x.Multiply == request.LocalizedName));
+                    (EF.Functions.ILike(x.Single, $"%{request.LocalizedName}%") ||
+                     EF.Functions.ILike(x.Double, $"%{request.LocalizedName}%") ||
+                     EF.Functions.ILike(x.Multiply, $"%{request.LocalizedName}%")));
 
             if (entity is null)
             {
