@@ -7,6 +7,7 @@ using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Building.Commands;
 using Izumi.Services.Game.Building.Queries;
 using Izumi.Services.Game.Currency.Commands;
@@ -36,8 +37,11 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Field
 
         public async Task<Unit> Handle(FieldBuyCommand request, CancellationToken cancellationToken)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
+
+            user.Location.CheckRequiredLocation(LocationType.Village);
+
+            var emotes = await _mediator.Send(new GetEmotesQuery());
             var fieldPrice = await _mediator.Send(new GetWorldPropertyValueQuery(
                 WorldPropertyType.EconomyFieldPrice));
             var building = await _mediator.Send(new GetBuildingQuery(BuildingType.HarvestField));

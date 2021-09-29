@@ -3,15 +3,17 @@ using System;
 using Izumi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Izumi.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210929002918_UpdateContractAddIncId")]
+    partial class UpdateContractAddIncId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1339,41 +1341,6 @@ namespace Izumi.Data.Migrations
                     b.ToTable("user_collections");
                 });
 
-            modelBuilder.Entity("Izumi.Data.Entities.User.UserContract", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid>("ContractId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("contract_id");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<DateTimeOffset>("Expiration")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("expiration");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_user_contracts");
-
-                    b.HasIndex("ContractId")
-                        .HasDatabaseName("ix_user_contracts_contract_id");
-
-                    b.HasIndex("UserId", "ContractId")
-                        .IsUnique()
-                        .HasDatabaseName("ix_user_contracts_user_id_contract_id");
-
-                    b.ToTable("user_contracts");
-                });
-
             modelBuilder.Entity("Izumi.Data.Entities.User.UserCooldown", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2407,27 +2374,6 @@ namespace Izumi.Data.Migrations
                         .HasConstraintName("fk_user_collections_users_user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Izumi.Data.Entities.User.UserContract", b =>
-                {
-                    b.HasOne("Izumi.Data.Entities.Contract", "Contract")
-                        .WithMany()
-                        .HasForeignKey("ContractId")
-                        .HasConstraintName("fk_user_contracts_contracts_contract_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Izumi.Data.Entities.User.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("fk_user_contracts_users_user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contract");
 
                     b.Navigation("User");
                 });

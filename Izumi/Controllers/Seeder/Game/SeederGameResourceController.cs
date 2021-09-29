@@ -17,64 +17,63 @@ namespace Izumi.Controllers.Seeder.Game
         }
 
         [HttpPost, Route("alcohols")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadAlcohols(SeederUploadAlcoholsCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadAlcohols()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadAlcoholsCommand()));
         }
 
         [HttpPost, Route("craftings")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadCraftings(SeederUploadCraftingsCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadCraftings()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadCraftingsCommand()));
         }
 
         [HttpPost, Route("crops")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadCrops(SeederUploadCropsCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadCrops()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadCropsCommand()));
         }
 
         [HttpPost, Route("drinks")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadDrinks(SeederUploadDrinksCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadDrinks()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadDrinksCommand()));
         }
 
         [HttpPost, Route("fishes")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadFishes(SeederUploadFishesCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadFishes()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadFishesCommand()));
         }
 
         [HttpPost, Route("foods")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadFoods(SeederUploadFoodsCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadFoods()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadFoodsCommand()));
         }
 
         [HttpPost, Route("gatherings")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadGatherings(
-            SeederUploadGatheringsCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadGatherings()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadGatheringsCommand()));
         }
 
         [HttpPost, Route("products")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadProducts(SeederUploadProductsCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadProducts()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadProductsCommand()));
         }
 
         [HttpPost, Route("seafoods")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadSeafoods(SeederUploadSeafoodsCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadSeafoods()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadSeafoodsCommand()));
         }
 
         [HttpPost, Route("seeds")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadSeeds(SeederUploadSeedsCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadSeeds()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadSeedsCommand()));
         }
     }
 }

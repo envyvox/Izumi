@@ -17,9 +17,15 @@ namespace Izumi.Controllers.Seeder.Discord
         }
 
         [HttpPost, Route("images")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadImages(SeederUploadImagesCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadImages()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadImagesCommand()));
+        }
+
+        [HttpPost, Route("slash-commands")]
+        public async Task<ActionResult> UploadSlashCommands()
+        {
+            return Ok(await _mediator.Send(new SeederUploadSlashCommandsCommand()));
         }
     }
 }

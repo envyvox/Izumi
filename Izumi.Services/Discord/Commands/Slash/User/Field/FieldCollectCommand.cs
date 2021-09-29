@@ -11,6 +11,7 @@ using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Achievement.Commands;
 using Izumi.Services.Game.Collection.Commands;
 using Izumi.Services.Game.Crop.Commands;
@@ -47,8 +48,11 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Field
                 .Options.First()
                 .Options.Single(x => x.Name == "номер").Value;
 
-            var emotes = await _mediator.Send(new GetEmotesQuery());
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
+
+            user.Location.CheckRequiredLocation(LocationType.Village);
+
+            var emotes = await _mediator.Send(new GetEmotesQuery());
             var userField = await _mediator.Send(new GetUserFieldQuery(user.Id, number));
 
             var embed = new EmbedBuilder()

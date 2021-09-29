@@ -9,8 +9,10 @@ using Izumi.Services.Discord.Client.Impl;
 using Izumi.Services.Discord.Client.Options;
 using Izumi.Services.Game.Localization;
 using Izumi.Services.Game.Localization.Impl;
+using Izumi.Services.Hangfire.BackgroundJobs.CompleteContract;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteExploreCastle;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteExploreGarden;
+using Izumi.Services.Hangfire.BackgroundJobs.CompleteFieldWatering;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteFishing;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteMaking;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteMaking.Impl;
@@ -88,9 +90,11 @@ namespace Izumi
             services.AddScoped<ICompleteCraftingItemJob, CompleteCraftingItemJob>();
             services.AddScoped<ICompleteCraftingAlcoholJob, CompleteCraftingAlcoholJob>();
             services.AddScoped<ICompleteCraftingDrinkJob, CompleteCraftingDrinkJob>();
+            services.AddScoped<ICompleteFieldWateringJob, CompleteFieldWateringJob>();
             services.AddScoped<IStartNewDayJob, StartNewDayJob>();
             services.AddScoped<IEnergyRecoveryJob, EnergyRecoveryJob>();
             services.AddScoped<IGenerateDynamicShopBannerJob, GenerateDynamicShopBannerJob>();
+            services.AddScoped<ICompleteContractJob, CompleteContractJob>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

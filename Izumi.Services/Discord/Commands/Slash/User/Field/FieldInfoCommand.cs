@@ -11,6 +11,7 @@ using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Field.Queries;
 using Izumi.Services.Game.Localization;
 using Izumi.Services.Game.Tutorial.Commands;
@@ -38,8 +39,11 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Field
 
         public async Task<Unit> Handle(FieldInfoCommand request, CancellationToken cancellationToken)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
+
+            user.Location.CheckRequiredLocation(LocationType.Village);
+
+            var emotes = await _mediator.Send(new GetEmotesQuery());
             var userFields = await _mediator.Send(new GetUserFieldsQuery(user.Id));
 
             var embed = new EmbedBuilder()

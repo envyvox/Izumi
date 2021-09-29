@@ -17,35 +17,39 @@ namespace Izumi.Controllers.Seeder.Game
         }
 
         [HttpPost, Route("achievements")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadAchievements(SeederUploadAchievementsCommand
-            request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadAchievements()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadAchievementsCommand()));
         }
 
         [HttpPost, Route("banners")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadBanners(SeederUploadBannersCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadBanners()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadBannersCommand()));
         }
 
         [HttpPost, Route("buildings")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadBuildings(SeederUploadBuildingsCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadBuildings()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadBuildingsCommand()));
+        }
+
+        [HttpPost, Route("contracts")]
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadContacts()
+        {
+            return Ok(await _mediator.Send(new SeederUploadContractsCommand()));
         }
 
         [HttpPost, Route("localizations")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadLocalizations(
-            SeederUploadLocalizationsCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadLocalizations()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadLocalizationsCommand()));
         }
 
         [HttpPost, Route("transits")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadTransits(SeederUploadTransitsCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadTransits()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadTransitsCommand()));
         }
     }
 }

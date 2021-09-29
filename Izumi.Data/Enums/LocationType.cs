@@ -56,5 +56,15 @@ namespace Izumi.Data.Enums
             LocationType.Village => DiscordRoleType.LocationVillage,
             _ => throw new ArgumentOutOfRangeException(nameof(location), location, null)
         };
+
+        public static ReputationType Reputation(this LocationType location) => location switch
+        {
+            LocationType.Capital => ReputationType.Capital,
+            LocationType.Garden => ReputationType.Garden,
+            LocationType.Seaport => ReputationType.Seaport,
+            LocationType.Castle => ReputationType.Castle,
+            LocationType.Village => ReputationType.Village,
+            _ => throw new ArgumentOutOfRangeException(nameof(location), location, null)
+        };
     }
 }

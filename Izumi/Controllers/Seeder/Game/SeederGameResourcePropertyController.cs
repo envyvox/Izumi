@@ -17,24 +17,21 @@ namespace Izumi.Controllers.Seeder.Game
         }
 
         [HttpPost, Route("alcohol")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadAlcoholProperties(
-            SeederUploadAlcoholPropertiesCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadAlcoholProperties()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadAlcoholPropertiesCommand()));
         }
 
         [HttpPost, Route("crafting")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadCraftingProperties(
-            SeederUploadCraftingPropertiesCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadCraftingProperties()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadCraftingPropertiesCommand()));
         }
 
         [HttpPost, Route("gathering")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadGatheringProperties(
-            SeederUploadGatheringPropertiesCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadGatheringProperties()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadGatheringPropertiesCommand()));
         }
     }
 }

@@ -11,6 +11,7 @@ using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Game.Banner.Queries;
+using Izumi.Services.Game.Contract.Queries;
 using Izumi.Services.Game.Transit.Queries;
 using Izumi.Services.Game.Tutorial.Commands;
 using Izumi.Services.Game.User.Queries;
@@ -57,8 +58,11 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info
 
                 case LocationType.WorkOnContract:
 
-                    // todo display contract
-                    locationString = ".";
+                    var userContract = await _mediator.Send(new GetUserContractQuery(user.Id));
+
+                    locationString =
+                        $"**{userContract.Contract.Name}** в **{userContract.Contract.Location.Localize(true)}**, еще " +
+                        $"{(userContract.Expiration - DateTimeOffset.UtcNow).Humanize(2, new CultureInfo("ru-RU"))}";
 
                     break;
                 case LocationType.ExploreGarden:
@@ -102,7 +106,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Info
                 .AddField("Рейтинг приключений",
                     $"{emotes.GetEmote("Blank")} Временно недоступно.")
                 .AddField("Семья",
-                    $"{emotes.GetEmote("Blank")} Временно недоступно..." +
+                    $"{emotes.GetEmote("Blank")} Временно недоступно." +
                     $"\n{StringExtensions.EmptyChar}")
                 .AddField("Дата присоединения",
                     user.CreatedAt.ToString("dd MMMM yyy", new CultureInfo("ru-RU")))

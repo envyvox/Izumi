@@ -40,8 +40,11 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Field
                 .Options.First()
                 .Options.Single(x => x.Name == "номер").Value;
 
-            var emotes = await _mediator.Send(new GetEmotesQuery());
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
+
+            user.Location.CheckRequiredLocation(LocationType.Village);
+
+            var emotes = await _mediator.Send(new GetEmotesQuery());
             var userField = await _mediator.Send(new GetUserFieldQuery(user.Id, number));
 
             var embed = new EmbedBuilder()

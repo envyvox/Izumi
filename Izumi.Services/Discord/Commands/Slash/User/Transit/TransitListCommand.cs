@@ -48,7 +48,8 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
                     "тут отображаются доступные отправления из твоей локации:" +
                     $"\n\n{emotes.GetEmote("Arrow")} Напиши `/отправиться` и выбери локацию из списка вариантов." +
                     $"\n{StringExtensions.EmptyChar}")
-                .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.TransitList)));
+                .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.TransitList)))
+                .WithFooter("* Длительность указана с учетом твоей текущей энергии.");
 
             var counter = 0;
             foreach (var transit in transits)
@@ -60,7 +61,7 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
                 embed.AddField(transit.Destination.Localize(),
                     $"Стоимость: {emotes.GetEmote(CurrencyType.Ien.ToString())} {transit.Price} " +
                     $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString(), transit.Price)}" +
-                    $"\nДлительность: {transitTime.Humanize(2, new CultureInfo("ru-RU"))}*", true);
+                    $"\nДлительность: {transitTime.Humanize(2, new CultureInfo("ru-RU"))}", true);
 
                 if (counter == 2)
                 {
@@ -68,8 +69,6 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Transit
                     embed.AddEmptyField(true);
                 }
             }
-
-            embed.WithFooter("* Длительность указана с учетом твоей текущей энергии.");
 
             await _mediator.Send(new CheckUserTutorialStepCommand(user.Id, TutorialStepType.CheckTransits));
             return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));

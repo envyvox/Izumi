@@ -17,10 +17,9 @@ namespace Izumi.Controllers.Seeder.Game
         }
 
         [HttpPost, Route("world")]
-        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadWorldProperties(
-            SeederUploadWorldPropertiesCommand request)
+        public async Task<ActionResult<TotalAndAffectedCountDto>> UploadWorldProperties()
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(new SeederUploadWorldPropertiesCommand()));
         }
     }
 }

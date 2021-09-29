@@ -48,10 +48,13 @@ namespace Izumi.Services.Discord.Commands.Slash.User.Field
                 .Options.First()
                 .Options.Single(x => x.Name == "название").Value;
 
+            var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
+
+            user.Location.CheckRequiredLocation(LocationType.Village);
+
             var localization = await _mediator.Send(new GetLocalizationByLocalizedNameQuery(
                 LocalizationCategoryType.Seed, seedName));
             var emotes = await _mediator.Send(new GetEmotesQuery());
-            var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
             var seed = await _mediator.Send(new GetSeedByNameQuery(localization.Name));
             var userSeed = await _mediator.Send(new GetUserSeedQuery(user.Id, seed.Id));
             var userField = await _mediator.Send(new GetUserFieldQuery(user.Id, number));
