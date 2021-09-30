@@ -1,19 +1,17 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Izumi.Data.Enums;
-using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.CommunityDesc.Commands;
 using Izumi.Services.Discord.CommunityDesc.Queries;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
-using Izumi.Services.Discord.Guild.Commands;
 using Izumi.Services.Discord.Guild.Extensions;
 using Izumi.Services.Discord.Guild.Queries;
 using MediatR;
+using static Discord.Emote;
 
 namespace Izumi.Services.Discord.Client.Events
 {
@@ -40,53 +38,6 @@ namespace Izumi.Services.Discord.Client.Events
             var channels = await _mediator.Send(new GetChannelsQuery());
             var communityDescChannels = channels.GetCommunityDescChannels();
 
-            if (request.Channel.Id == (ulong) channels[DiscordChannelType.SearchGetRoles].Id ||
-                request.Channel.Id == (ulong) channels[DiscordChannelType.EventGetRoles].Id)
-            {
-                var role = request.Reaction.Emote.Name switch
-                {
-                    // роль мероприятий
-                    "🥳" => DiscordRoleType.DiscordEvent,
-                    // роли оповещений событий
-                    "NumOne" => DiscordRoleType.AllEvents,
-                    "NumTwo" => DiscordRoleType.DailyEvents,
-                    "NumThree" => DiscordRoleType.WeeklyEvents,
-                    "NumFour" => DiscordRoleType.MonthlyEvents,
-                    "NumFive" => DiscordRoleType.YearlyEvents,
-                    "NumSix" => DiscordRoleType.UniqueEvents,
-                    // игровые роли
-                    "GenshinImpact" => DiscordRoleType.GenshinImpact,
-                    "LeagueOfLegends" => DiscordRoleType.LeagueOfLegends,
-                    "TeamfightTactics" => DiscordRoleType.TeamfightTactics,
-                    "Valorant" => DiscordRoleType.Valorant,
-                    "ApexLegends" => DiscordRoleType.ApexLegends,
-                    "LostArk" => DiscordRoleType.LostArk,
-                    "Dota" => DiscordRoleType.Dota,
-                    "Osu" => DiscordRoleType.Osu,
-                    "AmongUs" => DiscordRoleType.AmongUs,
-                    "Rust" => DiscordRoleType.Rust,
-                    "CSGO" => DiscordRoleType.CsGo,
-                    "HotS" => DiscordRoleType.HotS,
-                    "WildRift" => DiscordRoleType.WildRift,
-                    "MobileLegends" => DiscordRoleType.MobileLegends,
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-
-                var hasRole = await _mediator.Send(new CheckGuildUserHasRoleQuery(request.Reaction.UserId, role));
-
-                if (hasRole)
-                {
-                    await _mediator.Send(new RemoveRoleFromGuildUserCommand(request.Reaction.UserId, role));
-
-                }
-                else
-                {
-                    await _mediator.Send(new AddRoleToGuildUserCommand(request.Reaction.UserId, role));
-                }
-
-                await msg.RemoveReactionAsync(request.Reaction.Emote, request.Reaction.UserId);
-            }
-
             if (communityDescChannels.Contains(request.Channel.Id))
             {
                 if (request.Reaction.Emote.Name is not ("Like" or "Dislike")) return Unit.Value;
@@ -111,8 +62,8 @@ namespace Izumi.Services.Discord.Client.Events
 
                         await msg.RemoveReactionAsync(
                             antiVote == VoteType.Like
-                                ? global::Discord.Emote.Parse(emotes.GetEmote("Like"))
-                                : global::Discord.Emote.Parse(emotes.GetEmote("Dislike")),
+                                ? Parse(emotes.GetEmote("Like"))
+                                : Parse(emotes.GetEmote("Dislike")),
                             request.Reaction.UserId);
                     }
 

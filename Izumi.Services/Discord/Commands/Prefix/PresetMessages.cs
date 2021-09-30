@@ -10,6 +10,7 @@ using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
 using MediatR;
+using static Discord.Emote;
 
 namespace Izumi.Services.Discord.Commands.Prefix
 {
@@ -29,52 +30,31 @@ namespace Izumi.Services.Discord.Commands.Prefix
         {
             var emotes = await _mediator.Send(new GetEmotesQuery());
             var channels = await _mediator.Send(new GetChannelsQuery());
-            var roles = await _mediator.Send(new GetRolesQuery());
 
             var embed = new EmbedBuilder()
                 .WithColor(new Color(uint.Parse("202225", NumberStyles.HexNumber)))
                 .WithAuthor("Игровые роли")
                 .WithDescription(
                     $"Ты можешь получить игровые роли, которые можно **упоминать** в <#{channels[DiscordChannelType.Search].Id}> " +
-                    "чтобы упростить процесс **поиска людей** для совместной игры, для этого нажми на **реакцию** под этим сообщением.")
-                .AddField("Доступные для получения роли",
-                    $"{emotes.GetEmote("GenshinImpact")} <@&{roles[DiscordRoleType.GenshinImpact].Id}>\n" +
-                    $"{emotes.GetEmote("LeagueOfLegends")} <@&{roles[DiscordRoleType.LeagueOfLegends].Id}>\n" +
-                    $"{emotes.GetEmote("TeamfightTactics")} <@&{roles[DiscordRoleType.TeamfightTactics].Id}>\n" +
-                    $"{emotes.GetEmote("Valorant")} <@&{roles[DiscordRoleType.Valorant].Id}>\n" +
-                    $"{emotes.GetEmote("ApexLegends")} <@&{roles[DiscordRoleType.ApexLegends].Id}>\n" +
-                    $"{emotes.GetEmote("LostArk")} <@&{roles[DiscordRoleType.LostArk].Id}>\n" +
-                    $"{emotes.GetEmote("Dota")} <@&{roles[DiscordRoleType.Dota].Id}>\n" +
-                    $"{emotes.GetEmote("AmongUs")} <@&{roles[DiscordRoleType.AmongUs].Id}>\n" +
-                    $"{emotes.GetEmote("Osu")} <@&{roles[DiscordRoleType.Osu].Id}>\n" +
-                    $"{emotes.GetEmote("Rust")} <@&{roles[DiscordRoleType.Rust].Id}>\n" +
-                    $"{emotes.GetEmote("CSGO")} <@&{roles[DiscordRoleType.CsGo].Id}>\n" +
-                    $"{emotes.GetEmote("HotS")} <@&{roles[DiscordRoleType.HotS].Id}>\n" +
-                    $"{emotes.GetEmote("WildRift")} <@&{roles[DiscordRoleType.WildRift].Id}>\n" +
-                    $"{emotes.GetEmote("MobileLegends")} <@&{roles[DiscordRoleType.MobileLegends].Id}>\n")
-                .WithFooter(
-                    "При нажатии на реакцию, она будет снята и ты получишь соответствующую роль. " +
-                    "При необходимости роль можно снять, нажав на реакцию повторно.");
+                    "чтобы упростить процесс **поиска людей** для совместной игры, для этого нажми на **кнопку** под этим сообщением.");
 
-            var message = await Context.Channel.SendMessageAsync("", false, embed.Build());
+            var buttons = new ComponentBuilder()
+                .WithButton("Genshin Impact", "toggle-role-GenshinImpact", emote: Parse(emotes.GetEmote("GenshinImpact")))
+                .WithButton("League of Legends", "toggle-role-LeagueOfLegends", emote: Parse(emotes.GetEmote("LeagueOfLegends")))
+                .WithButton("Teamfight Tactics", "toggle-role-TeamfightTactics", emote: Parse(emotes.GetEmote("TeamfightTactics")))
+                .WithButton("Valorant", "toggle-role-Valorant", emote: Parse(emotes.GetEmote("Valorant")))
+                .WithButton("Apex Legends", "toggle-role-ApexLegends", emote: Parse(emotes.GetEmote("ApexLegends")))
+                .WithButton("Lost Ark", "toggle-role-LostArk", emote: Parse(emotes.GetEmote("LostArk")))
+                .WithButton("Dota 2", "toggle-role-Dota", emote: Parse(emotes.GetEmote("Dota")))
+                .WithButton("Among Us", "toggle-role-AmongUs", emote: Parse(emotes.GetEmote("AmongUs")))
+                .WithButton("Osu", "toggle-role-Osu", emote: Parse(emotes.GetEmote("Osu")))
+                .WithButton("Rust", "toggle-role-Rust", emote: Parse(emotes.GetEmote("Rust")))
+                .WithButton("CS:GO", "toggle-role-CSGO", emote: Parse(emotes.GetEmote("CSGO")))
+                .WithButton("HotS", "toggle-role-HotS", emote: Parse(emotes.GetEmote("HotS")))
+                .WithButton("Wild Rift", "toggle-role-WildRift", emote: Parse(emotes.GetEmote("WildRift")))
+                .WithButton("Mobile Legends", "toggle-role-MobileLegends", emote: Parse(emotes.GetEmote("MobileLegends")));
 
-            await message.AddReactionsAsync(new IEmote[]
-            {
-                global::Discord.Emote.Parse(emotes.GetEmote("GenshinImpact")),
-                global::Discord.Emote.Parse(emotes.GetEmote("LeagueOfLegends")),
-                global::Discord.Emote.Parse(emotes.GetEmote("TeamfightTactics")),
-                global::Discord.Emote.Parse(emotes.GetEmote("Valorant")),
-                global::Discord.Emote.Parse(emotes.GetEmote("ApexLegends")),
-                global::Discord.Emote.Parse(emotes.GetEmote("LostArk")),
-                global::Discord.Emote.Parse(emotes.GetEmote("Dota")),
-                global::Discord.Emote.Parse(emotes.GetEmote("AmongUs")),
-                global::Discord.Emote.Parse(emotes.GetEmote("Osu")),
-                global::Discord.Emote.Parse(emotes.GetEmote("Rust")),
-                global::Discord.Emote.Parse(emotes.GetEmote("CSGO")),
-                global::Discord.Emote.Parse(emotes.GetEmote("HotS")),
-                global::Discord.Emote.Parse(emotes.GetEmote("WildRift")),
-                global::Discord.Emote.Parse(emotes.GetEmote("MobileLegends"))
-            });
+            await Context.Channel.SendMessageAsync("", false, embed.Build(), component: buttons.Build());
         }
 
         [Command("event-role")]
@@ -89,15 +69,13 @@ namespace Izumi.Services.Discord.Commands.Prefix
                 .WithDescription(
                     $"Ты можешь получить роль <@&{roles[DiscordRoleType.DiscordEvent].Id}>, " +
                     $"которая будет **упоминаться** в <#{channels[DiscordChannelType.EventNotification].Id}> " +
-                    "для оповещения о предстоящих **мероприятиях**, для этого нажми на **реакцию** под этим сообщением.")
-                .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.GetEventRole)))
-                .WithFooter(
-                    "При нажатии на реакцию, она будет снята и ты получишь соответствующую роль. " +
-                    "При необходимости роль можно снять, нажав на реакцию повторно.");
+                    "для оповещения о предстоящих **мероприятиях**, для этого нажми на **кнопку** под этим сообщением.")
+                .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.GetEventRole)));
 
-            var message = await Context.Channel.SendMessageAsync("", false, embed.Build());
+            var buttons = new ComponentBuilder()
+                .WithButton("Мероприятия", "toggle-role-DiscordEvent", emote: new Emoji("🥳"));
 
-            await message.AddReactionAsync(new Emoji("🥳"));
+            await Context.Channel.SendMessageAsync("", false, embed.Build(), component: buttons.Build());
         }
 
         [Command("how-desc-work")]
@@ -112,7 +90,8 @@ namespace Izumi.Services.Discord.Commands.Prefix
                 .WithAuthor("Доска сообщества")
                 .WithDescription(
                     "Ты можешь делиться с нами своими любимыми изображениями в каналах доски сообщества." +
-                    $"\n\n{emotes.GetEmote("Arrow")} Напиши `/доска-сообщества` чтобы посмотреть информацию о своем участии." +
+                    $"\n\n{emotes.GetEmote("Arrow")} Напиши в канал <#{channels[DiscordChannelType.Commands].Id}> " +
+                    "`/доска-сообщества` чтобы посмотреть информацию о своем участии." +
                     $"\n{StringExtensions.EmptyChar}")
                 .AddField("Каналы доски",
                     $"{emotes.GetEmote("List")} <#{channels[DiscordChannelType.Photos].Id}> - Красивые ~~котики~~ фотографии.\n" +

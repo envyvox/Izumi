@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Izumi.Data.Enums;
+using Izumi.Services.Discord.Commands.Component;
 using Izumi.Services.Discord.Commands.Slash.User;
 using Izumi.Services.Discord.Commands.Slash.User.Casino;
 using Izumi.Services.Discord.Commands.Slash.User.Contract;
@@ -126,6 +127,12 @@ namespace Izumi.Services.Discord.Client.Events
                                 await HandleInteraction(request.Interaction, new AchievementsCommand(command), true),
                             _ => Unit.Value
                         };
+                    case SocketMessageComponent component:
+
+                        if (component.Data.CustomId.Contains("toggle-role"))
+                            await HandleInteraction(request.Interaction, new ToggleRoleButton(component), true);
+
+                        break;
                 }
             }
             catch (GameUserExpectedException e)
@@ -183,6 +190,14 @@ namespace Izumi.Services.Discord.Client.Events
                         command.User.Username, command.User.Id, command.Data.Name, command.Data.Options?
                             .Aggregate(string.Empty, (s, v) => s + $"{v.Name}: {v.Value}, ")
                             .RemoveFromEnd(2));
+
+                    break;
+
+                case SocketMessageComponent component:
+
+                    _logger.LogInformation(
+                        "{UserName} {UserId} clicked a button {ButtonId}",
+                        component.User.Username, component.User.Id, component.Data.CustomId);
 
                     break;
             }
