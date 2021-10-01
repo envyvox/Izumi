@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Izumi.Data.Enums;
 using Izumi.Services.Game.Fish.Commands;
 using Izumi.Services.Game.Fish.Models;
 using Izumi.Services.Game.Fish.Queries;
@@ -29,6 +30,12 @@ namespace Izumi.Controllers.Game.Resource
         public async Task<ActionResult<List<FishDto>>> GetFishes()
         {
             return Ok(await _mediator.Send(new GetFishesQuery()));
+        }
+
+        [HttpGet, Route("list-by-season/{season}")]
+        public async Task<ActionResult<List<FishDto>>> GetFishes([FromRoute] SeasonType season)
+        {
+            return Ok(await _mediator.Send(new GetFishesBySeasonQuery(season)));
         }
 
         [HttpPost, Route("create")]

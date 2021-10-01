@@ -14,6 +14,7 @@ using Izumi.Services.Discord.Commands.Slash.User.Cooking;
 using Izumi.Services.Discord.Commands.Slash.User.Crafting;
 using Izumi.Services.Discord.Commands.Slash.User.Explore;
 using Izumi.Services.Discord.Commands.Slash.User.Field;
+using Izumi.Services.Discord.Commands.Slash.User.Fisher;
 using Izumi.Services.Discord.Commands.Slash.User.Info;
 using Izumi.Services.Discord.Commands.Slash.User.Info.Interaction;
 using Izumi.Services.Discord.Commands.Slash.User.Market;
@@ -91,6 +92,10 @@ namespace Izumi.Services.Discord.Client.Events
                                 await HandleInteraction(request.Interaction, new ExploreCastleCommand(command), false),
                             "рыбачить" =>
                                 await HandleInteraction(request.Interaction, new FishingCommand(command), false),
+                            "рыбак" =>
+                                await HandleInteraction(request.Interaction, new FisherListCommand(command), true),
+                            "рыбак-продать" =>
+                                await HandleInteraction(request.Interaction, new FisherSellCommand(command), false),
                             "открыть" =>
                                 await HandleInteraction(request.Interaction, new OpenBoxCommand(command), false),
                             "магазин-посмотреть" =>

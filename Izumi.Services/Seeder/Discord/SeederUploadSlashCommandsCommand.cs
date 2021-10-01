@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -163,6 +164,34 @@ namespace Izumi.Services.Seeder.Discord
                 new SlashCommandBuilder()
                     .WithName("рыбачить")
                     .WithDescription($"Отправиться рыбачить в {LocationType.Seaport.Localize(true)}"),
+
+                new SlashCommandBuilder()
+                    .WithName("рыбак")
+                    .WithDescription("Просмотр рыбы, которую покупает рыбак"),
+
+                new SlashCommandBuilder()
+                    .WithName("рыбак-продать")
+                    .WithDescription("Продать указанную рыбу")
+                    .AddOption(new SlashCommandOptionBuilder()
+                        .WithType(ApplicationCommandOptionType.SubCommand)
+                        .WithRequired(false)
+                        .WithName("рыбу")
+                        .WithDescription("Продать рыбаку определенную рыбу")
+                        .AddOption(new SlashCommandOptionBuilder()
+                            .WithType(ApplicationCommandOptionType.Integer)
+                            .WithRequired(true)
+                            .WithName("номер")
+                            .WithDescription("Номер рыбы, которую ты хочешь продать"))
+                        .AddOption(new SlashCommandOptionBuilder()
+                            .WithType(ApplicationCommandOptionType.Integer)
+                            .WithRequired(false)
+                            .WithName("количество")
+                            .WithDescription("Количество рыбы, которое ты хочешь продать")))
+                    .AddOption(new SlashCommandOptionBuilder()
+                        .WithType(ApplicationCommandOptionType.SubCommand)
+                        .WithRequired(false)
+                        .WithName("все")
+                        .WithDescription("Продать рыбаку всю подходяющую рыбу которая у тебя есть")),
 
                 new SlashCommandBuilder()
                     .WithName("открыть")
@@ -557,9 +586,15 @@ namespace Izumi.Services.Seeder.Discord
                             .WithDescription("Название товара который ты хочешь продать"))),
             };
 
+            var guildCommands = await socketClient.Rest.GetGuildApplicationCommands(_options.Value.GuildId);
+
             foreach (var command in commands)
             {
                 result.Total++;
+
+                // для ускорения работы необходимо пропускать команды, которые уже загружены на сервер
+                // если команду необходимо обновить - необходимо сперва удалить ее вручную
+                if (guildCommands.Any(x => x.Name == command.Name)) continue;
 
                 try
                 {
