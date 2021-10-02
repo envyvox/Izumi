@@ -42,7 +42,8 @@ namespace Izumi.Data.Enums.Discord
         CsGo = 210,
         HotS = 211,
         WildRift = 212,
-        MobileLegends = 213
+        MobileLegends = 213,
+        NewWorld = 214,
     }
 
     public static class DiscordRoleHelper
@@ -85,6 +86,7 @@ namespace Izumi.Data.Enums.Discord
             DiscordRoleType.HotS => "HotS",
             DiscordRoleType.WildRift => "Wild Rift",
             DiscordRoleType.MobileLegends => "Mobile Legends",
+            DiscordRoleType.NewWorld => "New World",
             _ => throw new ArgumentOutOfRangeException(nameof(role), role, null)
         };
 

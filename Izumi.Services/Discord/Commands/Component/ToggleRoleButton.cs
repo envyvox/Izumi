@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -7,6 +6,7 @@ using Discord.WebSocket;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Guild.Commands;
 using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Extensions;
 using MediatR;
 
 namespace Izumi.Services.Discord.Commands.Component
@@ -29,35 +29,13 @@ namespace Izumi.Services.Discord.Commands.Component
             {
                 // роль мероприятий
                 "toggle-role-DiscordEvent" => DiscordRoleType.DiscordEvent,
-                // роли оповещений событий
-                "toggle-role-AllEvents" => DiscordRoleType.AllEvents,
-                "toggle-role-DailyEvents" => DiscordRoleType.DailyEvents,
-                "toggle-role-WeeklyEvents" => DiscordRoleType.WeeklyEvents,
-                "toggle-role-MonthlyEvents" => DiscordRoleType.MonthlyEvents,
-                "toggle-role-YearlyEvents" => DiscordRoleType.YearlyEvents,
-                "toggle-role-UniqueEvents" => DiscordRoleType.UniqueEvents,
-                // игровые роли
-                "toggle-role-GenshinImpact" => DiscordRoleType.GenshinImpact,
-                "toggle-role-LeagueOfLegends" => DiscordRoleType.LeagueOfLegends,
-                "toggle-role-TeamfightTactics" => DiscordRoleType.TeamfightTactics,
-                "toggle-role-Valorant" => DiscordRoleType.Valorant,
-                "toggle-role-ApexLegends" => DiscordRoleType.ApexLegends,
-                "toggle-role-LostArk" => DiscordRoleType.LostArk,
-                "toggle-role-Dota" => DiscordRoleType.Dota,
-                "toggle-role-Osu" => DiscordRoleType.Osu,
-                "toggle-role-AmongUs" => DiscordRoleType.AmongUs,
-                "toggle-role-Rust" => DiscordRoleType.Rust,
-                "toggle-role-CSGO" => DiscordRoleType.CsGo,
-                "toggle-role-HotS" => DiscordRoleType.HotS,
-                "toggle-role-WildRift" => DiscordRoleType.WildRift,
-                "toggle-role-MobileLegends" => DiscordRoleType.MobileLegends,
                 _ => throw new ArgumentOutOfRangeException()
             };
 
             var hasRole = await _mediator.Send(new CheckGuildUserHasRoleQuery(request.Component.User.Id, role));
 
             var embed = new EmbedBuilder()
-                .WithColor(new Color(uint.Parse("202225", NumberStyles.HexNumber)));
+                .WithDefaultColor();
 
             if (hasRole)
             {

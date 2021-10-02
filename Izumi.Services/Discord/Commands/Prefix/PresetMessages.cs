@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Izumi.Data.Enums;
@@ -32,29 +31,37 @@ namespace Izumi.Services.Discord.Commands.Prefix
             var channels = await _mediator.Send(new GetChannelsQuery());
 
             var embed = new EmbedBuilder()
-                .WithColor(new Color(uint.Parse("202225", NumberStyles.HexNumber)))
+                .WithDefaultColor()
                 .WithAuthor("Игровые роли")
                 .WithDescription(
                     $"Ты можешь получить игровые роли, которые можно **упоминать** в <#{channels[DiscordChannelType.Search].Id}> " +
-                    "чтобы упростить процесс **поиска людей** для совместной игры, для этого нажми на **кнопку** под этим сообщением.");
+                    "чтобы упростить процесс **поиска людей** для совместной игры, для этого **выберите роли** " +
+                    "из списка под этим сообщением.")
+                .WithFooter("Игровые роли можно при необходимости снять, убрав их из списка.");
 
-            var buttons = new ComponentBuilder()
-                .WithButton("Genshin Impact", "toggle-role-GenshinImpact", emote: Parse(emotes.GetEmote("GenshinImpact")))
-                .WithButton("League of Legends", "toggle-role-LeagueOfLegends", emote: Parse(emotes.GetEmote("LeagueOfLegends")))
-                .WithButton("Teamfight Tactics", "toggle-role-TeamfightTactics", emote: Parse(emotes.GetEmote("TeamfightTactics")))
-                .WithButton("Valorant", "toggle-role-Valorant", emote: Parse(emotes.GetEmote("Valorant")))
-                .WithButton("Apex Legends", "toggle-role-ApexLegends", emote: Parse(emotes.GetEmote("ApexLegends")))
-                .WithButton("Lost Ark", "toggle-role-LostArk", emote: Parse(emotes.GetEmote("LostArk")))
-                .WithButton("Dota 2", "toggle-role-Dota", emote: Parse(emotes.GetEmote("Dota")))
-                .WithButton("Among Us", "toggle-role-AmongUs", emote: Parse(emotes.GetEmote("AmongUs")))
-                .WithButton("Osu", "toggle-role-Osu", emote: Parse(emotes.GetEmote("Osu")))
-                .WithButton("Rust", "toggle-role-Rust", emote: Parse(emotes.GetEmote("Rust")))
-                .WithButton("CS:GO", "toggle-role-CSGO", emote: Parse(emotes.GetEmote("CSGO")))
-                .WithButton("HotS", "toggle-role-HotS", emote: Parse(emotes.GetEmote("HotS")))
-                .WithButton("Wild Rift", "toggle-role-WildRift", emote: Parse(emotes.GetEmote("WildRift")))
-                .WithButton("Mobile Legends", "toggle-role-MobileLegends", emote: Parse(emotes.GetEmote("MobileLegends")));
+            var menu = new ComponentBuilder()
+                .WithSelectMenu(new SelectMenuBuilder()
+                    .WithPlaceholder("Выберите игровые роли")
+                    .WithCustomId("select-game-roles")
+                    .WithMinValues(0)
+                    .WithMaxValues(14)
+                    .AddOption("Genshin Impact", "GenshinImpact", emote: Parse(emotes.GetEmote("GenshinImpact")))
+                    .AddOption("League of Legends", "LeagueOfLegends", emote: Parse(emotes.GetEmote("LeagueOfLegends")))
+                    .AddOption("Teamfight Tactics", "TeamfightTactics", emote: Parse(emotes.GetEmote("TeamfightTactics")))
+                    .AddOption("Valorant", "Valorant", emote: Parse(emotes.GetEmote("Valorant")))
+                    .AddOption("Apex Legends", "ApexLegends", emote: Parse(emotes.GetEmote("ApexLegends")))
+                    .AddOption("Lost Ark", "LostArk", emote: Parse(emotes.GetEmote("LostArk")))
+                    .AddOption("Dota 2", "Dota", emote: Parse(emotes.GetEmote("Dota")))
+                    .AddOption("Among Us", "AmongUs", emote: Parse(emotes.GetEmote("AmongUs")))
+                    .AddOption("Osu", "Osu", emote: Parse(emotes.GetEmote("Osu")))
+                    .AddOption("Rust", "Rust", emote: Parse(emotes.GetEmote("Rust")))
+                    .AddOption("CS:GO", "CSGO", emote: Parse(emotes.GetEmote("CSGO")))
+                    .AddOption("HotS", "HotS", emote: Parse(emotes.GetEmote("HotS")))
+                    .AddOption("Wild Rift", "WildRift", emote: Parse(emotes.GetEmote("WildRift")))
+                    .AddOption("Mobile Legends", "MobileLegends", emote: Parse(emotes.GetEmote("MobileLegends")))
+                    .AddOption("New World", "NewWorld", emote: Parse(emotes.GetEmote("NewWorld"))));
 
-            await Context.Channel.SendMessageAsync("", false, embed.Build(), component: buttons.Build());
+            await Context.Channel.SendMessageAsync(embed: embed.Build(), component: menu.Build());
         }
 
         [Command("event-role")]
@@ -64,7 +71,7 @@ namespace Izumi.Services.Discord.Commands.Prefix
             var roles = await _mediator.Send(new GetRolesQuery());
 
             var embed = new EmbedBuilder()
-                .WithColor(new Color(uint.Parse("202225", NumberStyles.HexNumber)))
+                .WithDefaultColor()
                 .WithAuthor("Роль мероприятия")
                 .WithDescription(
                     $"Ты можешь получить роль <@&{roles[DiscordRoleType.DiscordEvent].Id}>, " +
@@ -86,7 +93,7 @@ namespace Izumi.Services.Discord.Commands.Prefix
             var roles = await _mediator.Send(new GetRolesQuery());
 
             var embed = new EmbedBuilder()
-                .WithColor(new Color(uint.Parse("202225", NumberStyles.HexNumber)))
+                .WithDefaultColor()
                 .WithAuthor("Доска сообщества")
                 .WithDescription(
                     "Ты можешь делиться с нами своими любимыми изображениями в каналах доски сообщества." +

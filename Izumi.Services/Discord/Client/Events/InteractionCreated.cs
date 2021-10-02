@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,7 +27,6 @@ using Izumi.Services.Extensions;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using static Izumi.Services.Extensions.ExceptionExtensions;
 
 
@@ -136,6 +134,8 @@ namespace Izumi.Services.Discord.Client.Events
 
                         if (component.Data.CustomId.Contains("toggle-role"))
                             await HandleInteraction(request.Interaction, new ToggleRoleButton(component), true);
+                        if (component.Data.CustomId == "select-game-roles")
+                            await HandleInteraction(request.Interaction, new SelectGameRolesMenu(component), true);
 
                         break;
                 }
@@ -146,7 +146,7 @@ namespace Izumi.Services.Discord.Client.Events
                 var user = await _mediator.Send(new GetUserQuery((long) request.Interaction.User.Id));
 
                 var embed = new EmbedBuilder()
-                    .WithColor(new Color(uint.Parse("202225", NumberStyles.HexNumber)))
+                    .WithDefaultColor()
                     .WithAuthor("Ой, кажется что-то пошло не так...")
                     .WithDescription(
                         $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} " +
@@ -161,7 +161,7 @@ namespace Izumi.Services.Discord.Client.Events
                 var user = await _mediator.Send(new GetUserQuery((long) request.Interaction.User.Id));
 
                 var embed = new EmbedBuilder()
-                    .WithColor(new Color(uint.Parse("202225", NumberStyles.HexNumber)))
+                    .WithDefaultColor()
                     .WithAuthor("Ой, кажется что-то пошло не так...")
                     .WithDescription(
                         $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} " +
