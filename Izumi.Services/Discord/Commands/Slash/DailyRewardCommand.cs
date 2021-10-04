@@ -69,7 +69,7 @@ namespace Izumi.Services.Discord.Commands.Slash
 
                 embed.WithDescription(
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
-                    $"ты получил ежедневную награду ввиде {emotes.GetEmote(CurrencyType.Ien.ToString())} {dailyReward} " +
+                    $"ты получил ежедневную награду в виде {emotes.GetEmote(CurrencyType.Ien.ToString())} {dailyReward} " +
                     $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString(), dailyReward)}.");
             }
 
