@@ -584,6 +584,10 @@ namespace Izumi.Services.Seeder.Discord
                             .WithRequired(true)
                             .WithName("название")
                             .WithDescription("Название товара который ты хочешь продать"))),
+
+                new SlashCommandBuilder()
+                    .WithName("ежедневная-награда")
+                    .WithDescription("Забрать свою ежедневную награду")
             };
 
             var guildCommands = await socketClient.Rest.GetGuildApplicationCommands(_options.Value.GuildId);

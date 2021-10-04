@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Izumi.Services.Game.Tutorial.Queries
 {
-    public record GetUserTutorialStepQuery(long UserId) : IRequest<TutorialStepType>;
+    public record GetUserTutorialStepQuery(long UserId) : IRequest<TutorialStepType?>;
 
-    public class GetUserTutorialStepHandler : IRequestHandler<GetUserTutorialStepQuery, TutorialStepType>
+    public class GetUserTutorialStepHandler : IRequestHandler<GetUserTutorialStepQuery, TutorialStepType?>
     {
         private readonly IMediator _mediator;
         private readonly AppDbContext _db;
@@ -23,16 +23,12 @@ namespace Izumi.Services.Game.Tutorial.Queries
             _db = new AppDbContext(options);
         }
 
-        public async Task<TutorialStepType> Handle(GetUserTutorialStepQuery request, CancellationToken ct)
+        public async Task<TutorialStepType?> Handle(GetUserTutorialStepQuery request, CancellationToken ct)
         {
             var entity = await _db.UserTutorials
                 .SingleOrDefaultAsync(x => x.UserId == request.UserId);
 
-            if (entity is not null) return entity.Step;
-
-            await _mediator.Send(new CreateUserTutorialCommand(request.UserId));
-
-            return TutorialStepType.CheckProfile;
+            return entity?.Step;
         }
     }
 }

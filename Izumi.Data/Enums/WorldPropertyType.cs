@@ -14,7 +14,7 @@
         ActionTimeMinutesFieldWater = 10,
         ActionTimeMinutesExplore = 11,
         EconomyStartup = 12,
-        EconomyDailyIncome = 13,
+        EconomyDailyReward = 13,
         EconomyTutorialReward = 14,
         EconomyFoodEnergyPrice = 15,
         OpenBoxCapitalMinAmount = 16,

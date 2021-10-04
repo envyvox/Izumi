@@ -6,20 +6,20 @@ using Discord;
 using Discord.WebSocket;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Commands.Component;
-using Izumi.Services.Discord.Commands.Slash.User;
-using Izumi.Services.Discord.Commands.Slash.User.Casino;
-using Izumi.Services.Discord.Commands.Slash.User.Contract;
-using Izumi.Services.Discord.Commands.Slash.User.Cooking;
-using Izumi.Services.Discord.Commands.Slash.User.Crafting;
-using Izumi.Services.Discord.Commands.Slash.User.Explore;
-using Izumi.Services.Discord.Commands.Slash.User.Field;
-using Izumi.Services.Discord.Commands.Slash.User.Fisher;
-using Izumi.Services.Discord.Commands.Slash.User.Info;
-using Izumi.Services.Discord.Commands.Slash.User.Info.Interaction;
-using Izumi.Services.Discord.Commands.Slash.User.Market;
-using Izumi.Services.Discord.Commands.Slash.User.Referral;
-using Izumi.Services.Discord.Commands.Slash.User.Shop;
-using Izumi.Services.Discord.Commands.Slash.User.Transit;
+using Izumi.Services.Discord.Commands.Slash;
+using Izumi.Services.Discord.Commands.Slash.Casino;
+using Izumi.Services.Discord.Commands.Slash.Contract;
+using Izumi.Services.Discord.Commands.Slash.Cooking;
+using Izumi.Services.Discord.Commands.Slash.Crafting;
+using Izumi.Services.Discord.Commands.Slash.Explore;
+using Izumi.Services.Discord.Commands.Slash.Field;
+using Izumi.Services.Discord.Commands.Slash.Fisher;
+using Izumi.Services.Discord.Commands.Slash.Info;
+using Izumi.Services.Discord.Commands.Slash.Info.Interaction;
+using Izumi.Services.Discord.Commands.Slash.Market;
+using Izumi.Services.Discord.Commands.Slash.Referral;
+using Izumi.Services.Discord.Commands.Slash.Shop;
+using Izumi.Services.Discord.Commands.Slash.Transit;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
@@ -128,6 +128,8 @@ namespace Izumi.Services.Discord.Client.Events
                                 await HandleInteraction(request.Interaction, new MarketCommand(command), true),
                             "достижения" =>
                                 await HandleInteraction(request.Interaction, new AchievementsCommand(command), true),
+                            "ежедневная-награда" =>
+                                await HandleInteraction(request.Interaction, new DailyRewardCommand(command), false),
                             _ => Unit.Value
                         };
                     case SocketMessageComponent component:
