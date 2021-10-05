@@ -27,11 +27,9 @@ namespace Izumi.Services.Discord.Client.Events
         public async Task<Unit> Handle(UserVoiceStateUpdated request, CancellationToken cancellationToken)
         {
             var channels = await _mediator.Send(new GetChannelsQuery());
-            var roles = await _mediator.Send(new GetRolesQuery());
 
             var createRoomParent = (ulong) channels[DiscordChannelType.CreateRoomParent].Id;
             var createRoom = (ulong) channels[DiscordChannelType.CreateRoom].Id;
-            var musicBot = (ulong) roles[DiscordRoleType.MusicBot].Id;
 
             var oldChannel = request.OldVoiceState.VoiceChannel;
             var newChannel = request.NewVoiceState.VoiceChannel;
@@ -62,8 +60,6 @@ namespace Izumi.Services.Discord.Client.Events
 
                 await createdChannel.AddPermissionOverwriteAsync(request.SocketUser,
                     new OverwritePermissions(manageChannel: PermValue.Allow));
-                await createdChannel.AddPermissionOverwriteAsync(newChannel.Guild.GetRole(musicBot),
-                    new OverwritePermissions(moveMembers: PermValue.Allow));
             }
 
             if (oldChannel?.CategoryId == createRoomParent &&
