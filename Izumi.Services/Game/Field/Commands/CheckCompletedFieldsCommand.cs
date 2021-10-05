@@ -29,7 +29,7 @@ namespace Izumi.Services.Game.Field.Commands
         public async Task<Unit> Handle(CheckCompletedFieldsCommand request, CancellationToken ct)
         {
             var entities = await _db.UserFields
-                .Include(x => x.Seed)
+                .AsQueryable()
                 .Where(x =>
                     x.State != FieldStateType.Empty &&
                     x.State != FieldStateType.Completed &&
