@@ -60,6 +60,7 @@ namespace Izumi.Services.Game.User.Commands
                 Points = 0,
                 IsPremium = false,
                 CommandColor = DefaultCommandColor,
+                AutoTitleRole = true,
                 CreatedAt = DateTimeOffset.UtcNow,
                 UpdatedAt = DateTimeOffset.UtcNow
             });

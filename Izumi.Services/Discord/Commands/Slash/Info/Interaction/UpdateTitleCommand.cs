@@ -7,6 +7,7 @@ using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
+using Izumi.Services.Discord.Guild.Commands;
 using Izumi.Services.Game.Title.Queries;
 using Izumi.Services.Game.User.Commands;
 using Izumi.Services.Game.User.Queries;
@@ -43,6 +44,8 @@ namespace Izumi.Services.Discord.Commands.Slash.Info.Interaction
             }
             else
             {
+                await _mediator.Send(new RemoveRoleFromGuildUserCommand(request.Command.User.Id, user.Title.Role()));
+                await _mediator.Send(new AddRoleToGuildUserCommand(request.Command.User.Id, title.Role()));
                 await _mediator.Send(new UpdateUserTitleCommand(user.Id, title));
 
                 embed.WithDescription(

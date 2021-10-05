@@ -20,9 +20,4 @@
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Discord\Commands\Message" />
-      <Folder Include="Discord\Commands\User" />
-    </ItemGroup>
-
 </Project>

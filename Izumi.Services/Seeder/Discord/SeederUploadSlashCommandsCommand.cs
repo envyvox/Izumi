@@ -587,7 +587,24 @@ namespace Izumi.Services.Seeder.Discord
 
                 new SlashCommandBuilder()
                     .WithName("ежедневная-награда")
-                    .WithDescription("Забрать свою ежедневную награду")
+                    .WithDescription("Забрать свою ежедневную награду"),
+
+                new SlashCommandBuilder()
+                    .WithName("настройка")
+                    .WithDescription("Различные настройки игрового профиля")
+                    .AddOption(new SlashCommandOptionBuilder()
+                        .WithType(ApplicationCommandOptionType.SubCommand)
+                        .WithName("роли-титула")
+                        .WithDescription("Переключение автоматической выдачи роли активного титула"))
+                    .AddOption(new SlashCommandOptionBuilder()
+                        .WithType(ApplicationCommandOptionType.SubCommand)
+                        .WithName("цвета-команд")
+                        .WithDescription("Настройка цвета левой полоски у команд (только для премиум пользователей)")
+                        .AddOption(new SlashCommandOptionBuilder()
+                            .WithType(ApplicationCommandOptionType.String)
+                            .WithRequired(true)
+                            .WithName("цвет")
+                            .WithDescription("HEX значение нового цвета полоски у команд")))
             };
 
             var guildCommands = await socketClient.Rest.GetGuildApplicationCommands(_options.Value.GuildId);

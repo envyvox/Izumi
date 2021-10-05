@@ -18,6 +18,7 @@ using Izumi.Services.Discord.Commands.Slash.Info;
 using Izumi.Services.Discord.Commands.Slash.Info.Interaction;
 using Izumi.Services.Discord.Commands.Slash.Market;
 using Izumi.Services.Discord.Commands.Slash.Referral;
+using Izumi.Services.Discord.Commands.Slash.Settings;
 using Izumi.Services.Discord.Commands.Slash.Shop;
 using Izumi.Services.Discord.Commands.Slash.Transit;
 using Izumi.Services.Discord.Emote.Extensions;
@@ -130,6 +131,8 @@ namespace Izumi.Services.Discord.Client.Events
                                 await HandleInteraction(request.Interaction, new AchievementsCommand(command), true),
                             "ежедневная-награда" =>
                                 await HandleInteraction(request.Interaction, new DailyRewardCommand(command), false),
+                            "настройка" =>
+                                await HandleInteraction(request.Interaction, new SettingsCommand(command), true),
                             _ => Unit.Value
                         };
                     case SocketMessageComponent component:
@@ -203,7 +206,7 @@ namespace Izumi.Services.Discord.Client.Events
                 case SocketMessageComponent component:
 
                     _logger.LogInformation(
-                        "{UserName} {UserId} clicked a button {ButtonId}",
+                        "{UserName} {UserId} used a component with id {ButtonId}",
                         component.User.Username, component.User.Id, component.Data.CustomId);
 
                     break;

@@ -4,7 +4,6 @@ namespace Izumi.Data.Enums.Discord
 {
     public enum DiscordRoleType : byte
     {
-        MusicBot = 1,
         Administration = 2,
         EventManager = 3,
         Moderator = 4,
@@ -29,6 +28,28 @@ namespace Izumi.Data.Enums.Discord
         YearlyEvents = 104,
         UniqueEvents = 105,
 
+        Newbie = 151,
+        Lucky = 152,
+        ResourcefulCatcher = 153,
+        DescendantAristocracy = 154,
+        DescendantOcean = 155,
+        KeeperGrove = 156,
+        ReliableWorkaholic = 157,
+        SereneExcavator = 158,
+        AgileEarner = 159,
+        Handyman = 160,
+        WineSamurai = 161,
+        StockyFarmer = 162,
+        SeaPoet = 163,
+        CulinaryIdol = 164,
+        Toxic = 165,
+        KingExcitement = 166,
+        BelievingInLuck = 167,
+        FirstSamurai = 168,
+        Yatagarasu = 169,
+        HarbingerOfSummer = 170,
+        DrinkCollection = 171,
+
         GenshinImpact = 200,
         LeagueOfLegends = 201,
         TeamfightTactics = 202,
@@ -50,7 +71,6 @@ namespace Izumi.Data.Enums.Discord
     {
         public static string Name(this DiscordRoleType role) => role switch
         {
-            DiscordRoleType.MusicBot => "Музыкальные боты",
             DiscordRoleType.Administration => "Сёгунат",
             DiscordRoleType.EventManager => "Собаёри",
             DiscordRoleType.Moderator => "Родзю",
@@ -87,6 +107,27 @@ namespace Izumi.Data.Enums.Discord
             DiscordRoleType.WildRift => "Wild Rift",
             DiscordRoleType.MobileLegends => "Mobile Legends",
             DiscordRoleType.NewWorld => "New World",
+            DiscordRoleType.Newbie => TitleType.Newbie.Localize(),
+            DiscordRoleType.Lucky => TitleType.Lucky.Localize(),
+            DiscordRoleType.ResourcefulCatcher => TitleType.ResourcefulCatcher.Localize(),
+            DiscordRoleType.DescendantAristocracy => TitleType.DescendantAristocracy.Localize(),
+            DiscordRoleType.DescendantOcean => TitleType.DescendantOcean.Localize(),
+            DiscordRoleType.KeeperGrove => TitleType.KeeperGrove.Localize(),
+            DiscordRoleType.ReliableWorkaholic => TitleType.ReliableWorkaholic.Localize(),
+            DiscordRoleType.SereneExcavator => TitleType.SereneExcavator.Localize(),
+            DiscordRoleType.AgileEarner => TitleType.AgileEarner.Localize(),
+            DiscordRoleType.Handyman => TitleType.Handyman.Localize(),
+            DiscordRoleType.WineSamurai => TitleType.WineSamurai.Localize(),
+            DiscordRoleType.StockyFarmer => TitleType.StockyFarmer.Localize(),
+            DiscordRoleType.SeaPoet => TitleType.SeaPoet.Localize(),
+            DiscordRoleType.CulinaryIdol => TitleType.CulinaryIdol.Localize(),
+            DiscordRoleType.Toxic => TitleType.Toxic.Localize(),
+            DiscordRoleType.KingExcitement => TitleType.KingExcitement.Localize(),
+            DiscordRoleType.BelievingInLuck => TitleType.BelievingInLuck.Localize(),
+            DiscordRoleType.FirstSamurai => TitleType.FirstSamurai.Localize(),
+            DiscordRoleType.Yatagarasu => TitleType.Yatagarasu.Localize(),
+            DiscordRoleType.HarbingerOfSummer => TitleType.HarbingerOfSummer.Localize(),
+            DiscordRoleType.DrinkCollection => TitleType.DrinkCollection.Localize(),
             _ => throw new ArgumentOutOfRangeException(nameof(role), role, null)
         };
 
@@ -98,6 +139,27 @@ namespace Izumi.Data.Enums.Discord
             DiscordRoleType.Nitro => "f47fff",
             DiscordRoleType.ContentProvider => "6fffc4",
             DiscordRoleType.Premium => "ffb71d",
+            DiscordRoleType.Newbie => "8ecbf1",
+            DiscordRoleType.Lucky => "9741b8",
+            DiscordRoleType.ResourcefulCatcher => "f0c3c3",
+            DiscordRoleType.DescendantAristocracy => "631515",
+            DiscordRoleType.DescendantOcean => "385e9b",
+            DiscordRoleType.KeeperGrove => "5be274",
+            DiscordRoleType.ReliableWorkaholic => "000000", // todo change value
+            DiscordRoleType.SereneExcavator => "ffbb88",
+            DiscordRoleType.AgileEarner => "f3bc6a",
+            DiscordRoleType.Handyman => "914f1e",
+            DiscordRoleType.WineSamurai => "a32121",
+            DiscordRoleType.StockyFarmer => "36d451",
+            DiscordRoleType.SeaPoet => "72abff",
+            DiscordRoleType.CulinaryIdol => "f3ff38",
+            DiscordRoleType.Toxic => "000000", // todo change value
+            DiscordRoleType.KingExcitement => "000000", // todo change value
+            DiscordRoleType.BelievingInLuck => "2c8f24",
+            DiscordRoleType.FirstSamurai => "050000",
+            DiscordRoleType.Yatagarasu => "ff1901",
+            DiscordRoleType.HarbingerOfSummer => "ebf0ac",
+            DiscordRoleType.DrinkCollection => "000000", // todo change value
             // для всех остальных используем значение по-умолчанию (прозрачный цвет дискорда)
             _ => "000000"
         };

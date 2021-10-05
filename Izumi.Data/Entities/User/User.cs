@@ -17,6 +17,7 @@ namespace Izumi.Data.Entities.User
         public uint Points { get; set; }
         public bool IsPremium { get; set; }
         public string CommandColor { get; set; }
+        public bool AutoTitleRole { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
     }
@@ -37,6 +38,7 @@ namespace Izumi.Data.Entities.User
             builder.Property(x => x.Points).IsRequired();
             builder.Property(x => x.IsPremium).IsRequired();
             builder.Property(x => x.CommandColor).IsRequired();
+            builder.Property(x => x.AutoTitleRole).IsRequired();
             builder.Property(x => x.CreatedAt).IsRequired();
             builder.Property(x => x.UpdatedAt).IsRequired();
         }

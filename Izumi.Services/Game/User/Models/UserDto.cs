@@ -14,6 +14,7 @@ namespace Izumi.Services.Game.User.Models
         uint Points,
         bool IsPremium,
         string CommandColor,
+        bool AutoTitleRole,
         DateTimeOffset CreatedAt,
         DateTimeOffset UpdatedAt);
 

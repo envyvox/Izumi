@@ -1,4 +1,5 @@
 ﻿using System;
+using Izumi.Data.Enums.Discord;
 
 namespace Izumi.Data.Enums
 {
@@ -58,5 +59,31 @@ namespace Izumi.Data.Enums
         };
 
         public static string EmoteName(this TitleType title) => "Title" + title;
+
+        public static DiscordRoleType Role(this TitleType title) => title switch
+        {
+            TitleType.Newbie => DiscordRoleType.Newbie,
+            TitleType.Lucky => DiscordRoleType.Lucky,
+            TitleType.ResourcefulCatcher => DiscordRoleType.ResourcefulCatcher,
+            TitleType.DescendantAristocracy => DiscordRoleType.DescendantAristocracy,
+            TitleType.DescendantOcean => DiscordRoleType.DescendantOcean,
+            TitleType.KeeperGrove => DiscordRoleType.KeeperGrove,
+            TitleType.ReliableWorkaholic => DiscordRoleType.ReliableWorkaholic,
+            TitleType.SereneExcavator => DiscordRoleType.SereneExcavator,
+            TitleType.AgileEarner => DiscordRoleType.AgileEarner,
+            TitleType.Handyman => DiscordRoleType.Handyman,
+            TitleType.WineSamurai => DiscordRoleType.WineSamurai,
+            TitleType.StockyFarmer => DiscordRoleType.StockyFarmer,
+            TitleType.SeaPoet => DiscordRoleType.SeaPoet,
+            TitleType.CulinaryIdol => DiscordRoleType.CulinaryIdol,
+            TitleType.Toxic => DiscordRoleType.Toxic,
+            TitleType.KingExcitement => DiscordRoleType.KingExcitement,
+            TitleType.BelievingInLuck => DiscordRoleType.BelievingInLuck,
+            TitleType.FirstSamurai => DiscordRoleType.FirstSamurai,
+            TitleType.Yatagarasu => DiscordRoleType.Yatagarasu,
+            TitleType.HarbingerOfSummer => DiscordRoleType.HarbingerOfSummer,
+            TitleType.DrinkCollection => DiscordRoleType.DrinkCollection,
+            _ => throw new ArgumentOutOfRangeException(nameof(title), title, null)
+        };
     }
 }
