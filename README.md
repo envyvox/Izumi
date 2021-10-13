@@ -3,6 +3,8 @@
 **Изуми** это уникальный бот с упрощенной RPG системой, созданный специально для Discord-сервера Hinode.<br>
 ***Izumi** is a unique bot with a simplified RPG system, created specifically for the Hinode Discord server.*
 
+![alt-текст](https://cdn.discordapp.com/attachments/842067362139209778/897915309871230996/unknown.png "Превью команд")
+
 Т.к. этот бот предназначен для русскоязычного сообщества дальнейшая информация будет на русском.<br>
 *Because this bot is intended for the Russian-speaking community further information will be in Russian.*
 
