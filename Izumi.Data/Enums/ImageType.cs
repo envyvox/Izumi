@@ -28,6 +28,7 @@
         Market = 24,
         ColorPicker = 25,
         Premium = 26,
-        Tutorial = 27
+        Tutorial = 27,
+        GetGameRoles = 28
     }
 }

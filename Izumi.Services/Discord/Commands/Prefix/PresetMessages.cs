@@ -37,7 +37,7 @@ namespace Izumi.Services.Discord.Commands.Prefix
                     "как **найти людей** для совместной игры, так и просто пообщаться на игровую тематику. " +
                     "Для этого **выбери роли** из списка под этим сообщением.")
                 .WithFooter("Игровые роли можно при необходимости снять, убрав их из списка.")
-                .WithImageUrl("https://cdn.discordapp.com/attachments/842067362139209778/898169768266309662/unknown.png");
+                .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.GetGameRoles)));
 
             var menu = new ComponentBuilder()
                 .WithSelectMenu(new SelectMenuBuilder()
