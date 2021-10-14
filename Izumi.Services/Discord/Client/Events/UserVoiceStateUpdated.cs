@@ -27,9 +27,13 @@ namespace Izumi.Services.Discord.Client.Events
         public async Task<Unit> Handle(UserVoiceStateUpdated request, CancellationToken cancellationToken)
         {
             var channels = await _mediator.Send(new GetChannelsQuery());
+            var roles = await _mediator.Send(new GetRolesQuery());
 
             var createRoomParent = (ulong) channels[DiscordChannelType.CreateRoomParent].Id;
             var createRoom = (ulong) channels[DiscordChannelType.CreateRoom].Id;
+
+            var eventParent = (ulong) channels[DiscordChannelType.EventParent].Id;
+            var eventCreateRoom = (ulong) channels[DiscordChannelType.EventCreateRoom].Id;
 
             var oldChannel = request.OldVoiceState.VoiceChannel;
             var newChannel = request.NewVoiceState.VoiceChannel;
@@ -56,15 +60,80 @@ namespace Izumi.Services.Discord.Client.Events
 
                 await newChannel.Guild
                     .GetUser(request.SocketUser.Id)
-                    .ModifyAsync(x => { x.Channel = createdChannel; });
+                    .ModifyAsync(x => x.Channel = createdChannel);
 
                 await createdChannel.AddPermissionOverwriteAsync(request.SocketUser,
                     new OverwritePermissions(manageChannel: PermValue.Allow));
             }
 
+            if (newChannel?.Id == eventCreateRoom)
+            {
+                var createdChannel = await newChannel.Guild.CreateVoiceChannelAsync("Мероприятие",
+                    x => x.CategoryId = eventParent);
+
+                await newChannel.Guild
+                    .GetUser(request.SocketUser.Id)
+                    .ModifyAsync(x => x.Channel = createdChannel);
+
+                var eventManagerRole = newChannel.Guild.GetRole((ulong) roles[DiscordRoleType.EventManager].Id);
+                var moderatorRole = newChannel.Guild.GetRole((ulong) roles[DiscordRoleType.Moderator].Id);
+
+                await createdChannel.AddPermissionOverwriteAsync(eventManagerRole,
+                    new OverwritePermissions(
+                        createInstantInvite: PermValue.Allow,
+                        manageChannel: PermValue.Allow,
+                        manageRoles: PermValue.Allow,
+                        viewChannel: PermValue.Allow,
+                        connect: PermValue.Allow,
+                        speak: PermValue.Allow,
+                        muteMembers: PermValue.Allow,
+                        deafenMembers: PermValue.Allow,
+                        moveMembers: PermValue.Allow,
+                        useVoiceActivation: PermValue.Allow,
+                        prioritySpeaker: PermValue.Allow,
+                        stream: PermValue.Allow));
+
+                await createdChannel.AddPermissionOverwriteAsync(moderatorRole,
+                    new OverwritePermissions(
+                        createInstantInvite: PermValue.Allow,
+                        manageChannel: PermValue.Deny,
+                        manageRoles: PermValue.Deny,
+                        viewChannel: PermValue.Allow,
+                        connect: PermValue.Allow,
+                        speak: PermValue.Allow,
+                        muteMembers: PermValue.Allow,
+                        deafenMembers: PermValue.Allow,
+                        moveMembers: PermValue.Allow,
+                        useVoiceActivation: PermValue.Allow,
+                        prioritySpeaker: PermValue.Allow,
+                        stream: PermValue.Allow));
+
+                await createdChannel.AddPermissionOverwriteAsync(newChannel.Guild.EveryoneRole,
+                    new OverwritePermissions(
+                        createInstantInvite: PermValue.Allow,
+                        manageChannel: PermValue.Deny,
+                        manageRoles: PermValue.Deny,
+                        viewChannel: PermValue.Allow,
+                        connect: PermValue.Allow,
+                        speak: PermValue.Allow,
+                        muteMembers: PermValue.Deny,
+                        deafenMembers: PermValue.Deny,
+                        moveMembers: PermValue.Deny,
+                        useVoiceActivation: PermValue.Allow,
+                        prioritySpeaker: PermValue.Deny,
+                        stream: PermValue.Deny));
+            }
+
             if (oldChannel?.CategoryId == createRoomParent &&
                 oldChannel.Users.Count == 0 &&
                 oldChannel.Id != createRoom)
+            {
+                await oldChannel.DeleteAsync();
+            }
+
+            if (oldChannel?.CategoryId == eventParent &&
+                oldChannel.Users.Count == 0 &&
+                oldChannel.Id != eventCreateRoom)
             {
                 await oldChannel.DeleteAsync();
             }

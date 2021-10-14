@@ -28,16 +28,16 @@ namespace Izumi.Services.Discord.Commands.Prefix
         public async Task SendGameRolesMessageTask()
         {
             var emotes = await _mediator.Send(new GetEmotesQuery());
-            var channels = await _mediator.Send(new GetChannelsQuery());
 
             var embed = new EmbedBuilder()
                 .WithDefaultColor()
                 .WithAuthor("Игровые роли")
                 .WithDescription(
-                    $"Ты можешь получить игровые роли, которые можно **упоминать** в <#{channels[DiscordChannelType.Search].Id}> " +
-                    "чтобы упростить процесс **поиска людей** для совместной игры, для этого **выберите роли** " +
-                    "из списка под этим сообщением.")
-                .WithFooter("Игровые роли можно при необходимости снять, убрав их из списка.");
+                    "Ты можешь получить игровые роли, которые открывают доступ к текстовым каналам где можно " +
+                    "как **найти людей** для совместной игры, так и просто пообщаться на игровую тематику. " +
+                    "Для этого **выбери роли** из списка под этим сообщением.")
+                .WithFooter("Игровые роли можно при необходимости снять, убрав их из списка.")
+                .WithImageUrl("https://cdn.discordapp.com/attachments/842067362139209778/898169768266309662/unknown.png");
 
             var menu = new ComponentBuilder()
                 .WithSelectMenu(new SelectMenuBuilder()

@@ -174,7 +174,7 @@ namespace Izumi.Services.Discord.Client.Events
                         "этом команде разработки. Приношу извинения за моих глупых создателей, они обязательно исправятся.")
                     .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.CommandError)));
 
-                await request.Interaction.FollowupAsync("", new[] { embed.Build() });
+                await request.Interaction.FollowupAsync("", new[] { embed.Build() }, ephemeral: true);
 
                 _logger.LogError(e, "Interaction ended with unexpected exception");
             }
