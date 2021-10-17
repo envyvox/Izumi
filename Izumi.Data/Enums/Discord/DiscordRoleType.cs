@@ -8,7 +8,7 @@ namespace Izumi.Data.Enums.Discord
         EventManager = 3,
         Moderator = 4,
         Nitro = 5, // роль nitro-boost создается дискордом по-умолчанию, нам нужно только получить ее
-        Mute = 6,
+        Muted = 6,
         ContentProvider = 7,
         InVoice = 8,
         Premium = 9,
@@ -98,7 +98,7 @@ namespace Izumi.Data.Enums.Discord
             DiscordRoleType.Dota => "Dota 2",
             DiscordRoleType.Osu => "Osu!",
             DiscordRoleType.AmongUs => "Among Us",
-            DiscordRoleType.Mute => "Блокировка чата",
+            DiscordRoleType.Muted => "Блокировка чата",
             DiscordRoleType.ContentProvider => "Поставщик контента",
             DiscordRoleType.InVoice => "🎙️",
             DiscordRoleType.Rust => "Rust",

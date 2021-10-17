@@ -33,7 +33,9 @@ namespace Izumi.Data
         public DbSet<Emote> Emotes { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<UserMute> UserMutes { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<UserWarn> UserWarns { get; set; }
 
         public DbSet<Alcohol> Alcohols { get; set; }
         public DbSet<AlcoholIngredient> AlcoholIngredients { get; set; }

@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using Discord.WebSocket;
 using Izumi.Data.Enums;
 using Izumi.Data.Enums.Discord;
-using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Discord.Guild.Commands;
+using Izumi.Services.Discord.Mute.Queries;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -34,25 +35,26 @@ namespace Izumi.Services.Discord.Client.Events
                 request.SocketGuildUser.Id);
 
             var user = await _mediator.Send(new GetUserQuery((long) request.SocketGuildUser.Id));
-            var roles = await _mediator.Send(new GetRolesQuery());
+            var muted = await _mediator.Send(new CheckUserMutedQuery(user.Id));
 
             if (user.CreatedAt.Date != DateTimeOffset.UtcNow.Date &&
                 request.SocketGuildUser.Roles.All(x => x.Name != user.Location.Role().Name()))
             {
-                await request.SocketGuildUser.AddRoleAsync((ulong) roles[user.Location.Role()].Id);
-
-                _logger.LogInformation(
-                    "Added user {UserId} role {Role}",
-                    request.SocketGuildUser.Id, user.Location.Role().ToString());
+                await _mediator.Send(new AddRoleToGuildUserCommand(
+                    request.SocketGuildUser.Id, user.Location.Role()));
             }
 
-            if (user.IsPremium && request.SocketGuildUser.Roles.All(x => x.Name != DiscordRoleType.Premium.Name()))
+            if (user.IsPremium &&
+                request.SocketGuildUser.Roles.All(x => x.Name != DiscordRoleType.Premium.Name()))
             {
-                await request.SocketGuildUser.AddRoleAsync((ulong) roles[DiscordRoleType.Premium].Id);
+                await _mediator.Send(new AddRoleToGuildUserCommand(
+                    request.SocketGuildUser.Id, DiscordRoleType.Premium));
+            }
 
-                _logger.LogInformation(
-                    "Added user {UserId} role {Role}",
-                    request.SocketGuildUser.Id, DiscordRoleType.Premium.ToString());
+            if (muted)
+            {
+                await _mediator.Send(new AddRoleToGuildUserCommand(
+                    request.SocketGuildUser.Id, DiscordRoleType.Muted));
             }
 
             return Unit.Value;

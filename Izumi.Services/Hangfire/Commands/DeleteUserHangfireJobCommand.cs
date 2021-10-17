@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Hangfire;
 using Izumi.Data;
 using Izumi.Data.Enums;
 using Izumi.Data.Extensions;
@@ -38,6 +39,7 @@ namespace Izumi.Services.Hangfire.Commands
                     $"user {request.UserId} doesnt have hangfire job entity with type {request.Type.ToString()}");
             }
 
+            BackgroundJob.Delete(entity.JobId);
             await _db.DeleteEntity(entity);
 
             _logger.LogInformation(
