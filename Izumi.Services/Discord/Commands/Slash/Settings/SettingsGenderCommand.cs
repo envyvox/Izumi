@@ -62,8 +62,8 @@ namespace Izumi.Services.Discord.Commands.Slash.Settings
                         $"\n{StringExtensions.EmptyChar}")
                     .AddField("Подтверждение пола",
                         "После беседы в голосовом канале, упомяни меня и напиши одну из команд:" +
-                        $"\n{emotes.GetEmote(GenderType.Male.EmoteName())} {client.CurrentUser.Mention} update-gender {request.Command.User.Mention} 1" +
-                        $"\n{emotes.GetEmote(GenderType.Female.EmoteName())} {client.CurrentUser.Mention} update-gender {request.Command.User.Mention} 2");
+                        $"\n{emotes.GetEmote(GenderType.Male.EmoteName())} `{client.CurrentUser.Mention} update-gender {request.Command.User.Mention} 1`" +
+                        $"\n{emotes.GetEmote(GenderType.Female.EmoteName())} `{client.CurrentUser.Mention} update-gender {request.Command.User.Mention} 2`");
 
                 await _mediator.Send(new SendEmbedToChannelCommand(
                     DiscordChannelType.Moderation, notify, $"<@&{roles[DiscordRoleType.Moderator].Id}>"));
