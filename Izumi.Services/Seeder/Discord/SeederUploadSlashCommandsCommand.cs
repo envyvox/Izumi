@@ -1,24 +1,22 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
 using Izumi.Data.Enums;
-using Izumi.Data.Util;
 using Izumi.Services.Discord.Client;
 using Izumi.Services.Discord.Client.Options;
 using Izumi.Services.Game.Localization;
 using MediatR;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using IRequest = MediatR.IRequest;
 
 namespace Izumi.Services.Seeder.Discord
 {
-    public record SeederUploadSlashCommandsCommand : IRequest<TotalAndAffectedCountDto>;
+    public record SeederUploadSlashCommandsCommand : IRequest;
 
-    public class SeederUploadSlashCommandsHandler
-        : IRequestHandler<SeederUploadSlashCommandsCommand, TotalAndAffectedCountDto>
+    public class SeederUploadSlashCommandsHandler : IRequestHandler<SeederUploadSlashCommandsCommand>
     {
         private readonly IDiscordClientService _discordClientService;
         private readonly IOptions<DiscordOptions> _options;
@@ -34,20 +32,21 @@ namespace Izumi.Services.Seeder.Discord
             _local = local;
         }
 
-        public async Task<TotalAndAffectedCountDto> Handle(SeederUploadSlashCommandsCommand request,
-            CancellationToken ct)
+        public async Task<Unit> Handle(SeederUploadSlashCommandsCommand request, CancellationToken ct)
         {
-            var result = new TotalAndAffectedCountDto();
             var socketClient = await _discordClientService.GetSocketClient();
-            var commands = new[]
+
+            ApplicationCommandProperties[] commands =
             {
                 new SlashCommandBuilder()
                     .WithName("доска-сообщества")
-                    .WithDescription("Информация о твоем участии в доске сообщества"),
+                    .WithDescription("Информация о твоем участии в доске сообщества")
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("мир")
-                    .WithDescription("Информация о состоянии игрового мира"),
+                    .WithDescription("Информация о состоянии игрового мира")
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("профиль")
@@ -56,7 +55,8 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.User)
                         .WithRequired(false)
                         .WithName("пользователь")
-                        .WithDescription("Пользователь, профиль которого ты хочешь посмотреть")),
+                        .WithDescription("Пользователь, профиль которого ты хочешь посмотреть"))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("информация")
@@ -65,7 +65,8 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.String)
                         .WithRequired(true)
                         .WithName("текст")
-                        .WithDescription("Новая информация")),
+                        .WithDescription("Новая информация"))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("инвентарь")
@@ -78,7 +79,8 @@ namespace Izumi.Services.Seeder.Discord
                         .AddChoice("рыба", "рыба")
                         .AddChoice("семена", "семена")
                         .AddChoice("урожай", "урожай")
-                        .AddChoice("блюда", "блюда")),
+                        .AddChoice("блюда", "блюда"))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("коллекция")
@@ -94,11 +96,13 @@ namespace Izumi.Services.Seeder.Discord
                         .AddChoice(CollectionType.Drink.Localize(), CollectionType.Drink.GetHashCode())
                         .AddChoice(CollectionType.Crop.Localize(), CollectionType.Crop.GetHashCode())
                         .AddChoice(CollectionType.Fish.Localize(), CollectionType.Fish.GetHashCode())
-                        .AddChoice(CollectionType.Food.Localize(), CollectionType.Food.GetHashCode())),
+                        .AddChoice(CollectionType.Food.Localize(), CollectionType.Food.GetHashCode()))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("титулы")
-                    .WithDescription("Просмотр коллекции титулов"),
+                    .WithDescription("Просмотр коллекции титулов")
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("титул")
@@ -107,11 +111,13 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.Integer)
                         .WithRequired(true)
                         .WithName("титул")
-                        .WithDescription("Номер титула")),
+                        .WithDescription("Номер титула"))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("баннеры")
-                    .WithDescription("Просмотр коллекции баннеров"),
+                    .WithDescription("Просмотр коллекции баннеров")
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("баннер")
@@ -120,11 +126,13 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.Integer)
                         .WithRequired(true)
                         .WithName("баннер")
-                        .WithDescription("Номер баннера")),
+                        .WithDescription("Номер баннера"))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("приглашения")
-                    .WithDescription("Информация об участии в реферальной системе"),
+                    .WithDescription("Информация об участии в реферальной системе")
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("пригласил")
@@ -133,11 +141,13 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.User)
                         .WithRequired(true)
                         .WithName("пользователь")
-                        .WithDescription("Пользователь, который тебя пригласил")),
+                        .WithDescription("Пользователь, который тебя пригласил"))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("отправления")
-                    .WithDescription("Просмотр доступных отправлений из текущей локации"),
+                    .WithDescription("Просмотр доступных отправлений из текущей локации")
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("отправиться")
@@ -151,23 +161,28 @@ namespace Izumi.Services.Seeder.Discord
                         .AddChoice(LocationType.Garden.Localize(), LocationType.Garden.GetHashCode())
                         .AddChoice(LocationType.Seaport.Localize(), LocationType.Seaport.GetHashCode())
                         .AddChoice(LocationType.Castle.Localize(), LocationType.Castle.GetHashCode())
-                        .AddChoice(LocationType.Village.Localize(), LocationType.Village.GetHashCode())),
+                        .AddChoice(LocationType.Village.Localize(), LocationType.Village.GetHashCode()))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("исследовать")
-                    .WithDescription($"Отправиться исследовать {LocationType.Garden.Localize()}"),
+                    .WithDescription($"Отправиться исследовать {LocationType.Garden.Localize()}")
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("копать")
-                    .WithDescription($"Отправиться копать в {LocationType.Castle.Localize(true)}"),
+                    .WithDescription($"Отправиться копать в {LocationType.Castle.Localize(true)}")
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("рыбачить")
-                    .WithDescription($"Отправиться рыбачить в {LocationType.Seaport.Localize(true)}"),
+                    .WithDescription($"Отправиться рыбачить в {LocationType.Seaport.Localize(true)}")
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("рыбак")
-                    .WithDescription("Просмотр рыбы, которую покупает рыбак"),
+                    .WithDescription("Просмотр рыбы, которую покупает рыбак")
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("рыбак-продать")
@@ -191,7 +206,8 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.SubCommand)
                         .WithRequired(false)
                         .WithName("все")
-                        .WithDescription("Продать рыбаку всю подходяющую рыбу которая у тебя есть")),
+                        .WithDescription("Продать рыбаку всю подходяющую рыбу которая у тебя есть"))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("открыть")
@@ -215,7 +231,8 @@ namespace Izumi.Services.Seeder.Discord
                         .AddChoice(_local.Localize(LocalizationCategoryType.Box, BoxType.Castle.ToString()),
                             BoxType.Castle.GetHashCode())
                         .AddChoice(_local.Localize(LocalizationCategoryType.Box, BoxType.Village.ToString()),
-                            BoxType.Village.GetHashCode())),
+                            BoxType.Village.GetHashCode()))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("магазин-посмотреть")
@@ -228,7 +245,8 @@ namespace Izumi.Services.Seeder.Discord
                         .AddChoice("семена", "seed")
                         .AddChoice("продукты", "product")
                         .AddChoice("рецепты", "recipe")
-                        .AddChoice("баннеры", "banner")),
+                        .AddChoice("баннеры", "banner"))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("магазин-купить")
@@ -251,7 +269,8 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.Integer)
                         .WithRequired(false)
                         .WithName("количество")
-                        .WithDescription("Количество товара, который ты хочешь приобрести")),
+                        .WithDescription("Количество товара, который ты хочешь приобрести"))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("достижения")
@@ -280,11 +299,13 @@ namespace Izumi.Services.Seeder.Discord
                         .AddChoice(AchievementCategoryType.Collection.Localize(),
                             AchievementCategoryType.Collection.GetHashCode())
                         .AddChoice(AchievementCategoryType.Event.Localize(),
-                            AchievementCategoryType.Event.GetHashCode())),
+                            AchievementCategoryType.Event.GetHashCode()))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("контракты")
-                    .WithDescription("Просмотр доступных рабочих контрактов в текущей локации"),
+                    .WithDescription("Просмотр доступных рабочих контрактов в текущей локации")
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("контракт")
@@ -293,7 +314,8 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.Integer)
                         .WithRequired(true)
                         .WithName("номер")
-                        .WithDescription("Номер контракта")),
+                        .WithDescription("Номер контракта"))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("съесть")
@@ -307,7 +329,8 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.String)
                         .WithRequired(true)
                         .WithName("название")
-                        .WithDescription("Название блюда которое ты хочешь съесть")),
+                        .WithDescription("Название блюда которое ты хочешь съесть"))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("репутация")
@@ -326,7 +349,8 @@ namespace Izumi.Services.Seeder.Discord
                         .AddChoice(ReputationType.Castle.Location().Localize(),
                             ReputationType.Castle.GetHashCode())
                         .AddChoice(ReputationType.Village.Location().Localize(),
-                            ReputationType.Village.GetHashCode())),
+                            ReputationType.Village.GetHashCode()))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("участок")
@@ -380,7 +404,8 @@ namespace Izumi.Services.Seeder.Discord
                             .WithType(ApplicationCommandOptionType.Integer)
                             .WithRequired(true)
                             .WithName("номер")
-                            .WithDescription("Номер клетки земли которую ты хочешь освободить от семян"))),
+                            .WithDescription("Номер клетки земли которую ты хочешь освободить от семян")))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("изготовление")
@@ -392,7 +417,8 @@ namespace Izumi.Services.Seeder.Discord
                         .WithDescription("Категория изготовления")
                         .AddChoice("предметов", "item")
                         .AddChoice("алкоголя", "alcohol")
-                        .AddChoice("напитков", "drink")),
+                        .AddChoice("напитков", "drink"))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("изготовить")
@@ -414,7 +440,8 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.String)
                         .WithRequired(true)
                         .WithName("название")
-                        .WithDescription("Название предмета который ты хочешь изготовить")),
+                        .WithDescription("Название предмета который ты хочешь изготовить"))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("приготовление")
@@ -439,7 +466,8 @@ namespace Izumi.Services.Seeder.Discord
                         .AddChoice(FoodCategoryType.Grandmaster.Localize(),
                             FoodCategoryType.Grandmaster.GetHashCode())
                         .AddChoice(FoodCategoryType.Legendary.Localize(),
-                            FoodCategoryType.Legendary.GetHashCode())),
+                            FoodCategoryType.Legendary.GetHashCode()))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("приготовить")
@@ -453,7 +481,8 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.String)
                         .WithRequired(true)
                         .WithName("название")
-                        .WithDescription("Название блюда которое ты хочешь приготовить")),
+                        .WithDescription("Название блюда которое ты хочешь приготовить"))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("лотерея")
@@ -477,7 +506,8 @@ namespace Izumi.Services.Seeder.Discord
                             .WithType(ApplicationCommandOptionType.User)
                             .WithRequired(true)
                             .WithName("пользователь")
-                            .WithDescription("Пользователь, которому ты хочешь подарить лотерейный билет"))),
+                            .WithDescription("Пользователь, которому ты хочешь подарить лотерейный билет")))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("ставка")
@@ -486,11 +516,13 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.Integer)
                         .WithRequired(true)
                         .WithName("количество")
-                        .WithDescription("Количество иен которые ты хочешь поставить")),
+                        .WithDescription("Количество иен которые ты хочешь поставить"))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("обучение")
-                    .WithDescription("Начать или посмотреть свой текущий шаг обучения"),
+                    .WithDescription("Начать или посмотреть свой текущий шаг обучения")
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("рынок")
@@ -583,11 +615,13 @@ namespace Izumi.Services.Seeder.Discord
                             .WithType(ApplicationCommandOptionType.String)
                             .WithRequired(true)
                             .WithName("название")
-                            .WithDescription("Название товара который ты хочешь продать"))),
+                            .WithDescription("Название товара который ты хочешь продать")))
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("ежедневная-награда")
-                    .WithDescription("Забрать свою ежедневную награду"),
+                    .WithDescription("Забрать свою ежедневную награду")
+                    .Build(),
 
                 new SlashCommandBuilder()
                     .WithName("настройка")
@@ -605,32 +639,20 @@ namespace Izumi.Services.Seeder.Discord
                             .WithRequired(true)
                             .WithName("цвет")
                             .WithDescription("HEX значение нового цвета полоски у команд")))
+                    .Build()
             };
 
-            var guildCommands = await socketClient.Rest.GetGuildApplicationCommands(_options.Value.GuildId);
-
-            foreach (var command in commands)
+            try
             {
-                result.Total++;
-
-                // для ускорения работы необходимо пропускать команды, которые уже загружены на сервер
-                // если команду необходимо обновить - необходимо сперва удалить ее вручную
-                if (guildCommands.Any(x => x.Name == command.Name)) continue;
-
-                try
-                {
-                    await socketClient.Rest.CreateGuildCommand(command.Build(), _options.Value.GuildId);
-
-                    result.Affected++;
-                }
-                catch (ApplicationCommandException exception)
-                {
-                    var json = JsonConvert.SerializeObject(exception.Error, Formatting.Indented);
-                    Console.WriteLine(json);
-                }
+                await socketClient.Rest.BulkOverwriteGuildCommands(commands, _options.Value.GuildId);
+            }
+            catch (ApplicationCommandException exception)
+            {
+                var json = JsonConvert.SerializeObject(exception.Error, Formatting.Indented);
+                Console.WriteLine(json);
             }
 
-            return result;
+            return Unit.Value;
         }
     }
 }
