@@ -24,6 +24,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Settings
             {
                 "роли-титула" => await _mediator.Send(new SettingsAutoTitleRoleCommand(request.Command)),
                 "цвет-команд" => await _mediator.Send(new SettingsCommandColorCommand(request.Command)),
+                "пола" => await _mediator.Send(new SettingsGenderCommand(request.Command)),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

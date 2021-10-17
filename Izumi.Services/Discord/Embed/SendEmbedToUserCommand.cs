@@ -10,7 +10,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Izumi.Services.Discord.Embed
 {
-    public record SendEmbedToUserCommand(ulong UserId, EmbedBuilder Builder, string Message = "") : IRequest;
+    public record SendEmbedToUserCommand(
+            ulong UserId,
+            EmbedBuilder Builder,
+            string Message = "")
+        : IRequest;
 
     public class SendEmbedToUserHandler : IRequestHandler<SendEmbedToUserCommand>
     {

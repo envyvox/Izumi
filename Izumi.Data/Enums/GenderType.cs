@@ -1,4 +1,5 @@
 ﻿using System;
+using Izumi.Data.Enums.Discord;
 
 namespace Izumi.Data.Enums
 {
@@ -20,5 +21,12 @@ namespace Izumi.Data.Enums
         };
 
         public static string EmoteName(this GenderType gender) => "Gender" + gender;
+
+        public static DiscordRoleType Role(this GenderType gender) => gender switch
+        {
+            GenderType.Male => DiscordRoleType.GenderMale,
+            GenderType.Female => DiscordRoleType.GenderFemale,
+            _ => throw new ArgumentOutOfRangeException(nameof(gender), gender, null)
+        };
     }
 }

@@ -13,6 +13,8 @@ namespace Izumi.Data.Enums.Discord
         InVoice = 8,
         Premium = 9,
         DiscordEvent = 10,
+        GenderMale = 11,
+        GenderFemale = 12,
 
         LocationInTransit = 50,
         LocationCapital = 51,
@@ -77,6 +79,8 @@ namespace Izumi.Data.Enums.Discord
             DiscordRoleType.Nitro => "Поддержка сервера",
             DiscordRoleType.Premium => "Премиум",
             DiscordRoleType.DiscordEvent => "🥳 Мероприятия",
+            DiscordRoleType.GenderMale => "Оками",
+            DiscordRoleType.GenderFemale => "Китсунэ",
             DiscordRoleType.LocationInTransit => LocationType.InTransit.Localize(),
             DiscordRoleType.LocationCapital => LocationType.Capital.Localize(),
             DiscordRoleType.LocationGarden => LocationType.Garden.Localize(),
@@ -160,6 +164,8 @@ namespace Izumi.Data.Enums.Discord
             DiscordRoleType.Yatagarasu => "ff1901",
             DiscordRoleType.HarbingerOfSummer => "ebf0ac",
             DiscordRoleType.DrinkCollection => "000000", // todo change value
+            DiscordRoleType.GenderMale => "5ca5f9",
+            DiscordRoleType.GenderFemale => "ff7799",
             // для всех остальных используем значение по-умолчанию (прозрачный цвет дискорда)
             _ => "000000"
         };
