@@ -1,13 +1,13 @@
 version: '3.5'
 services:
   bot:
-    image: registry.kkxo.ru/izumi
+    image: registry.envyvox.app/izumi
     build:
       context: .
       dockerfile: ./Izumi/Dockerfile
 
   dashboard:
-    image: registry.kkxo.ru/izumi-dashboard
+    image: registry.envyvox.app/izumi-dashboard
     build:
       context: .
       dockerfile: Izumi.Dashboard/Dockerfile
