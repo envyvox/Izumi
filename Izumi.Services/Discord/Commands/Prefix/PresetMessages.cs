@@ -118,7 +118,7 @@ namespace Izumi.Services.Discord.Commands.Prefix
                     $"Пользователи, публикации который набирают суммарно {emotes.GetEmote("Like")} 500 лайков " +
                     $"получают роль <@&{roles[DiscordRoleType.ContentProvider].Id}> на 30 дней." +
                     $"\n\n{emotes.GetEmote("Arrow")} Если пользователь получит еще {emotes.GetEmote("Like")} 500 лайков " +
-                    "уже имя роль, то ее длительность увеличится на 30 дней." +
+                    "уже имея роль, то ее длительность увеличится на 30 дней." +
                     $"\n{StringExtensions.EmptyChar}")
                 .AddField("Модерация",
                     $"Публикации набирающие {emotes.GetEmote("Dislike")} 5 дизлайков будут автоматически удалены." +
