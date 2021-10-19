@@ -40,7 +40,6 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit
 
             var channels = await _mediator.Send(new GetChannelsQuery());
             DiscordChannelType descChannel;
-            DiscordChannelType whatToDoChannel;
             DiscordChannelType eventsChannel;
 
             switch (destination)
@@ -48,7 +47,6 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit
                 case LocationType.Capital:
 
                     descChannel = DiscordChannelType.CapitalDesc;
-                    whatToDoChannel = DiscordChannelType.CapitalWhatToDo;
                     eventsChannel = DiscordChannelType.CapitalEvents;
 
                     await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.TransitToCapital));
@@ -57,7 +55,6 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit
                 case LocationType.Garden:
 
                     descChannel = DiscordChannelType.GardenDesc;
-                    whatToDoChannel = DiscordChannelType.GardenWhatToDo;
                     eventsChannel = DiscordChannelType.GardenEvents;
 
                     await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.TransitToGarden));
@@ -66,7 +63,6 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit
                 case LocationType.Seaport:
 
                     descChannel = DiscordChannelType.SeaportDesc;
-                    whatToDoChannel = DiscordChannelType.SeaportWhatToDo;
                     eventsChannel = DiscordChannelType.SeaportEvents;
 
                     await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.TransitToSeaport));
@@ -75,7 +71,6 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit
                 case LocationType.Castle:
 
                     descChannel = DiscordChannelType.CastleDesc;
-                    whatToDoChannel = DiscordChannelType.CastleWhatToDo;
                     eventsChannel = DiscordChannelType.CastleEvents;
 
                     await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.TransitToCastle));
@@ -84,7 +79,6 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit
                 case LocationType.Village:
 
                     descChannel = DiscordChannelType.VillageDesc;
-                    whatToDoChannel = DiscordChannelType.VillageWhatToDo;
                     eventsChannel = DiscordChannelType.VillageEvents;
 
                     await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.TransitToVillage));
@@ -108,7 +102,7 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit
                     $"Ты достиг точки прибытия, добро пожаловать в **{destination.Localize()}**!" +
                     $"\n{StringExtensions.EmptyChar}")
                 .AddField("Каналы локации",
-                    $"<#{channels[descChannel].Id}>, <#{channels[whatToDoChannel].Id}>, <#{channels[eventsChannel].Id}>")
+                    $"<#{channels[descChannel].Id}>, <#{channels[eventsChannel].Id}>")
                 .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.InTransit)));
 
             await _mediator.Send(new SendEmbedToUserCommand((ulong) userId, embed));

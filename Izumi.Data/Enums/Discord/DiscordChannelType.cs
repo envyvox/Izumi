@@ -58,27 +58,22 @@ namespace Izumi.Data.Enums.Discord
 
         CapitalParent = 45,
         CapitalDesc = 46,
-        CapitalWhatToDo = 47,
         CapitalEvents = 48,
 
         GardenParent = 49,
         GardenDesc = 50,
-        GardenWhatToDo = 51,
         GardenEvents = 52,
 
         SeaportParent = 53,
         SeaportDesc = 54,
-        SeaportWhatToDo = 55,
         SeaportEvents = 56,
 
         CastleParent = 57,
         CastleDesc = 58,
-        CastleWhatToDo = 59,
         CastleEvents = 60,
 
         VillageParent = 61,
         VillageDesc = 62,
-        VillageWhatToDo = 63,
         VillageEvents = 64,
 
         AfkParent = 65,
@@ -94,7 +89,6 @@ namespace Izumi.Data.Enums.Discord
     public static class DiscordChannelHelper
     {
         private const string LocationDesc = "описание";
-        private const string LocationWhatToDo = "чем-заняться";
         private const string LocationEvents = "события";
 
         public static string Name(this DiscordChannelType channel) => channel switch
@@ -153,27 +147,22 @@ namespace Izumi.Data.Enums.Discord
 
             DiscordChannelType.CapitalParent => LocationType.Capital.Localize(),
             DiscordChannelType.CapitalDesc => "🏯" + LocationDesc,
-            DiscordChannelType.CapitalWhatToDo => "🏯" + LocationWhatToDo,
             DiscordChannelType.CapitalEvents => "🏯" + LocationEvents,
 
             DiscordChannelType.GardenParent => LocationType.Garden.Localize(),
             DiscordChannelType.GardenDesc => "🌳" + LocationDesc,
-            DiscordChannelType.GardenWhatToDo => "🌳" + LocationWhatToDo,
             DiscordChannelType.GardenEvents => "🌳" + LocationEvents,
 
             DiscordChannelType.SeaportParent => LocationType.Seaport.Localize(),
             DiscordChannelType.SeaportDesc => "⛵" + LocationDesc,
-            DiscordChannelType.SeaportWhatToDo => "⛵" + LocationWhatToDo,
             DiscordChannelType.SeaportEvents => "⛵" + LocationEvents,
 
             DiscordChannelType.CastleParent => LocationType.Castle.Localize(),
             DiscordChannelType.CastleDesc => "🏰" + LocationDesc,
-            DiscordChannelType.CastleWhatToDo => "🏰" + LocationWhatToDo,
             DiscordChannelType.CastleEvents => "🏰" + LocationEvents,
 
             DiscordChannelType.VillageParent => LocationType.Village.Localize(),
             DiscordChannelType.VillageDesc => "🎑" + LocationDesc,
-            DiscordChannelType.VillageWhatToDo => "🎑" + LocationWhatToDo,
             DiscordChannelType.VillageEvents => "🎑" + LocationEvents,
 
             DiscordChannelType.AfkParent => "zzz",
@@ -244,27 +233,22 @@ namespace Izumi.Data.Enums.Discord
 
             DiscordChannelType.CapitalParent => DiscordChannelCategoryType.CategoryChannel,
             DiscordChannelType.CapitalDesc => DiscordChannelCategoryType.TextChannel,
-            DiscordChannelType.CapitalWhatToDo => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.CapitalEvents => DiscordChannelCategoryType.TextChannel,
 
             DiscordChannelType.GardenParent => DiscordChannelCategoryType.CategoryChannel,
             DiscordChannelType.GardenDesc => DiscordChannelCategoryType.TextChannel,
-            DiscordChannelType.GardenWhatToDo => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.GardenEvents => DiscordChannelCategoryType.TextChannel,
 
             DiscordChannelType.SeaportParent => DiscordChannelCategoryType.CategoryChannel,
             DiscordChannelType.SeaportDesc => DiscordChannelCategoryType.TextChannel,
-            DiscordChannelType.SeaportWhatToDo => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.SeaportEvents => DiscordChannelCategoryType.TextChannel,
 
             DiscordChannelType.CastleParent => DiscordChannelCategoryType.CategoryChannel,
             DiscordChannelType.CastleDesc => DiscordChannelCategoryType.TextChannel,
-            DiscordChannelType.CastleWhatToDo => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.CastleEvents => DiscordChannelCategoryType.TextChannel,
 
             DiscordChannelType.VillageParent => DiscordChannelCategoryType.CategoryChannel,
             DiscordChannelType.VillageDesc => DiscordChannelCategoryType.TextChannel,
-            DiscordChannelType.VillageWhatToDo => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.VillageEvents => DiscordChannelCategoryType.TextChannel,
 
             DiscordChannelType.AfkParent => DiscordChannelCategoryType.CategoryChannel,
@@ -322,23 +306,18 @@ namespace Izumi.Data.Enums.Discord
             DiscordChannelType.CreateRoom => DiscordChannelType.CreateRoomParent,
 
             DiscordChannelType.CapitalDesc => DiscordChannelType.CapitalParent,
-            DiscordChannelType.CapitalWhatToDo => DiscordChannelType.CapitalParent,
             DiscordChannelType.CapitalEvents => DiscordChannelType.CapitalParent,
 
             DiscordChannelType.GardenDesc => DiscordChannelType.GardenParent,
-            DiscordChannelType.GardenWhatToDo => DiscordChannelType.GardenParent,
             DiscordChannelType.GardenEvents => DiscordChannelType.GardenParent,
 
             DiscordChannelType.SeaportDesc => DiscordChannelType.SeaportParent,
-            DiscordChannelType.SeaportWhatToDo => DiscordChannelType.SeaportParent,
             DiscordChannelType.SeaportEvents => DiscordChannelType.SeaportParent,
 
             DiscordChannelType.CastleDesc => DiscordChannelType.CastleParent,
-            DiscordChannelType.CastleWhatToDo => DiscordChannelType.CastleParent,
             DiscordChannelType.CastleEvents => DiscordChannelType.CastleParent,
 
             DiscordChannelType.VillageDesc => DiscordChannelType.VillageParent,
-            DiscordChannelType.VillageWhatToDo => DiscordChannelType.VillageParent,
             DiscordChannelType.VillageEvents => DiscordChannelType.VillageParent,
 
             DiscordChannelType.Afk => DiscordChannelType.AfkParent,
