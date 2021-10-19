@@ -37,6 +37,9 @@
         FishFailChanceEpic = 33,
         FishFailChanceMythical = 34,
         FishFailChanceLegendary = 35,
-        EconomyFieldPrice = 36
+        EconomyFieldPrice = 36,
+        CasinoBetMinAmount = 37,
+        CasinoBetMaxAmount = 38,
+        CasinoBetCooldownMinutes = 39,
     }
 }

@@ -3,6 +3,7 @@
     public enum CooldownType : byte
     {
         UpdateAbout = 1,
-        DailyReward = 2
+        DailyReward = 2,
+        CasinoBet = 3
     }
 }
