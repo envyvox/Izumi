@@ -3,10 +3,13 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
+using Izumi.Data.Enums.Discord;
+using Izumi.Services.Discord.Client.Options;
 using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Izumi.Services.Discord.Embed
 {
@@ -20,27 +23,38 @@ namespace Izumi.Services.Discord.Embed
     {
         private readonly IMediator _mediator;
         private readonly ILogger<SendEmbedToUserHandler> _logger;
+        private readonly DiscordOptions _options;
 
         public SendEmbedToUserHandler(
             IMediator mediator,
-            ILogger<SendEmbedToUserHandler> logger)
+            ILogger<SendEmbedToUserHandler> logger,
+            IOptions<DiscordOptions> options)
         {
             _mediator = mediator;
             _logger = logger;
+            _options = options.Value;
         }
 
         public async Task<Unit> Handle(SendEmbedToUserCommand request, CancellationToken ct)
         {
             var user = await _mediator.Send(new GetUserQuery((long) request.UserId));
             var socketUser = await _mediator.Send(new GetSocketGuildUserQuery(request.UserId));
+            var channels = await _mediator.Send(new GetChannelsQuery());
 
             var embed = request.Builder
                 .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))
                 .Build();
 
+            var buttons = new ComponentBuilder()
+                .WithButton($"Открыть канал #{DiscordChannelType.Chat.Name()}", null, ButtonStyle.Link, null,
+                    $"https://www.discord.com/channels/{_options.GuildId}/{channels[DiscordChannelType.Chat].Id}")
+                .WithButton($"Открыть канал #{DiscordChannelType.Commands.Name()}", null, ButtonStyle.Link, null,
+                    $"https://www.discord.com/channels/{_options.GuildId}/{channels[DiscordChannelType.Commands].Id}")
+                .Build();
+
             try
             {
-                await socketUser.SendMessageAsync(request.Message, false, embed);
+                await socketUser.SendMessageAsync(request.Message, false, embed, component: buttons);
 
                 _logger.LogInformation(
                     "Sended a direct message to user {UserId}",
