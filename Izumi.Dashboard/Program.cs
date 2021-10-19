@@ -18,7 +18,7 @@ namespace Izumi.Dashboard
             {
                 BaseAddress = new Uri(builder.HostEnvironment.IsDevelopment()
                     ? "https://localhost:5001/"
-                    : "https://izumi.kkxo.ru/")
+                    : "https://izumi.envyvox.app/")
             });
 
             builder.Services.AddMudServices();
