@@ -45,5 +45,6 @@
         CasinoLotteryPrice = 41,
         CasinoLotteryReward = 42,
         CasinoLotteryDeliveryPrice = 43,
+        SendIenTaxPercent = 44,
     }
 }

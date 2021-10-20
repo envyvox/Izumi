@@ -643,6 +643,21 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.SubCommand)
                         .WithName("пола")
                         .WithDescription("Отправить запрос на подтверждение пола"))
+                    .Build(),
+
+                new SlashCommandBuilder()
+                    .WithName("передать")
+                    .WithDescription("Передать указанному пользователю иены")
+                    .AddOption(new SlashCommandOptionBuilder()
+                        .WithType(ApplicationCommandOptionType.User)
+                        .WithRequired(true)
+                        .WithName("пользователь")
+                        .WithDescription("Пользователь которому ты хочешь передать иены"))
+                    .AddOption(new SlashCommandOptionBuilder()
+                        .WithType(ApplicationCommandOptionType.Integer)
+                        .WithRequired(true)
+                        .WithName("количество")
+                        .WithDescription("Количествои иен которое ты хочешь передать"))
                     .Build()
             };
 

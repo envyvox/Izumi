@@ -134,6 +134,8 @@ namespace Izumi.Services.Discord.Client.Events
                                 await HandleInteraction(request.Interaction, new DailyRewardCommand(command), false),
                             "настройка" =>
                                 await HandleInteraction(request.Interaction, new SettingsCommand(command), true),
+                            "передать" =>
+                                await HandleInteraction(request.Interaction, new SendIenCommand(command), false),
                             _ => Unit.Value
                         };
                     case SocketMessageComponent component:
