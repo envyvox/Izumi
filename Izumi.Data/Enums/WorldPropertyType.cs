@@ -41,5 +41,9 @@
         CasinoBetMinAmount = 37,
         CasinoBetMaxAmount = 38,
         CasinoBetCooldownMinutes = 39,
+        CasinoLotteryRequiredUsersCount = 40,
+        CasinoLotteryPrice = 41,
+        CasinoLotteryReward = 42,
+        CasinoLotteryDeliveryPrice = 43,
     }
 }
