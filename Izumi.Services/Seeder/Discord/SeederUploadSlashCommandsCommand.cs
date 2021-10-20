@@ -199,7 +199,7 @@ namespace Izumi.Services.Seeder.Discord
                             .WithDescription("Номер рыбы, которую ты хочешь продать"))
                         .AddOption(new SlashCommandOptionBuilder()
                             .WithType(ApplicationCommandOptionType.Integer)
-                            .WithRequired(false)
+                            .WithRequired(true)
                             .WithName("количество")
                             .WithDescription("Количество рыбы, которое ты хочешь продать")))
                     .AddOption(new SlashCommandOptionBuilder()
@@ -267,7 +267,7 @@ namespace Izumi.Services.Seeder.Discord
                         .WithDescription("Номер товара, который ты хочешь приобрести"))
                     .AddOption(new SlashCommandOptionBuilder()
                         .WithType(ApplicationCommandOptionType.Integer)
-                        .WithRequired(false)
+                        .WithRequired(true)
                         .WithName("количество")
                         .WithDescription("Количество товара, который ты хочешь приобрести"))
                     .Build(),
