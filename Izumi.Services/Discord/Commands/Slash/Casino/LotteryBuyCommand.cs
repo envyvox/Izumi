@@ -6,6 +6,7 @@ using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Achievement.Commands;
 using Izumi.Services.Game.Currency.Commands;
 using Izumi.Services.Game.Currency.Queries;
@@ -36,8 +37,11 @@ namespace Izumi.Services.Discord.Commands.Slash.Casino
 
         public async Task<Unit> Handle(LotteryBuyCommand request, CancellationToken ct)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
+
+            user.Location.CheckRequiredLocation(LocationType.Capital);
+
+            var emotes = await _mediator.Send(new GetEmotesQuery());
             var hasLottery = await _mediator.Send(new CheckUserHasEffectQuery(user.Id, EffectType.Lottery));
 
             var embed = new EmbedBuilder();

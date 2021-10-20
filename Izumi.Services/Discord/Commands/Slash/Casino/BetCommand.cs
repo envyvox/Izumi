@@ -10,6 +10,7 @@ using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Achievement.Commands;
 using Izumi.Services.Game.Cooldown.Commands;
 using Izumi.Services.Game.Cooldown.Queries;
@@ -43,8 +44,11 @@ namespace Izumi.Services.Discord.Commands.Slash.Casino
         {
             var betAmount = (uint) (long) request.Command.Data.Options.First().Value;
 
-            var emotes = await _mediator.Send(new GetEmotesQuery());
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
+
+            user.Location.CheckRequiredLocation(LocationType.Capital);
+
+            var emotes = await _mediator.Send(new GetEmotesQuery());
             var userCooldown = await _mediator.Send(new GetUserCooldownQuery(user.Id, CooldownType.CasinoBet));
 
             var embed = new EmbedBuilder();
