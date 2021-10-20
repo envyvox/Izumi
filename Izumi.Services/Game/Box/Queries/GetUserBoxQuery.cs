@@ -32,12 +32,9 @@ namespace Izumi.Services.Game.Box.Queries
                     x.UserId == request.UserId &&
                     x.Box == request.Box);
 
-            if (entity is null)
-            {
-                throw new Exception($"user {request.UserId} doesnt have box {request.Box}");
-            }
-
-            return _mapper.Map<UserBoxDto>(entity);
+            return entity is null
+                ? new UserBoxDto(request.Box, 0)
+                : _mapper.Map<UserBoxDto>(entity);
         }
     }
 }

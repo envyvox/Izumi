@@ -32,12 +32,9 @@ namespace Izumi.Services.Game.Food.Queries
                     x.UserId == request.UserId &&
                     x.FoodId == request.FoodId);
 
-            if (entity is null)
-            {
-                throw new Exception($"user {request.UserId} doesnt have food {request.FoodId}");
-            }
-
-            return _mapper.Map<UserFoodDto>(entity);
+            return entity is null
+                ? new UserFoodDto(null, 0)
+                : _mapper.Map<UserFoodDto>(entity);
         }
     }
 }

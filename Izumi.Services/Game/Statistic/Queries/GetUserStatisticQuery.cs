@@ -31,7 +31,9 @@ namespace Izumi.Services.Game.Statistic.Queries
                     x.UserId == request.UserId &&
                     x.Type == request.Type);
 
-            return _mapper.Map<UserStatisticDto>(entity is null ? new UserStatisticDto(request.Type, 0) : entity);
+            return entity is null
+                ? new UserStatisticDto(request.Type, 0)
+                : _mapper.Map<UserStatisticDto>(entity);
         }
     }
 }

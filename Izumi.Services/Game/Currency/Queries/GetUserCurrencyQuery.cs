@@ -32,12 +32,9 @@ namespace Izumi.Services.Game.Currency.Queries
                     x.UserId == request.UserId &&
                     x.Currency == request.Currency);
 
-            if (entity is null)
-            {
-                throw new Exception($"user {request.UserId} doesnt have currency {request.Currency}");
-            }
-
-            return _mapper.Map<UserCurrencyDto>(entity);
+            return entity is null
+                ? new UserCurrencyDto(request.Currency, 0)
+                : _mapper.Map<UserCurrencyDto>(entity);
         }
     }
 }

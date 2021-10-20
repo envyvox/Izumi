@@ -32,12 +32,9 @@ namespace Izumi.Services.Game.Product.Queries
                     x.UserId == request.UserId &&
                     x.ProductId == request.ProductId);
 
-            if (entity is null)
-            {
-                throw new Exception($"user {request.UserId} doesnt have product {request.ProductId}");
-            }
-
-            return _mapper.Map<UserProductDto>(entity);
+            return entity is null
+                ? new UserProductDto(null, 0)
+                : _mapper.Map<UserProductDto>(entity);
         }
     }
 }

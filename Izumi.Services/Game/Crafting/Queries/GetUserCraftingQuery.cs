@@ -32,12 +32,9 @@ namespace Izumi.Services.Game.Crafting.Queries
                 .Where(x => x.UserId == request.UserId)
                 .SingleOrDefaultAsync();
 
-            if (entity is null)
-            {
-                throw new Exception($"user {request.UserId} doesnt have crafting {request.CraftingId}");
-            }
-
-            return _mapper.Map<UserCraftingDto>(entity);
+            return entity is null
+                ? new UserCraftingDto(null, 0)
+                : _mapper.Map<UserCraftingDto>(entity);
         }
     }
 }

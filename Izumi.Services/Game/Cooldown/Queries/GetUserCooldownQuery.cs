@@ -32,9 +32,9 @@ namespace Izumi.Services.Game.Cooldown.Queries
                     x.UserId == request.UserId &&
                     x.Type == request.Type);
 
-            return _mapper.Map<UserCooldownDto>(entity is null
+            return entity is null
                 ? new UserCooldownDto(request.Type, DateTimeOffset.UtcNow)
-                : entity);
+                : _mapper.Map<UserCooldownDto>(entity);
         }
     }
 }

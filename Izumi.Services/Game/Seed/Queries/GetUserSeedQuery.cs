@@ -32,12 +32,9 @@ namespace Izumi.Services.Game.Seed.Queries
                     x.UserId == request.UserId &&
                     x.SeedId == request.SeedId);
 
-            if (entity is null)
-            {
-                throw new Exception($"user {request.UserId} doesnt have seed {request.SeedId}");
-            }
-
-            return _mapper.Map<UserSeedDto>(entity);
+            return entity is null
+                ? new UserSeedDto(null, 0)
+                : _mapper.Map<UserSeedDto>(entity);
         }
     }
 }

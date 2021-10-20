@@ -32,12 +32,9 @@ namespace Izumi.Services.Game.Drink.Queries
                     x.UserId == request.UserId &&
                     x.DrinkId == request.DrinkId);
 
-            if (entity is null)
-            {
-                throw new Exception($"user {request.UserId} doesnt have drink {request.DrinkId}");
-            }
-
-            return _mapper.Map<UserDrinkDto>(entity);
+            return entity is null
+                ? new UserDrinkDto(null, 0)
+                : _mapper.Map<UserDrinkDto>(entity);
         }
     }
 }

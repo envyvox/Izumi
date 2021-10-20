@@ -32,12 +32,9 @@ namespace Izumi.Services.Game.Fish.Queries
                     x.UserId == request.UserId &&
                     x.FishId == request.FishId);
 
-            if (entity is null)
-            {
-                throw new Exception($"user {request.UserId} doesnt have fish {request.FishId}");
-            }
-
-            return _mapper.Map<UserFishDto>(entity);
+            return entity is null
+                ? new UserFishDto(null, 0)
+                : _mapper.Map<UserFishDto>(entity);
         }
     }
 }

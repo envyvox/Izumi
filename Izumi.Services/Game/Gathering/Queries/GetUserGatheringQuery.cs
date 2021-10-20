@@ -32,12 +32,9 @@ namespace Izumi.Services.Game.Gathering.Queries
                     x.UserId == request.UserId &&
                     x.GatheringId == request.GatheringId);
 
-            if (entity is null)
-            {
-                throw new Exception($"user {request.UserId} doesnt have gathering {request.GatheringId}");
-            }
-
-            return _mapper.Map<UserGatheringDto>(entity);
+            return entity is null
+                ? new UserGatheringDto(null, 0)
+                : _mapper.Map<UserGatheringDto>(entity);
         }
     }
 }

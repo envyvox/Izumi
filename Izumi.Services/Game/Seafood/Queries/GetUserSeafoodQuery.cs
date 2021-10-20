@@ -32,12 +32,9 @@ namespace Izumi.Services.Game.Seafood.Queries
                     x.UserId == request.UserId &&
                     x.SeafoodId == request.SeafoodId);
 
-            if (entity is null)
-            {
-                throw new Exception($"user {request.UserId} doesnt have seafood {request.SeafoodId}");
-            }
-
-            return _mapper.Map<UserSeafoodDto>(entity);
+            return entity is null
+                ? new UserSeafoodDto(null, 0)
+                : _mapper.Map<UserSeafoodDto>(entity);
         }
     }
 }

@@ -33,12 +33,9 @@ namespace Izumi.Services.Game.Crop.Queries
                     x.UserId == request.UserId &&
                     x.CropId == request.CropId);
 
-            if (entity is null)
-            {
-                throw new Exception($"user {request.UserId} doesnt have crop {request.CropId}");
-            }
-
-            return _mapper.Map<UserCropDto>(entity);
+            return entity is null
+                ? new UserCropDto(null, 0)
+                : _mapper.Map<UserCropDto>(entity);
         }
     }
 }
