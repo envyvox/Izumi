@@ -26,7 +26,7 @@ namespace Izumi.Services.Seeder.Game
             {
                 new("Carp", FishRarityType.Common, new List<SeasonType> { SeasonType.Any }, WeatherType.Any, TimesDayType.Any, 20),
                 new("Bream", FishRarityType.Common, new List<SeasonType> { SeasonType.Any }, WeatherType.Any, TimesDayType.Night, 23),
-                new("Ghostfish", FishRarityType.Common, new List<SeasonType> { SeasonType.Any }, WeatherType.Any, TimesDayType.Any, 20),
+                new("Ghostfish", FishRarityType.Common, new List<SeasonType> { SeasonType.Summer, SeasonType.Autumn }, WeatherType.Any, TimesDayType.Any, 20),
                 new("Chub", FishRarityType.Common, new List<SeasonType> { SeasonType.Any }, WeatherType.Any, TimesDayType.Any, 20),
                 new("Sandfish", FishRarityType.Rare, new List<SeasonType> { SeasonType.Any }, WeatherType.Any, TimesDayType.Day, 45),
                 new("Bullhead", FishRarityType.Rare, new List<SeasonType> { SeasonType.Any }, WeatherType.Any, TimesDayType.Any, 40),
