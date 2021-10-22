@@ -1,0 +1,113 @@
+﻿@page "/banner"
+@inject HttpClient _http;
+@inject ISnackbar _snackbar;
+
+<MudTable Items="_banners"
+          CanCancelEdit="@true"
+          @bind-SelectedItem="_selected"
+          RowEditPreview="Backup"
+          RowEditCancel="Reset"
+          RowEditCommit="Save">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Rarity</MudTh>
+        <MudTh>Url</MudTh>
+        <MudTh>Price</MudTh>
+        <MudTh>IncId</MudTh>
+        <MudTh>Id</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Rarity">@context.Rarity</MudTd>
+        <MudTd DataLabel="Url"><MudLink Href="@context.Url">Click to preview</MudLink></MudTd>
+        <MudTd DataLabel="Price">@context.Price</MudTd>
+        <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Name">
+            <MudTextField @bind-Value="@context.Name" Required/>
+        </MudTd>
+        <MudTd DataLabel="Rarity">
+            <MudSelect @bind-Value="@context.Rarity">
+                @foreach (BannerRarityType rarity in Enum.GetValues(typeof(BannerRarityType)))
+                {
+                    <MudSelectItem Value="@rarity">@rarity</MudSelectItem>
+                }
+            </MudSelect>
+        </MudTd>
+        <MudTd DataLabel="Url">
+            <MudTextField @bind-Value="@context.Url" Required/>
+        </MudTd>
+        <MudTd DataLabel="Price">
+            <MudTextField @bind-Value="@context.Price" Required/>
+        </MudTd>
+        <MudTd DataLabel="AutoIncrementedId">@context.AutoIncrementedId</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+    </RowEditingTemplate>
+</MudTable>
+
+@code {
+    private BannerClient _bannerClient;
+    private ICollection<BannerDto> _banners;
+    private BannerDto _selected;
+    private BannerDto _backup;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _bannerClient = new BannerClient(_http);
+        _banners = await _bannerClient.GetBannersAsync();
+    }
+
+    private void Backup(object element)
+    {
+        var banner = (BannerDto) element;
+
+        _backup = new BannerDto
+        {
+            Id = banner.Id,
+            Name = banner.Name,
+            Rarity = banner.Rarity,
+            Url = banner.Url,
+            Price = banner.Price
+        };
+    }
+
+    private async void Save(object element)
+    {
+        var banner = (BannerDto) element;
+
+        try
+        {
+            await _bannerClient.UpdateBannerAsync(new UpdateBannerCommand
+            {
+                Id = banner.Id,
+                Name = banner.Name,
+                Rarity = banner.Rarity,
+                Url = banner.Url,
+                Price = banner.Price
+            });
+
+            _snackbar.Add("Баннер успешно обновлен");
+        }
+        catch (Exception e)
+        {
+            Reset(element);
+            _snackbar.Add(e.Message);
+        }
+    }
+
+    private void Reset(object element)
+    {
+        var banner = (BannerDto) element;
+
+        if (banner is null) return;
+
+        banner.Id = _backup.Id;
+        banner.Name = _backup.Name;
+        banner.Rarity = _backup.Rarity;
+        banner.Url = _backup.Url;
+        banner.Price = _backup.Price;
+    }
+
+}
