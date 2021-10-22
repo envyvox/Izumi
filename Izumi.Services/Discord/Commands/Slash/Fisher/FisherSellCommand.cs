@@ -152,7 +152,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Fisher
                             ? "Отчестность была такой длинной, что ты решил сразу взглянуть на самое важное" +
                               $"\n\nИтоговая прибыль {emotes.GetEmote(CurrencyType.Ien.ToString())} {totalCurrency} " +
                               $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString(), totalCurrency)}"
-                            : soldFishString);
+                            : descString);
             }
 
             return await _mediator.Send(new RespondEmbedCommand(command, embed));
