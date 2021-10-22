@@ -51,6 +51,12 @@ namespace Izumi.Services.Discord.Client.Events
                     request.SocketGuildUser.Id, DiscordRoleType.Premium));
             }
 
+            if (user.Gender is not GenderType.None)
+            {
+                await _mediator.Send(new AddRoleToGuildUserCommand(
+                    request.SocketGuildUser.Id, user.Gender.Role()));
+            }
+
             if (muted)
             {
                 await _mediator.Send(new AddRoleToGuildUserCommand(
