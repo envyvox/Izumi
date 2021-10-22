@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Izumi.Data;
 using Izumi.Data.Enums;
-using Izumi.Services.Game.Tutorial.Commands;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
