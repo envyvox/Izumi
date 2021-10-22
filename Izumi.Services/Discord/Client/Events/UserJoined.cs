@@ -6,12 +6,10 @@ using Discord.WebSocket;
 using Izumi.Data.Enums;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Guild.Commands;
-using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Discord.Mute.Queries;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using static Izumi.Services.Extensions.StringExtensions;
 
 namespace Izumi.Services.Discord.Client.Events
 {
@@ -21,7 +19,6 @@ namespace Izumi.Services.Discord.Client.Events
     {
         private readonly IMediator _mediator;
         private readonly ILogger<UserJoinedHandler> _logger;
-        private readonly Random _random = new();
 
         public UserJoinedHandler(
             IMediator mediator,
@@ -59,13 +56,6 @@ namespace Izumi.Services.Discord.Client.Events
                 await _mediator.Send(new AddRoleToGuildUserCommand(
                     request.SocketGuildUser.Id, DiscordRoleType.Muted));
             }
-
-            var channels = await _mediator.Send(new GetChannelsQuery());
-            var channel = await _mediator.Send(new GetSocketTextChannelQuery(
-                (ulong) channels[DiscordChannelType.Chat].Id));
-            var randomWelcomeMessage = WelcomeMessages[_random.Next(0, WelcomeMessages.Length)];
-
-            await channel.SendMessageAsync(string.Format(randomWelcomeMessage, request.SocketGuildUser.Mention));
 
             return Unit.Value;
         }
