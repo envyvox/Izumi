@@ -35,6 +35,8 @@ namespace Izumi.Services.Discord.Client.Events
             var eventParent = (ulong) channels[DiscordChannelType.EventParent].Id;
             var eventCreateRoom = (ulong) channels[DiscordChannelType.EventCreateRoom].Id;
 
+            var familyParent = (ulong) channels[DiscordChannelType.FamilyRoomParent].Id;
+
             var oldChannel = request.OldVoiceState.VoiceChannel;
             var newChannel = request.NewVoiceState.VoiceChannel;
 
@@ -124,6 +126,26 @@ namespace Izumi.Services.Discord.Client.Events
                         stream: PermValue.Deny));
             }
 
+            if (newChannel?.CategoryId == familyParent &&
+                newChannel.Users.Count == 1)
+            {
+                await newChannel.AddPermissionOverwriteAsync(newChannel.Guild.EveryoneRole,
+                    new OverwritePermissions(
+                        createInstantInvite: PermValue.Deny,
+                        manageChannel: PermValue.Deny,
+                        manageRoles: PermValue.Deny,
+                        viewChannel: PermValue.Allow,
+                        connect: PermValue.Deny,
+                        speak: PermValue.Allow,
+                        muteMembers: PermValue.Deny,
+                        deafenMembers: PermValue.Deny,
+                        moveMembers: PermValue.Deny,
+                        useVoiceActivation: PermValue.Allow,
+                        prioritySpeaker: PermValue.Deny,
+                        stream: PermValue.Allow,
+                        startEmbeddedActivities: PermValue.Allow));
+            }
+
             if (oldChannel?.CategoryId == createRoomParent &&
                 oldChannel.Users.Count == 0 &&
                 oldChannel.Id != createRoom)
@@ -136,6 +158,26 @@ namespace Izumi.Services.Discord.Client.Events
                 oldChannel.Id != eventCreateRoom)
             {
                 await oldChannel.DeleteAsync();
+            }
+
+            if (oldChannel?.CategoryId == familyParent &&
+                oldChannel.Users.Count == 0)
+            {
+                await oldChannel.AddPermissionOverwriteAsync(oldChannel.Guild.EveryoneRole,
+                    new OverwritePermissions(
+                        createInstantInvite: PermValue.Deny,
+                        manageChannel: PermValue.Deny,
+                        manageRoles: PermValue.Deny,
+                        viewChannel: PermValue.Deny,
+                        connect: PermValue.Deny,
+                        speak: PermValue.Allow,
+                        muteMembers: PermValue.Deny,
+                        deafenMembers: PermValue.Deny,
+                        moveMembers: PermValue.Deny,
+                        useVoiceActivation: PermValue.Allow,
+                        prioritySpeaker: PermValue.Deny,
+                        stream: PermValue.Allow,
+                        startEmbeddedActivities: PermValue.Allow));
             }
 
             return Unit.Value;
