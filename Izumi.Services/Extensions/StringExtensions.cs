@@ -7,7 +7,7 @@
 
         public static string RemoveFromEnd(this string source, int amount)
         {
-            return source.Remove(source.Length - amount);
+            return source.Length < amount ? source : source.Remove(source.Length - amount);
         }
     }
 }
