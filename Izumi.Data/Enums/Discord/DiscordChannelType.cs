@@ -6,9 +6,9 @@ namespace Izumi.Data.Enums.Discord
     {
         Chat = 1,
         Commands = 2,
+        GetRoles = 4,
 
         SearchParent = 3,
-        SearchGetRoles = 4,
         SearchGenshinImpact = 5,
         SearchLeagueOfLegends = 6,
         SearchTeamfightTactics = 7,
@@ -26,7 +26,6 @@ namespace Izumi.Data.Enums.Discord
         SearchNewWorld = 19,
 
         EventParent = 20,
-        EventGetRoles = 21,
         EventNotification = 22,
         EventCreateRoom = 23,
 
@@ -83,95 +82,97 @@ namespace Izumi.Data.Enums.Discord
         Administration = 68,
         Moderation = 69,
         EventManager = 70,
+        Staff = 72,
         Meeting = 71
     }
 
     public static class DiscordChannelHelper
     {
+        private const string Emote = "・";
         private const string LocationDesc = "описание";
         private const string LocationEvents = "события";
 
         public static string Name(this DiscordChannelType channel) => channel switch
         {
-            DiscordChannelType.Chat => "общение",
-            DiscordChannelType.Commands => "команды",
+            DiscordChannelType.Chat => Emote + "общение",
+            DiscordChannelType.Commands => Emote + "команды",
+            DiscordChannelType.GetRoles => Emote + "получение-ролей",
 
             DiscordChannelType.SearchParent => "поиск игроков",
-            DiscordChannelType.SearchGetRoles => "получение-ролей",
-            DiscordChannelType.SearchGenshinImpact => "genshin-impact",
-            DiscordChannelType.SearchLeagueOfLegends => "league-of-legends",
-            DiscordChannelType.SearchTeamfightTactics => "teamfight-tactics",
-            DiscordChannelType.SearchValorant => "valorant",
-            DiscordChannelType.SearchApexLegends => "apex-legends",
-            DiscordChannelType.SearchLostArk => "lost-ark",
-            DiscordChannelType.SearchDota => "dota",
-            DiscordChannelType.SearchAmongUs => "among-us",
-            DiscordChannelType.SearchOsu => "osu",
-            DiscordChannelType.SearchRust => "rust",
-            DiscordChannelType.SearchCsGo => "cs-go",
-            DiscordChannelType.SearchHotS => "hots",
-            DiscordChannelType.SearchWildRift => "wild-rift",
-            DiscordChannelType.SearchMobileLegends => "mobile-legends",
-            DiscordChannelType.SearchNewWorld => "new-world",
+            DiscordChannelType.SearchGenshinImpact => Emote + "genshin-impact",
+            DiscordChannelType.SearchLeagueOfLegends => Emote + "league-of-legends",
+            DiscordChannelType.SearchTeamfightTactics => Emote + "teamfight-tactics",
+            DiscordChannelType.SearchValorant => Emote + "valorant",
+            DiscordChannelType.SearchApexLegends => Emote + "apex-legends",
+            DiscordChannelType.SearchLostArk => Emote + "lost-ark",
+            DiscordChannelType.SearchDota => Emote + "dota",
+            DiscordChannelType.SearchAmongUs => Emote + "among-us",
+            DiscordChannelType.SearchOsu => Emote + "osu",
+            DiscordChannelType.SearchRust => Emote + "rust",
+            DiscordChannelType.SearchCsGo => Emote + "cs-go",
+            DiscordChannelType.SearchHotS => Emote + "hots",
+            DiscordChannelType.SearchWildRift => Emote + "wild-rift",
+            DiscordChannelType.SearchMobileLegends => Emote + "mobile-legends",
+            DiscordChannelType.SearchNewWorld => Emote + "new-world",
 
             DiscordChannelType.EventParent => "мероприятия",
-            DiscordChannelType.EventGetRoles => "получение-роли",
-            DiscordChannelType.EventNotification => "оповещения🔔",
+            DiscordChannelType.EventNotification => Emote + "оповещения🔔",
             DiscordChannelType.EventCreateRoom => "Начать мероприятие",
 
             DiscordChannelType.GameParent => "игровая вселенная",
-            DiscordChannelType.GameStart => "информация",
-            DiscordChannelType.GameUpdates => "обновления🔔",
-            DiscordChannelType.GameDiary => "дневник-странницы",
+            DiscordChannelType.GameStart => Emote + "информация",
+            DiscordChannelType.GameUpdates => Emote + "обновления🔔",
+            DiscordChannelType.GameDiary => Emote + "дневник-странницы",
 
             DiscordChannelType.CommunityDescParent => "доска сообщества",
-            DiscordChannelType.CommunityDescHowItWork => "как-работает",
-            DiscordChannelType.Photos => "фотографии",
-            DiscordChannelType.Screenshots => "скриншоты",
-            DiscordChannelType.Memes => "мемесы",
-            DiscordChannelType.Arts => "арты",
-            DiscordChannelType.Erotic => "эротика",
-            DiscordChannelType.Nsfw => "nsfw",
+            DiscordChannelType.CommunityDescHowItWork => Emote + "как-работает",
+            DiscordChannelType.Photos => Emote + "фотографии",
+            DiscordChannelType.Screenshots => "Emote + скриншоты",
+            DiscordChannelType.Memes => Emote + "мемесы",
+            DiscordChannelType.Arts => Emote + "арты",
+            DiscordChannelType.Erotic => Emote + "эротика",
+            DiscordChannelType.Nsfw => Emote + "nsfw",
 
             DiscordChannelType.LibraryParent => "великая «тосёкан»",
-            DiscordChannelType.Rules => "правила",
-            DiscordChannelType.Announcements => "объявления🔔",
-            DiscordChannelType.Giveaways => "розыгрыши🔔",
-            DiscordChannelType.Suggestions => "предложения",
+            DiscordChannelType.Rules => Emote + "правила",
+            DiscordChannelType.Announcements => Emote + "объявления🔔",
+            DiscordChannelType.Giveaways => Emote + "розыгрыши🔔",
+            DiscordChannelType.Suggestions => Emote + "предложения",
 
             DiscordChannelType.CreateRoomParent => "пригородные лагеря",
-            DiscordChannelType.NoMic => "без-микрофона",
+            DiscordChannelType.NoMic => Emote + "без-микрофона",
             DiscordChannelType.CreateRoom => "Разжечь костер",
 
             DiscordChannelType.FamilyRoomParent => "семейные беседки",
 
             DiscordChannelType.CapitalParent => LocationType.Capital.Localize(),
-            DiscordChannelType.CapitalDesc => "🏯" + LocationDesc,
-            DiscordChannelType.CapitalEvents => "🏯" + LocationEvents,
+            DiscordChannelType.CapitalDesc => "🏯" + Emote + LocationDesc,
+            DiscordChannelType.CapitalEvents => "🏯" + Emote + LocationEvents,
 
             DiscordChannelType.GardenParent => LocationType.Garden.Localize(),
-            DiscordChannelType.GardenDesc => "🌳" + LocationDesc,
-            DiscordChannelType.GardenEvents => "🌳" + LocationEvents,
+            DiscordChannelType.GardenDesc => "🌳" + Emote + LocationDesc,
+            DiscordChannelType.GardenEvents => "🌳" + Emote + LocationEvents,
 
             DiscordChannelType.SeaportParent => LocationType.Seaport.Localize(),
-            DiscordChannelType.SeaportDesc => "⛵" + LocationDesc,
-            DiscordChannelType.SeaportEvents => "⛵" + LocationEvents,
+            DiscordChannelType.SeaportDesc => "⛵" + Emote + LocationDesc,
+            DiscordChannelType.SeaportEvents => "⛵" + Emote + LocationEvents,
 
             DiscordChannelType.CastleParent => LocationType.Castle.Localize(),
-            DiscordChannelType.CastleDesc => "🏰" + LocationDesc,
-            DiscordChannelType.CastleEvents => "🏰" + LocationEvents,
+            DiscordChannelType.CastleDesc => "🏰" + Emote + LocationDesc,
+            DiscordChannelType.CastleEvents => "🏰" + Emote + LocationEvents,
 
             DiscordChannelType.VillageParent => LocationType.Village.Localize(),
-            DiscordChannelType.VillageDesc => "🎑" + LocationDesc,
-            DiscordChannelType.VillageEvents => "🎑" + LocationEvents,
+            DiscordChannelType.VillageDesc => "🎑" + Emote + LocationDesc,
+            DiscordChannelType.VillageEvents => "🎑" + Emote + LocationEvents,
 
             DiscordChannelType.AfkParent => "zzz",
             DiscordChannelType.Afk => "Афк, жду подарки",
 
             DiscordChannelType.AdministrationParent => "скрытый раздел",
-            DiscordChannelType.Administration => "сёгунат",
-            DiscordChannelType.Moderation => "родзю",
-            DiscordChannelType.EventManager => "собаёри",
+            DiscordChannelType.Administration => Emote + "администраторы",
+            DiscordChannelType.Moderation => Emote + "модераторы",
+            DiscordChannelType.EventManager => Emote + "организаторы",
+            DiscordChannelType.Staff => Emote + "стафф",
             DiscordChannelType.Meeting => "Собрание",
 
             _ => throw new ArgumentOutOfRangeException(nameof(channel), channel, null)
@@ -181,9 +182,9 @@ namespace Izumi.Data.Enums.Discord
         {
             DiscordChannelType.Chat => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.Commands => DiscordChannelCategoryType.TextChannel,
+            DiscordChannelType.GetRoles => DiscordChannelCategoryType.TextChannel,
 
             DiscordChannelType.SearchParent => DiscordChannelCategoryType.CategoryChannel,
-            DiscordChannelType.SearchGetRoles => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.SearchGenshinImpact => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.SearchLeagueOfLegends => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.SearchTeamfightTactics => DiscordChannelCategoryType.TextChannel,
@@ -201,7 +202,6 @@ namespace Izumi.Data.Enums.Discord
             DiscordChannelType.SearchNewWorld => DiscordChannelCategoryType.TextChannel,
 
             DiscordChannelType.EventParent => DiscordChannelCategoryType.CategoryChannel,
-            DiscordChannelType.EventGetRoles => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.EventNotification => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.EventCreateRoom => DiscordChannelCategoryType.VoiceChannel,
 
@@ -258,6 +258,7 @@ namespace Izumi.Data.Enums.Discord
             DiscordChannelType.Administration => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.Moderation => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.EventManager => DiscordChannelCategoryType.TextChannel,
+            DiscordChannelType.Staff => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.Meeting => DiscordChannelCategoryType.VoiceChannel,
 
             _ => throw new ArgumentOutOfRangeException(nameof(channel), channel, null)
@@ -265,7 +266,6 @@ namespace Izumi.Data.Enums.Discord
 
         public static DiscordChannelType Parent(this DiscordChannelType channel) => channel switch
         {
-            DiscordChannelType.SearchGetRoles => DiscordChannelType.SearchParent,
             DiscordChannelType.SearchGenshinImpact => DiscordChannelType.SearchParent,
             DiscordChannelType.SearchLeagueOfLegends => DiscordChannelType.SearchParent,
             DiscordChannelType.SearchTeamfightTactics => DiscordChannelType.SearchParent,
@@ -281,7 +281,6 @@ namespace Izumi.Data.Enums.Discord
             DiscordChannelType.SearchMobileLegends => DiscordChannelType.SearchParent,
             DiscordChannelType.SearchNewWorld => DiscordChannelType.SearchParent,
 
-            DiscordChannelType.EventGetRoles => DiscordChannelType.EventParent,
             DiscordChannelType.EventNotification => DiscordChannelType.EventParent,
             DiscordChannelType.EventCreateRoom => DiscordChannelType.EventParent,
 
@@ -325,6 +324,7 @@ namespace Izumi.Data.Enums.Discord
             DiscordChannelType.Administration => DiscordChannelType.AdministrationParent,
             DiscordChannelType.Moderation => DiscordChannelType.AdministrationParent,
             DiscordChannelType.EventManager => DiscordChannelType.AdministrationParent,
+            DiscordChannelType.Staff => DiscordChannelType.AdministrationParent,
             DiscordChannelType.Meeting => DiscordChannelType.AdministrationParent,
 
             _ => channel

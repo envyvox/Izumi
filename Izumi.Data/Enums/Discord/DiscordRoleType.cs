@@ -73,9 +73,9 @@ namespace Izumi.Data.Enums.Discord
     {
         public static string Name(this DiscordRoleType role) => role switch
         {
-            DiscordRoleType.Administration => "Сёгунат",
-            DiscordRoleType.EventManager => "Собаёри",
-            DiscordRoleType.Moderator => "Родзю",
+            DiscordRoleType.Administration => "Администраторы",
+            DiscordRoleType.EventManager => "Организаторы",
+            DiscordRoleType.Moderator => "Модераторы",
             DiscordRoleType.Nitro => "Поддержка сервера",
             DiscordRoleType.Premium => "Премиум",
             DiscordRoleType.DiscordEvent => "🥳 Мероприятия",
