@@ -658,6 +658,16 @@ namespace Izumi.Services.Seeder.Discord
                         .WithRequired(true)
                         .WithName("количество")
                         .WithDescription("Количествои иен которое ты хочешь передать"))
+                    .Build(),
+
+                new SlashCommandBuilder()
+                    .WithName("переименоваться")
+                    .WithDescription("Изменить имя на сервере")
+                    .AddOption(new SlashCommandOptionBuilder()
+                        .WithType(ApplicationCommandOptionType.String)
+                        .WithRequired(true)
+                        .WithName("имя")
+                        .WithDescription("Новое имя (если новое имя будет нарушать правила сервере - мы его изменим без компенсаций)"))
                     .Build()
             };
 

@@ -136,6 +136,8 @@ namespace Izumi.Services.Discord.Client.Events
                                 await HandleInteraction(request.Interaction, new SettingsCommand(command), true),
                             "передать" =>
                                 await HandleInteraction(request.Interaction, new SendIenCommand(command), false),
+                            "переименоваться" =>
+                                await HandleInteraction(request.Interaction, new RenameCommand(command), false),
                             _ => Unit.Value
                         };
                     case SocketMessageComponent component:

@@ -42,8 +42,6 @@ namespace Izumi.Services.Discord.Guild.Commands
                 _logger.LogError(e,
                     "Can't add role {Role} to user {UserId}",
                     request.Role.ToString(), request.UserId);
-
-                throw;
             }
 
             return Unit.Value;

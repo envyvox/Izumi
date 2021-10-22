@@ -4,6 +4,7 @@
     {
         UpdateAbout = 1,
         DailyReward = 2,
-        CasinoBet = 3
+        CasinoBet = 3,
+        Rename = 4
     }
 }

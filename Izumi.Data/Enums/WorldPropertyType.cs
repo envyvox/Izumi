@@ -46,5 +46,7 @@
         CasinoLotteryReward = 42,
         CasinoLotteryDeliveryPrice = 43,
         SendIenTaxPercent = 44,
+        RenamePrice = 45,
+        RenameCooldownDays = 46
     }
 }
