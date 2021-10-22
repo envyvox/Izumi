@@ -108,7 +108,12 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteFishing
             }
 
             await _mediator.Send(new CheckAchievementsInUserCommand(userId,
-                new[] { AchievementType.Catch50Fish, AchievementType.Catch300Fish }));
+                new[]
+                {
+                    AchievementType.FirstFish,
+                    AchievementType.Catch50Fish,
+                    AchievementType.Catch300Fish
+                }));
             await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.CompleteFishing));
             await _mediator.Send(new SendEmbedToUserCommand((ulong) userId, embed));
         }
