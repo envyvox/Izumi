@@ -34,7 +34,8 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
 
         public async Task<Unit> Handle(ProfileCommand request, CancellationToken ct)
         {
-            var socketUser = (SocketGuildUser) (request.Command.Data.Options is null
+            var option = request.Command.Data.Options.FirstOrDefault();
+            var socketUser = (SocketGuildUser) (option is null
                 ? request.Command.User
                 : request.Command.Data.Options.First().Value);
 

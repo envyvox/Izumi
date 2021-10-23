@@ -61,7 +61,8 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
 
         public async Task<Unit> Handle(InventoryCommand request, CancellationToken ct)
         {
-            var type = request.Command.Data.Options?.First().Value;
+            var option = request.Command.Data.Options.SingleOrDefault();
+
             _emotes = await _mediator.Send(new GetEmotesQuery());
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
 
@@ -71,7 +72,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
 
             var desc = string.Empty;
 
-            if (type is null)
+            if (option is null)
             {
                 desc = "все полученные предметы попадают сюда:";
                 var userCurrencies = await _mediator.Send(new GetUserCurrenciesQuery(user.Id));
@@ -123,7 +124,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
             }
             else
             {
-                switch (type)
+                switch ((string) option.Value)
                 {
                     case "рыба":
 
