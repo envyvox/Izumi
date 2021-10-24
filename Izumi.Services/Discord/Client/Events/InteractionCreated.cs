@@ -57,7 +57,9 @@ namespace Izumi.Services.Discord.Client.Events
                 // проблема заключается в том, что получение списка каналов слишком долгое чтобы делать его перед DeferAsync
                 // но проверку необходимо сделать именно перед ним, чтобы скрыть сообщение в случае ошибки
                 if (request.Interaction.Channel.Id != 879838888296857630 &&
-                    request.Interaction.Channel.Id != 882748412003512361)
+                    request.Interaction.Channel.Id != 882748412003512361 &&
+                    request.Interaction.Channel.Id != 882748413878337586 &&
+                    request.Interaction.Channel.Id != 750624139794055188)
                 {
                     await request.Interaction.RespondAsync(
                         text: $"{request.Interaction.User.Mention}, использование игровых команд доступно лишь в канале команды.",
