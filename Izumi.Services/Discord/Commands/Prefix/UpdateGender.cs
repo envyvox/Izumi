@@ -6,8 +6,8 @@ using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Commands.Prefix.Attributes;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Commands;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.User.Commands;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
@@ -27,7 +27,7 @@ namespace Izumi.Services.Discord.Commands.Prefix
         [Command("update-gender")]
         public async Task UpdateGenderTask(IUser mentionedUser, GenderType gender)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var user = await _mediator.Send(new GetUserQuery((long) mentionedUser.Id));
 
             await _mediator.Send(new UpdateUserGenderCommand(user.Id, gender));

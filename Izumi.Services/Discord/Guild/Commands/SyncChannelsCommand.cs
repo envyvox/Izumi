@@ -1,45 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using Discord;
-using Izumi.Data;
-using Izumi.Data.Entities.Discord;
 using Izumi.Data.Enums.Discord;
-using Izumi.Data.Extensions;
 using Izumi.Services.Discord.Guild.Models;
+using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Extensions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-namespace Izumi.Services.Discord.Guild.Queries
+namespace Izumi.Services.Discord.Guild.Commands
 {
-    public record GetChannelsQuery : IRequest<Dictionary<DiscordChannelType, ChannelDto>>;
+    public record SyncChannelsCommand : IRequest;
 
-    public class GetChannelsHandler : IRequestHandler<GetChannelsQuery, Dictionary<DiscordChannelType, ChannelDto>>
+    public class SyncChannelsHandler : IRequestHandler<SyncChannelsCommand>
     {
-        private readonly IMapper _mapper;
         private readonly IMediator _mediator;
-        private readonly AppDbContext _db;
+        private readonly ILogger<SyncChannelsHandler> _logger;
 
-        public GetChannelsHandler(
-            DbContextOptions options,
-            IMapper mapper,
-            IMediator mediator)
+        public SyncChannelsHandler(
+            IMediator mediator,
+            ILogger<SyncChannelsHandler> logger)
         {
-            _db = new AppDbContext(options);
-            _mapper = mapper;
             _mediator = mediator;
+            _logger = logger;
         }
 
-        public async Task<Dictionary<DiscordChannelType, ChannelDto>> Handle(GetChannelsQuery request,
-            CancellationToken ct)
+        public async Task<Unit> Handle(SyncChannelsCommand request, CancellationToken ct)
         {
-            var channels = await _db.Channels
-                .AsQueryable()
-                .ToDictionaryAsync(x => x.Type);
-
+            var channels = DiscordRepository.Channels;
             var channelTypes = Enum
                 .GetValues(typeof(DiscordChannelType))
                 .Cast<DiscordChannelType>()
@@ -64,12 +54,11 @@ namespace Izumi.Services.Discord.Guild.Queries
                                 var textChannel = await guild.CreateTextChannelAsync(channelType.Name(), x =>
                                 {
                                     x.CategoryId = channels.ContainsKey(channelType.Parent())
-                                        ? (ulong) channels[channelType.Parent()].Id
+                                        ? channels[channelType.Parent()].Id
                                         : Optional<ulong?>.Unspecified;
                                 });
 
-                                channels.Add(channelType, new Channel { Id = (long) textChannel.Id, Type = channelType });
-                                await _db.CreateEntity(new Channel { Id = (long) textChannel.Id, Type = channelType });
+                                channels.Add(channelType, new ChannelDto(textChannel.Id, channelType));
 
                                 break;
                             case DiscordChannelCategoryType.VoiceChannel:
@@ -77,20 +66,18 @@ namespace Izumi.Services.Discord.Guild.Queries
                                 var voiceChannel = await guild.CreateVoiceChannelAsync(channelType.Name(), x =>
                                 {
                                     x.CategoryId = channels.ContainsKey(channelType.Parent())
-                                        ? (ulong) channels[channelType.Parent()].Id
+                                        ? channels[channelType.Parent()].Id
                                         : Optional<ulong?>.Unspecified;
                                 });
 
-                                channels.Add(channelType, new Channel { Id = (long) voiceChannel.Id, Type = channelType });
-                                await _db.CreateEntity(new Channel { Id = (long) voiceChannel.Id, Type = channelType });
+                                channels.Add(channelType, new ChannelDto(voiceChannel.Id, channelType));
 
                                 break;
                             case DiscordChannelCategoryType.CategoryChannel:
 
                                 var categoryChannel = await guild.CreateCategoryChannelAsync(channelType.Name());
 
-                                channels.Add(channelType, new Channel { Id = (long) categoryChannel.Id, Type = channelType });
-                                await _db.CreateEntity(new Channel { Id = (long) categoryChannel.Id, Type = channelType });
+                                channels.Add(channelType, new ChannelDto(categoryChannel.Id, channelType));
 
                                 break;
                             default:
@@ -99,13 +86,15 @@ namespace Izumi.Services.Discord.Guild.Queries
                     }
                     else
                     {
-                        channels.Add(channelType, new Channel { Id = (long) chan.Id, Type = channelType });
-                        await _db.CreateEntity(new Channel { Id = (long) chan.Id, Type = channelType });
+                        channels.Add(channelType, new ChannelDto(chan.Id, channelType));
                     }
                 }
             }
 
-            return _mapper.Map<Dictionary<DiscordChannelType, ChannelDto>>(channels);
+            _logger.LogInformation(
+                "Channels sync completed");
+
+            return Unit.Value;
         }
     }
 }

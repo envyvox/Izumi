@@ -6,7 +6,7 @@ using Discord.WebSocket;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Localization;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
@@ -31,7 +31,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
         public async Task<Unit> Handle(ReputationsCommand request, CancellationToken ct)
         {
             var type = (ReputationType) (long) request.Command.Data.Options.First().Value;
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
 
             return await _mediator.Send(new RespondEmbedCommand(request.Command, new EmbedBuilder()

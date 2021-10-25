@@ -6,7 +6,6 @@ using Discord.WebSocket;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
 using Izumi.Services.Game.Tutorial.Commands;
@@ -33,7 +32,7 @@ namespace Izumi.Services.Discord.Commands.Slash
 
         public async Task<Unit> Handle(WorldInfoCommand request, CancellationToken ct)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
             var timeNow = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, _timeZoneInfo);
             var timesDay = await _mediator.Send(new GetCurrentTimesDayQuery());

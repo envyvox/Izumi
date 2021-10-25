@@ -45,7 +45,7 @@ namespace Izumi.Services.Discord.Commands.Component
 
         public async Task<Unit> Handle(SelectGameRolesMenu request, CancellationToken ct)
         {
-            var roles = await _mediator.Send(new GetRolesQuery());
+            var roles = DiscordRepository.Roles;
             var selectedValues = request.Component.Data.Values;
             var guildUser = await _mediator.Send(new GetSocketGuildUserQuery(request.Component.User.Id));
             var userRoles = guildUser.Roles.Where(x => _gameRolesNames.Contains(x.Name)).ToArray();
@@ -80,7 +80,7 @@ namespace Izumi.Services.Discord.Commands.Component
 
             foreach (var role in rolesToRemove)
             {
-                var roleDto = roles.Values.SingleOrDefault(x => x.Id == (long) role.Id);
+                var roleDto = roles.Values.SingleOrDefault(x => x.Id == role.Id);
 
                 if (roleDto is null)
                 {

@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Izumi.Data.Enums.Discord;
+using Izumi.Services.Extensions;
 using MediatR;
 
 namespace Izumi.Services.Discord.Guild.Queries
@@ -20,9 +21,9 @@ namespace Izumi.Services.Discord.Guild.Queries
         public async Task<bool> Handle(CheckGuildUserHasRoleQuery request, CancellationToken ct)
         {
             var user = await _mediator.Send(new GetSocketGuildUserQuery(request.UserId));
-            var roles = await _mediator.Send(new GetRolesQuery());
+            var roles = DiscordRepository.Roles;
 
-            return user.Roles.Any(x => x.Id == (ulong) roles[request.Role].Id);
+            return user.Roles.Any(x => x.Id == roles[request.Role].Id);
         }
     }
 }

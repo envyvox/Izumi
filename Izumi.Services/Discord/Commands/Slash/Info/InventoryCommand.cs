@@ -9,7 +9,6 @@ using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Models;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
 using Izumi.Services.Game.Alcohol.Models;
@@ -63,7 +62,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
         {
             var option = request.Command.Data.Options.SingleOrDefault();
 
-            _emotes = await _mediator.Send(new GetEmotesQuery());
+            _emotes = DiscordRepository.Emotes;
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
 
             var embed = new EmbedBuilder()

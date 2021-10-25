@@ -28,7 +28,7 @@ namespace Izumi.Services.Discord.Role.Queries
         public async Task<UserRoleDto> Handle(GetUserRoleQuery request, CancellationToken cancellationToken)
         {
             var entity = await _db.UserRoles
-                .Include(x => x.Role)
+                .AsQueryable()
                 .Where(x =>
                     x.UserId == request.UserId &&
                     x.RoleId == request.RoleId)

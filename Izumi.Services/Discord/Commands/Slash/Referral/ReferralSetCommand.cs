@@ -6,8 +6,8 @@ using Discord.WebSocket;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Referral.Commands;
 using Izumi.Services.Game.Referral.Queries;
 using Izumi.Services.Game.User.Queries;
@@ -28,7 +28,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Referral
 
         public async Task<Unit> Handle(ReferralSetCommand request, CancellationToken ct)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
             var tSocketUser = (IGuildUser) request.Command.Data.Options.First().Value;
 

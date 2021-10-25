@@ -5,7 +5,7 @@ using Discord.WebSocket;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Localization;
 using Izumi.Services.Game.Tutorial.Commands;
 using Izumi.Services.Game.User.Queries;
@@ -30,7 +30,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Cooking
 
         public async Task<Unit> Handle(CookingStartCommand request, CancellationToken ct)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
 
             // todo move this check into background job and add condition

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Extensions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -25,13 +26,13 @@ namespace Izumi.Services.Discord.Guild.Commands
 
         public async Task<Unit> Handle(AddRoleToGuildUserCommand request, CancellationToken ct)
         {
-            var roles = await _mediator.Send(new GetRolesQuery());
+            var roles = DiscordRepository.Roles;
             var guild = await _mediator.Send(new GetSocketGuildQuery());
             var user = await _mediator.Send(new GetSocketGuildUserQuery(request.UserId));
 
             try
             {
-                await user.AddRoleAsync(guild.GetRole((ulong) roles[request.Role].Id));
+                await user.AddRoleAsync(guild.GetRole(roles[request.Role].Id));
 
                 _logger.LogInformation(
                     "Added role {Role} to user {UserId}",

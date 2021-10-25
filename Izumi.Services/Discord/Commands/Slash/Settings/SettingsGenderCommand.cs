@@ -7,8 +7,6 @@ using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Client;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
-using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Extensions;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
@@ -32,7 +30,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Settings
 
         public async Task<Unit> Handle(SettingsGenderCommand request, CancellationToken ct)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
 
             var embed = new EmbedBuilder();
@@ -46,7 +44,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Settings
             else
             {
                 var client = await _discordClientService.GetSocketClient();
-                var roles = await _mediator.Send(new GetRolesQuery());
+                var roles = DiscordRepository.Roles;
 
                 embed.WithDescription(
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +

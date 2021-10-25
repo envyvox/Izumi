@@ -9,7 +9,6 @@ using Humanizer;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
 using Izumi.Services.Game.Field.Queries;
@@ -43,7 +42,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Field
 
             user.Location.CheckRequiredLocation(LocationType.Village);
 
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var userFields = await _mediator.Send(new GetUserFieldsQuery(user.Id));
 
             var embed = new EmbedBuilder()

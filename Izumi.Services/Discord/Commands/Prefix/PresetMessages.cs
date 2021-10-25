@@ -5,8 +5,6 @@ using Izumi.Data.Enums;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Client;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
-using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
 using MediatR;
@@ -32,7 +30,7 @@ namespace Izumi.Services.Discord.Commands.Prefix
         [Command("game-roles")]
         public async Task SendGameRolesMessageTask()
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
 
             var embed = new EmbedBuilder()
                 .WithDefaultColor()
@@ -73,8 +71,8 @@ namespace Izumi.Services.Discord.Commands.Prefix
         [Command("event-role")]
         public async Task SendEventRoleMessageTask()
         {
-            var channels = await _mediator.Send(new GetChannelsQuery());
-            var roles = await _mediator.Send(new GetRolesQuery());
+            var channels = DiscordRepository.Channels;
+            var roles = DiscordRepository.Roles;
 
             var embed = new EmbedBuilder()
                 .WithDefaultColor()
@@ -94,9 +92,9 @@ namespace Izumi.Services.Discord.Commands.Prefix
         [Command("how-desc-work")]
         public async Task SendHowCommunityDescWorkMessageTask()
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
-            var channels = await _mediator.Send(new GetChannelsQuery());
-            var roles = await _mediator.Send(new GetRolesQuery());
+            var emotes = DiscordRepository.Emotes;
+            var channels = DiscordRepository.Channels;
+            var roles = DiscordRepository.Roles;
 
             var embed = new EmbedBuilder()
                 .WithDefaultColor()
@@ -132,8 +130,8 @@ namespace Izumi.Services.Discord.Commands.Prefix
         public async Task SendGameInfoTask()
         {
             var client = await _discordClientService.GetSocketClient();
-            var emotes = await _mediator.Send(new GetEmotesQuery());
-            var channels = await _mediator.Send(new GetChannelsQuery());
+            var emotes = DiscordRepository.Emotes;
+            var channels = DiscordRepository.Channels;
 
             await Context.Channel.SendMessageAsync(embed: new EmbedBuilder()
                 .WithDefaultColor()

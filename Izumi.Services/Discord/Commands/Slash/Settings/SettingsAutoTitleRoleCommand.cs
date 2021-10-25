@@ -5,8 +5,8 @@ using Discord.WebSocket;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.User.Commands;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
@@ -26,16 +26,16 @@ namespace Izumi.Services.Discord.Commands.Slash.Settings
 
         public async Task<Unit> Handle(SettingsAutoTitleRoleCommand request, CancellationToken ct)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
             var guildUser = await _mediator.Send(new GetSocketGuildUserQuery(request.Command.User.Id));
-            var roles = await _mediator.Send(new GetRolesQuery());
+            var roles = DiscordRepository.Roles;
 
             var embed = new EmbedBuilder();
 
             if (user.AutoTitleRole)
             {
-                await guildUser.RemoveRoleAsync((ulong) roles[user.Title.Role()].Id);
+                await guildUser.RemoveRoleAsync(roles[user.Title.Role()].Id);
                 await _mediator.Send(new UpdateUserAutoTitleRoleCommand(user.Id, false));
 
                 embed.WithDescription(
@@ -45,7 +45,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Settings
             }
             else
             {
-                await guildUser.AddRoleAsync((ulong) roles[user.Title.Role()].Id);
+                await guildUser.AddRoleAsync(roles[user.Title.Role()].Id);
                 await _mediator.Send(new UpdateUserAutoTitleRoleCommand(user.Id, true));
 
                 embed.WithDescription(

@@ -5,7 +5,6 @@ using Discord.WebSocket;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Extensions;
 using Izumi.Services.Game.Fish.Queries;
 using Izumi.Services.Game.Localization;
@@ -36,7 +35,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Fisher
 
             user.Location.CheckRequiredLocation(LocationType.Seaport);
 
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var season = await _mediator.Send(new GetCurrentSeasonQuery());
             var fishes = await _mediator.Send(new GetFishesBySeasonQuery(season));
 

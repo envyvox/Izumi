@@ -6,7 +6,7 @@ using Discord.WebSocket;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Banner.Commands;
 using Izumi.Services.Game.Banner.Queries;
 using Izumi.Services.Game.User.Queries;
@@ -27,7 +27,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Info.Interaction
 
         public async Task<Unit> Handle(UpdateBannerCommand request, CancellationToken ct)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
             var banner = await _mediator.Send(new GetBannerByIncIdQuery(
                 (long) request.Command.Data.Options.First().Value));

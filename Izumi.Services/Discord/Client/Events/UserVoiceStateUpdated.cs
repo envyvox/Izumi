@@ -4,7 +4,7 @@ using Discord;
 using Discord.WebSocket;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Guild.Commands;
-using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Extensions;
 using MediatR;
 
 namespace Izumi.Services.Discord.Client.Events
@@ -26,16 +26,16 @@ namespace Izumi.Services.Discord.Client.Events
 
         public async Task<Unit> Handle(UserVoiceStateUpdated request, CancellationToken cancellationToken)
         {
-            var channels = await _mediator.Send(new GetChannelsQuery());
-            var roles = await _mediator.Send(new GetRolesQuery());
+            var channels = DiscordRepository.Channels;
+            var roles = DiscordRepository.Roles;
 
-            var createRoomParent = (ulong) channels[DiscordChannelType.CreateRoomParent].Id;
-            var createRoom = (ulong) channels[DiscordChannelType.CreateRoom].Id;
+            var createRoomParent = channels[DiscordChannelType.CreateRoomParent].Id;
+            var createRoom = channels[DiscordChannelType.CreateRoom].Id;
 
-            var eventParent = (ulong) channels[DiscordChannelType.EventParent].Id;
-            var eventCreateRoom = (ulong) channels[DiscordChannelType.EventCreateRoom].Id;
+            var eventParent = channels[DiscordChannelType.EventParent].Id;
+            var eventCreateRoom = channels[DiscordChannelType.EventCreateRoom].Id;
 
-            var familyParent = (ulong) channels[DiscordChannelType.FamilyRoomParent].Id;
+            var familyParent = channels[DiscordChannelType.FamilyRoomParent].Id;
 
             var oldChannel = request.OldVoiceState.VoiceChannel;
             var newChannel = request.NewVoiceState.VoiceChannel;
@@ -77,8 +77,8 @@ namespace Izumi.Services.Discord.Client.Events
                     .GetUser(request.SocketUser.Id)
                     .ModifyAsync(x => x.Channel = createdChannel);
 
-                var eventManagerRole = newChannel.Guild.GetRole((ulong) roles[DiscordRoleType.EventManager].Id);
-                var moderatorRole = newChannel.Guild.GetRole((ulong) roles[DiscordRoleType.Moderator].Id);
+                var eventManagerRole = newChannel.Guild.GetRole(roles[DiscordRoleType.EventManager].Id);
+                var moderatorRole = newChannel.Guild.GetRole(roles[DiscordRoleType.Moderator].Id);
 
                 await createdChannel.AddPermissionOverwriteAsync(eventManagerRole,
                     new OverwritePermissions(

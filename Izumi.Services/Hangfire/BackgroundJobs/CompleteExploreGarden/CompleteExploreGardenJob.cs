@@ -3,7 +3,6 @@ using Discord;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
 using Izumi.Services.Game.Achievement.Commands;
@@ -44,7 +43,7 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteExploreGarden
                 "Complete explore garden job executed for user {UserId}",
                 userId);
 
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var gatherings = await _mediator.Send(new GetGatheringsInLocationQuery(
                 LocationType.ExploreGarden));
 

@@ -7,9 +7,8 @@ using Izumi.Data.Enums;
 using Izumi.Services.Discord.CommunityDesc.Commands;
 using Izumi.Services.Discord.CommunityDesc.Queries;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Extensions;
-using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Extensions;
 using MediatR;
 using static Discord.Emote;
 
@@ -35,7 +34,7 @@ namespace Izumi.Services.Discord.Client.Events
             if (request.Reaction.User.Value.IsBot) return Unit.Value;
 
             var msg = await request.Message.GetOrDownloadAsync();
-            var channels = await _mediator.Send(new GetChannelsQuery());
+            var channels = DiscordRepository.Channels;
             var communityDescChannels = channels.GetCommunityDescChannels();
 
             if (communityDescChannels.Contains(request.Channel.Id))
@@ -58,7 +57,7 @@ namespace Izumi.Services.Discord.Client.Events
 
                     if (userVotes.ContainsKey(antiVote) && userVotes[antiVote].IsActive)
                     {
-                        var emotes = await _mediator.Send(new GetEmotesQuery());
+                        var emotes = DiscordRepository.Emotes;
 
                         await msg.RemoveReactionAsync(
                             antiVote == VoteType.Like

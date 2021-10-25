@@ -6,6 +6,7 @@ using Discord;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Client.Options;
 using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -39,7 +40,7 @@ namespace Izumi.Services.Discord.Embed
         {
             var user = await _mediator.Send(new GetUserQuery((long) request.UserId));
             var socketUser = await _mediator.Send(new GetSocketGuildUserQuery(request.UserId));
-            var channels = await _mediator.Send(new GetChannelsQuery());
+            var channels = DiscordRepository.Channels;
 
             var embed = request.Builder
                 .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))

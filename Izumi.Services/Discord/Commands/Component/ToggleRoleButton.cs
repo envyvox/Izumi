@@ -24,7 +24,7 @@ namespace Izumi.Services.Discord.Commands.Component
 
         public async Task<Unit> Handle(ToggleRoleButton request, CancellationToken ct)
         {
-            var roles = await _mediator.Send(new GetRolesQuery());
+            var roles = DiscordRepository.Roles;
             var role = request.Component.Data.CustomId switch
             {
                 // роль мероприятий

@@ -8,15 +8,13 @@ namespace Izumi.Data.Entities.Discord
     public class UserRole : IUniqueIdentifiedEntity, ICreatedEntity, IUpdatedEntity
     {
         public Guid Id { get; set; }
+        public long RoleId { get; set; }
         public DateTimeOffset Expiration { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
 
         public long UserId { get; set; }
         public User.User User { get; set; }
-
-        public long RoleId { get; set; }
-        public Role Role { get; set; }
     }
 
     public class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
@@ -27,6 +25,7 @@ namespace Izumi.Data.Entities.Discord
             builder.HasIndex(x => new { x.UserId, x.RoleId }).IsUnique();
 
             builder.Property(x => x.Id).IsRequired().ValueGeneratedNever();
+            builder.Property(x => x.RoleId).IsRequired();
             builder.Property(x => x.Expiration).IsRequired();
             builder.Property(x => x.CreatedAt).IsRequired();
             builder.Property(x => x.UpdatedAt).IsRequired();
@@ -35,11 +34,6 @@ namespace Izumi.Data.Entities.Discord
                 .HasOne(x => x.User)
                 .WithMany()
                 .HasForeignKey(x => x.UserId);
-
-            builder
-                .HasOne(x => x.Role)
-                .WithMany()
-                .HasForeignKey(x => x.RoleId);
         }
     }
 }

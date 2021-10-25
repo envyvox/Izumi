@@ -5,7 +5,6 @@ using Discord.WebSocket;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
 using Izumi.Services.Game.Banner.Queries;
@@ -36,7 +35,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Shop.List
 
             user.Location.CheckRequiredLocation(LocationType.Capital);
 
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var banners = await _mediator.Send(new GetDynamicShopBannersQuery());
 
             var embed = new EmbedBuilder()

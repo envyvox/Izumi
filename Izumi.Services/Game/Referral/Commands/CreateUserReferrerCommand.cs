@@ -8,8 +8,8 @@ using Izumi.Data.Enums;
 using Izumi.Data.Extensions;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Box.Commands;
 using Izumi.Services.Game.Currency.Commands;
 using Izumi.Services.Game.Localization;
@@ -73,7 +73,7 @@ namespace Izumi.Services.Game.Referral.Commands
 
         private async Task AddRewardsToReferrer(long userId, long referrerId)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var referralCount = await _mediator.Send(new GetUserReferralCountQuery(referrerId));
 
             var rewardString = string.Empty;

@@ -5,8 +5,8 @@ using Izumi.Data.Enums;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Currency.Commands;
 using Izumi.Services.Game.Effect.Queries;
 using Izumi.Services.Game.Localization;
@@ -37,7 +37,7 @@ namespace Izumi.Services.Game.Effect.Commands
 
         public async Task<Unit> Handle(StartLotteryCommand request, CancellationToken ct)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var reward = await _mediator.Send(new GetWorldPropertyValueQuery(WorldPropertyType.CasinoLotteryReward));
             var winner = await _mediator.Send(new GetRandomUserWithEffectQuery(EffectType.Lottery));
             var socketWinner = await _mediator.Send(new GetSocketGuildUserQuery((ulong) winner.Id));

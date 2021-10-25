@@ -7,7 +7,6 @@ using Humanizer;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
 using Izumi.Services.Game.Calculation;
@@ -37,7 +36,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Transit
 
         public async Task<Unit> Handle(TransitListCommand request, CancellationToken ct)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
             var transits = await _mediator.Send(new GetTransitsFromLocationQuery(user.Location));
 

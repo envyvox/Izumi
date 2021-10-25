@@ -11,9 +11,9 @@ using Izumi.Data.Enums;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Commands;
 using Izumi.Services.Discord.Image.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Calculation;
 using Izumi.Services.Game.Currency.Commands;
 using Izumi.Services.Game.Currency.Queries;
@@ -47,7 +47,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Transit
 
         public async Task<Unit> Handle(TransitMakeCommand request, CancellationToken ct)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
             var destination = (LocationType) (long) request.Command.Data.Options.First().Value;
             var hasMovement = await _mediator.Send(new CheckUserHasMovementQuery(user.Id));

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Izumi.Data.Enums;
+using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Commands.Component;
 using Izumi.Services.Discord.Commands.Slash;
 using Izumi.Services.Discord.Commands.Slash.Casino;
@@ -23,7 +24,6 @@ using Izumi.Services.Discord.Commands.Slash.Settings;
 using Izumi.Services.Discord.Commands.Slash.Shop;
 using Izumi.Services.Discord.Commands.Slash.Transit;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
 using Izumi.Services.Game.User.Queries;
@@ -53,13 +53,10 @@ namespace Izumi.Services.Discord.Client.Events
         {
             try
             {
-                // временное решение, нужно подумать как сделать это нормально
-                // проблема заключается в том, что получение списка каналов слишком долгое чтобы делать его перед DeferAsync
-                // но проверку необходимо сделать именно перед ним, чтобы скрыть сообщение в случае ошибки
-                if (request.Interaction.Channel.Id != 879838888296857630 &&
-                    request.Interaction.Channel.Id != 882748412003512361 &&
-                    request.Interaction.Channel.Id != 882748413878337586 &&
-                    request.Interaction.Channel.Id != 750624139794055188)
+                var channels = DiscordRepository.Channels;
+
+                if (request.Interaction.Channel.Id != channels[DiscordChannelType.Commands].Id &&
+                    request.Interaction.Channel.Id != channels[DiscordChannelType.GetRoles].Id)
                 {
                     await request.Interaction.RespondAsync(
                         text: $"{request.Interaction.User.Mention}, использование игровых команд доступно лишь в канале команды.",
@@ -167,7 +164,7 @@ namespace Izumi.Services.Discord.Client.Events
             }
             catch (GameUserExpectedException e)
             {
-                var emotes = await _mediator.Send(new GetEmotesQuery());
+                var emotes = DiscordRepository.Emotes;
                 var user = await _mediator.Send(new GetUserQuery((long) request.Interaction.User.Id));
 
                 var embed = new EmbedBuilder()
@@ -182,7 +179,7 @@ namespace Izumi.Services.Discord.Client.Events
             }
             catch (Exception e)
             {
-                var emotes = await _mediator.Send(new GetEmotesQuery());
+                var emotes = DiscordRepository.Emotes;
                 var user = await _mediator.Send(new GetUserQuery((long) request.Interaction.User.Id));
 
                 var embed = new EmbedBuilder()

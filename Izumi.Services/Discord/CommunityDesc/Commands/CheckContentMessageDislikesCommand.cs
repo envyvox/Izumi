@@ -7,8 +7,8 @@ using Izumi.Data.Enums;
 using Izumi.Services.Discord.CommunityDesc.Queries;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Extensions;
 using MediatR;
 
 namespace Izumi.Services.Discord.CommunityDesc.Commands
@@ -33,7 +33,7 @@ namespace Izumi.Services.Discord.CommunityDesc.Commands
             {
                 var message = await _mediator.Send(new GetUserMessageQuery(
                     (ulong) messageDislikes[0].Message.ChannelId, (ulong) messageDislikes[0].Message.MessageId));
-                var emotes = await _mediator.Send(new GetEmotesQuery());
+                var emotes = DiscordRepository.Emotes;
 
                 var embed = new EmbedBuilder()
                     .WithAuthor("Оповещение от доски сообщества")

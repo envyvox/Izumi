@@ -10,8 +10,8 @@ using Humanizer;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Calculation;
 using Izumi.Services.Game.Contract.Commands;
 using Izumi.Services.Game.Contract.Queries;
@@ -45,7 +45,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Contract
         {
             var incId = (long) request.Command.Data.Options.First().Value;
 
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
             var contract = await _mediator.Send(new GetContractQuery(incId));
 

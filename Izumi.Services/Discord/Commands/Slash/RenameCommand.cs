@@ -9,8 +9,8 @@ using Humanizer;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Commands;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Cooldown.Commands;
 using Izumi.Services.Game.Cooldown.Queries;
 using Izumi.Services.Game.Currency.Commands;
@@ -41,7 +41,7 @@ namespace Izumi.Services.Discord.Commands.Slash
         {
             var nickname = (string) request.Command.Data.Options.First().Value;
 
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
             var userCooldown = await _mediator.Send(new GetUserCooldownQuery(user.Id, CooldownType.Rename));
 

@@ -14,9 +14,9 @@ using Izumi.Services.Discord.CommunityDesc.Queries;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Models;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Discord.Role.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
 
@@ -36,9 +36,9 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
 
         public async Task<Unit> Handle(CommunityDescCommand request, CancellationToken ct)
         {
-            _emotes = await _mediator.Send(new GetEmotesQuery());
-            var channels = await _mediator.Send(new GetChannelsQuery());
-            var roles = await _mediator.Send(new GetRolesQuery());
+            _emotes = DiscordRepository.Emotes;
+            var channels = DiscordRepository.Channels;
+            var roles = DiscordRepository.Roles;
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
             var userMessages = await _mediator.Send(new GetContentMessagesByUserIdQuery(user.Id));
             var userVotes = await _mediator.Send(new GetContentAuthorVotesQuery(user.Id));
@@ -46,22 +46,22 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
                 request.Command.User.Id, DiscordRoleType.ContentProvider));
 
             var photosMessages = userMessages
-                .Where(x => x.ChannelId == channels[DiscordChannelType.Photos].Id)
+                .Where(x => x.ChannelId == (long) channels[DiscordChannelType.Photos].Id)
                 .ToList();
             var screenshotMessages = userMessages
-                .Where(x => x.ChannelId == channels[DiscordChannelType.Screenshots].Id)
+                .Where(x => x.ChannelId == (long) channels[DiscordChannelType.Screenshots].Id)
                 .ToList();
             var memesMessages = userMessages
-                .Where(x => x.ChannelId == channels[DiscordChannelType.Memes].Id)
+                .Where(x => x.ChannelId == (long) channels[DiscordChannelType.Memes].Id)
                 .ToList();
             var artMessages = userMessages
-                .Where(x => x.ChannelId == channels[DiscordChannelType.Arts].Id)
+                .Where(x => x.ChannelId == (long) channels[DiscordChannelType.Arts].Id)
                 .ToList();
             var eroticMessages = userMessages
-                .Where(x => x.ChannelId == channels[DiscordChannelType.Erotic].Id)
+                .Where(x => x.ChannelId == (long) channels[DiscordChannelType.Erotic].Id)
                 .ToList();
             var nsfwMessages = userMessages
-                .Where(x => x.ChannelId == channels[DiscordChannelType.Nsfw].Id)
+                .Where(x => x.ChannelId == (long) channels[DiscordChannelType.Nsfw].Id)
                 .ToList();
 
             var photosMessagesLikes = ChannelMessagesVotes(userVotes, photosMessages, VoteType.Like);
@@ -101,7 +101,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
             if (hasRole)
             {
                 var userRole = await _mediator.Send(new GetUserRoleQuery(
-                    user.Id, roles[DiscordRoleType.ContentProvider].Id));
+                    user.Id, (long) roles[DiscordRoleType.ContentProvider].Id));
                 var roleEndString = (DateTimeOffset.UtcNow - userRole.Expiration).TotalDays
                     .Days()
                     .Humanize(2, new CultureInfo("ru-RU"));
@@ -122,7 +122,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
                 .Count(cv => cv.Vote == vote);
         }
 
-        private string DisplayChannelInfo(long messages, long channelId, long likes, long dislikes)
+        private string DisplayChannelInfo(long messages, ulong channelId, long likes, long dislikes)
         {
             return
                 $"{_emotes.GetEmote("List")} {messages} публикаций в <#{channelId}>, " +

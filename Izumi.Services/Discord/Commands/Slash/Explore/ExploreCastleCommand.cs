@@ -10,7 +10,6 @@ using Humanizer;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
 using Izumi.Services.Game.Calculation;
@@ -48,7 +47,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Explore
 
             user.Location.CheckRequiredLocation(LocationType.Castle);
 
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var exploreTime = await _mediator.Send(new GetWorldPropertyValueQuery(
                 WorldPropertyType.ActionTimeMinutesExplore));
             var energyCost = await _mediator.Send(new GetWorldPropertyValueQuery(

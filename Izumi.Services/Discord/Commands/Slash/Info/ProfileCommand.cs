@@ -9,7 +9,7 @@ using Humanizer;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Banner.Queries;
 using Izumi.Services.Game.Contract.Queries;
 using Izumi.Services.Game.Transit.Queries;
@@ -39,7 +39,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
                 ? request.Command.User
                 : request.Command.Data.Options.First().Value);
 
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var user = await _mediator.Send(new GetUserQuery((long) socketUser.Id));
             var banner = await _mediator.Send(new GetUserActiveBannerQuery(user.Id));
 

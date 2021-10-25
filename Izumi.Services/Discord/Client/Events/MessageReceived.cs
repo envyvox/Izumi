@@ -7,9 +7,8 @@ using Izumi.Data.Enums;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.CommunityDesc.Commands;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Extensions;
-using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Achievement.Commands;
 using Izumi.Services.Game.Statistic.Commands;
 using Izumi.Services.Game.User.Queries;
@@ -30,7 +29,7 @@ namespace Izumi.Services.Discord.Client.Events
 
         public async Task<Unit> Handle(MessageReceived request, CancellationToken cancellationToken)
         {
-            var channels = await _mediator.Send(new GetChannelsQuery());
+            var channels = DiscordRepository.Channels;
             var communityDescChannels = channels.GetCommunityDescChannels();
 
             if (communityDescChannels.Contains(request.SocketMessage.Channel.Id))
@@ -52,12 +51,12 @@ namespace Izumi.Services.Discord.Client.Events
                 }
             }
 
-            if (request.SocketMessage.Channel.Id == (ulong) channels[DiscordChannelType.Suggestions].Id)
+            if (request.SocketMessage.Channel.Id == channels[DiscordChannelType.Suggestions].Id)
             {
                 await AddVotes((IUserMessage) request.SocketMessage);
             }
 
-            if (request.SocketMessage.Channel.Id == (ulong) channels[DiscordChannelType.Chat].Id)
+            if (request.SocketMessage.Channel.Id == channels[DiscordChannelType.Chat].Id)
             {
                 var user = await _mediator.Send(new GetUserQuery((long) request.SocketMessage.Author.Id));
 
@@ -65,7 +64,7 @@ namespace Izumi.Services.Discord.Client.Events
                 await _mediator.Send(new CheckAchievementInUserCommand(user.Id, AchievementType.FirstMessage));
             }
 
-            if (request.SocketMessage.Channel.Id == (ulong) channels[DiscordChannelType.Commands].Id)
+            if (request.SocketMessage.Channel.Id == channels[DiscordChannelType.Commands].Id)
             {
                 await DeleteMessage(request.SocketMessage);
             }
@@ -75,7 +74,7 @@ namespace Izumi.Services.Discord.Client.Events
 
         private async Task AddVotes(IUserMessage message)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
 
             await message.AddReactionsAsync(new IEmote[]
             {

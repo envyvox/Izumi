@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Izumi.Data.Enums;
-using Izumi.Services.Discord.Emote.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Localization;
 using Izumi.Services.Game.Tutorial.Commands;
 using MediatR;
@@ -23,7 +23,7 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteMaking.Impl
 
         public async Task Execute(long userId, Guid foodId, uint amount)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
 
             // todo add condition on this check
             await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.CookFriedEgg));

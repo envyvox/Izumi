@@ -5,7 +5,6 @@ using Izumi.Data.Enums;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Guild.Commands;
-using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
 using Izumi.Services.Game.Achievement.Commands;
@@ -38,7 +37,7 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit
                 "Complete user transit job executed for user {UserId} and destination {Destination}",
                 userId, destination.ToString());
 
-            var channels = await _mediator.Send(new GetChannelsQuery());
+            var channels = DiscordRepository.Channels;
             DiscordChannelType descChannel;
             DiscordChannelType eventsChannel;
 

@@ -7,10 +7,9 @@ using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.CommunityDesc.Queries;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Discord.Guild.Commands;
-using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Discord.Role.Commands;
+using Izumi.Services.Extensions;
 using MediatR;
 
 namespace Izumi.Services.Discord.CommunityDesc.Commands
@@ -28,19 +27,20 @@ namespace Izumi.Services.Discord.CommunityDesc.Commands
 
         public async Task<Unit> Handle(CheckContentMessageLikesCommand request, CancellationToken cancellationToken)
         {
-            var contentMessage = await _mediator.Send(new GetContentMessageQuery(request.ContentMessageId));
-            var authorLikes = await _mediator.Send(
-                new GetContentAuthorVotesCountQuery(contentMessage.User.Id, VoteType.Like));
+            var contentMessage = await _mediator.Send(new GetContentMessageQuery(
+                request.ContentMessageId));
+            var authorLikes = await _mediator.Send(new GetContentAuthorVotesCountQuery(
+                contentMessage.User.Id, VoteType.Like));
 
             if (authorLikes % 500 == 0)
             {
-                var emotes = await _mediator.Send(new GetEmotesQuery());
-                var roles = await _mediator.Send(new GetRolesQuery());
+                var emotes = DiscordRepository.Emotes;
+                var roles = DiscordRepository.Roles;
 
                 await _mediator.Send(new AddRoleToGuildUserCommand(
                     (ulong) contentMessage.User.Id, DiscordRoleType.ContentProvider));
                 await _mediator.Send(new AddRoleToUserCommand(
-                    contentMessage.User.Id, roles[DiscordRoleType.ContentProvider].Id, TimeSpan.FromDays(30)));
+                    contentMessage.User.Id, (long) roles[DiscordRoleType.ContentProvider].Id, TimeSpan.FromDays(30)));
 
                 var embed = new EmbedBuilder()
                     .WithAuthor("Оповещение от доски сообщества")

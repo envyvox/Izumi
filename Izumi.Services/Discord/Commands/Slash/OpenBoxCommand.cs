@@ -9,7 +9,6 @@ using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Emote.Models;
-using Izumi.Services.Discord.Emote.Queries;
 using Izumi.Services.Extensions;
 using Izumi.Services.Game.Box.Commands;
 using Izumi.Services.Game.Box.Queries;
@@ -50,7 +49,7 @@ namespace Izumi.Services.Discord.Commands.Slash
 
         public async Task<Unit> Handle(OpenBoxCommand request, CancellationToken ct)
         {
-            _emotes = await _mediator.Send(new GetEmotesQuery());
+            _emotes = DiscordRepository.Emotes;
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
             var boxAmount = (uint) (long) request.Command.Data.Options.First().Value;
             var boxType = (BoxType) (long) request.Command.Data.Options.Last().Value;

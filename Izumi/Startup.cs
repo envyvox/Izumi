@@ -21,7 +21,6 @@ using Izumi.Services.Hangfire.BackgroundJobs.EnergyRecovery;
 using Izumi.Services.Hangfire.BackgroundJobs.GenerateDynamicShopBanner;
 using Izumi.Services.Hangfire.BackgroundJobs.StartNewDay;
 using Izumi.Services.Hangfire.BackgroundJobs.Unmute;
-using Izumi.Services.Hangfire.BackgroundJobs.UploadEmotes;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -82,7 +81,6 @@ namespace Izumi
             services.AddSingleton<IDiscordClientService, DiscordClientService>();
             services.AddSingleton<ILocalizationService, LocalizationService>();
 
-            services.AddScoped<IUploadEmotesJob, UploadEmotesJob>();
             services.AddScoped<ICompleteUserTransitJob, CompleteUserTransitJob>();
             services.AddScoped<ICompleteExploreGardenJob, CompleteExploreGardenJob>();
             services.AddScoped<ICompleteExploreCastleJob, CompleteExploreCastleJob>();

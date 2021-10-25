@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Discord;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Guild.Queries;
+using Izumi.Services.Extensions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -30,7 +31,7 @@ namespace Izumi.Services.Discord.Embed
 
         public async Task<Unit> Handle(SendEmbedToChannelCommand request, CancellationToken ct)
         {
-            var channels = await _mediator.Send(new GetChannelsQuery());
+            var channels = DiscordRepository.Channels;
             var channel = await _mediator.Send(new GetSocketTextChannelQuery((ulong) channels[request.Channel].Id));
 
             try

@@ -7,7 +7,7 @@ using Discord.WebSocket;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.User.Commands;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
@@ -30,7 +30,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Settings
             var option = ((string) request.Command.Data.Options.First().Options.First().Value).Replace("#", "");
             var color = new Color(uint.Parse(option, NumberStyles.HexNumber));
 
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
 
             var embed = new EmbedBuilder();

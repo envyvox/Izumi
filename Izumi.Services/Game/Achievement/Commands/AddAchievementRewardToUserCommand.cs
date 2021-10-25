@@ -5,7 +5,7 @@ using Discord;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
-using Izumi.Services.Discord.Emote.Queries;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.Achievement.Queries;
 using Izumi.Services.Game.Currency.Commands;
 using Izumi.Services.Game.Localization;
@@ -31,7 +31,7 @@ namespace Izumi.Services.Game.Achievement.Commands
 
         public async Task<Unit> Handle(AddAchievementRewardToUserCommand request, CancellationToken cancellationToken)
         {
-            var emotes = await _mediator.Send(new GetEmotesQuery());
+            var emotes = DiscordRepository.Emotes;
             var achievement = await _mediator.Send(new GetAchievementQuery(request.Type));
 
             switch (achievement.RewardType)

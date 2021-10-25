@@ -27,12 +27,9 @@ namespace Izumi.Data
             modelBuilder.UseValueConverterForType<DateTime>(new DateTimeUtcKindConverter());
         }
 
-        public DbSet<Channel> Channels { get; set; }
         public DbSet<ContentMessage> ContentMessages { get; set; }
         public DbSet<ContentVote> ContentVotes { get; set; }
-        public DbSet<Emote> Emotes { get; set; }
         public DbSet<Image> Images { get; set; }
-        public DbSet<Role> Roles { get; set; }
         public DbSet<UserMute> UserMutes { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserWarn> UserWarns { get; set; }
