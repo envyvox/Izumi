@@ -4,15 +4,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Izumi.Data;
+using Izumi.Data.Enums;
 using Izumi.Services.Game.Statistic.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Izumi.Services.Game.Statistic.Queries
 {
-    public record GetUserStatisticsQuery(long UserId) : IRequest<List<UserStatisticDto>>;
+    public record GetUserStatisticsQuery(long UserId) : IRequest<Dictionary<StatisticType, UserStatisticDto>>;
 
-    public class GetUserStatisticsHandler : IRequestHandler<GetUserStatisticsQuery, List<UserStatisticDto>>
+    public class GetUserStatisticsHandler
+        : IRequestHandler<GetUserStatisticsQuery, Dictionary<StatisticType, UserStatisticDto>>
     {
         private readonly IMapper _mapper;
         private readonly AppDbContext _db;
@@ -25,14 +27,15 @@ namespace Izumi.Services.Game.Statistic.Queries
             _mapper = mapper;
         }
 
-        public async Task<List<UserStatisticDto>> Handle(GetUserStatisticsQuery request, CancellationToken ct)
+        public async Task<Dictionary<StatisticType, UserStatisticDto>> Handle(GetUserStatisticsQuery request,
+            CancellationToken ct)
         {
             var entities = await _db.UserStatistics
                 .AsQueryable()
                 .Where(x => x.UserId == request.UserId)
-                .ToListAsync();
+                .ToDictionaryAsync(x => x.Type);
 
-            return _mapper.Map<List<UserStatisticDto>>(entities);
+            return _mapper.Map<Dictionary<StatisticType, UserStatisticDto>>(entities);
         }
     }
 }

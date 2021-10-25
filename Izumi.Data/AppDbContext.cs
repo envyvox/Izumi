@@ -32,6 +32,7 @@ namespace Izumi.Data
         public DbSet<Image> Images { get; set; }
         public DbSet<UserMute> UserMutes { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<UserVoice> UserVoices { get; set; }
         public DbSet<UserWarn> UserWarns { get; set; }
 
         public DbSet<Alcohol> Alcohols { get; set; }

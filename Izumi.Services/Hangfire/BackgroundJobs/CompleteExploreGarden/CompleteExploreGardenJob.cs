@@ -50,7 +50,6 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteExploreGarden
             await _mediator.Send(new UpdateUserLocationCommand(userId, LocationType.Garden));
             await _mediator.Send(new DeleteUserMovementCommand(userId));
             await _mediator.Send(new DeleteUserHangfireJobCommand(userId, HangfireJobType.Explore));
-            await _mediator.Send(new AddStatisticToUserCommand(userId, StatisticType.ExploreGarden));
 
             var gatheringString = string.Empty;
             uint itemsCount = 0;

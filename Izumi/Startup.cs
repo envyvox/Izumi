@@ -21,6 +21,7 @@ using Izumi.Services.Hangfire.BackgroundJobs.EnergyRecovery;
 using Izumi.Services.Hangfire.BackgroundJobs.GenerateDynamicShopBanner;
 using Izumi.Services.Hangfire.BackgroundJobs.StartNewDay;
 using Izumi.Services.Hangfire.BackgroundJobs.Unmute;
+using Izumi.Services.Hangfire.BackgroundJobs.VoiceStatistic;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -95,6 +96,7 @@ namespace Izumi
             services.AddScoped<IGenerateDynamicShopBannerJob, GenerateDynamicShopBannerJob>();
             services.AddScoped<ICompleteContractJob, CompleteContractJob>();
             services.AddScoped<IUnmuteJob, UnmuteJob>();
+            services.AddScoped<IVoiceStatisticJob, VoiceStatisticJob>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

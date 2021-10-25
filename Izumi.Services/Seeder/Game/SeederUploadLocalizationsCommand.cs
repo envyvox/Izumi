@@ -181,6 +181,8 @@ namespace Izumi.Services.Seeder.Game
                     {
                         commands.Add(new CreateLocalizationCommand(
                             category, "User", "пользователь", "пользователя", "пользователей"));
+                        commands.Add(new CreateLocalizationCommand(
+                            category, "Message", "сообщение", "сообщения", "сообщений"));
 
                         break;
                     }

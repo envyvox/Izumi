@@ -8,6 +8,7 @@ using Izumi.Services.Discord.Guild.Commands;
 using Izumi.Services.Hangfire.BackgroundJobs.EnergyRecovery;
 using Izumi.Services.Hangfire.BackgroundJobs.GenerateDynamicShopBanner;
 using Izumi.Services.Hangfire.BackgroundJobs.StartNewDay;
+using Izumi.Services.Hangfire.BackgroundJobs.VoiceStatistic;
 using MediatR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -42,6 +43,10 @@ namespace Izumi.Services.Discord.Client.Events
                 await _mediator.Send(new SyncChannelsCommand());
                 await _mediator.Send(new SyncRolesCommand());
                 await _mediator.Send(new SyncEmotesCommand());
+
+                RecurringJob.AddOrUpdate<IVoiceStatisticJob>("voice-statistic",
+                    x => x.Execute(),
+                    Cron.Minutely, _timeZoneInfo);
 
                 RecurringJob.AddOrUpdate<IEnergyRecoveryJob>("recovery-energy",
                     x => x.Execute(),

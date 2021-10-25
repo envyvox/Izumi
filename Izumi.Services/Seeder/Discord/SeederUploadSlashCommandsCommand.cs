@@ -668,6 +668,11 @@ namespace Izumi.Services.Seeder.Discord
                         .WithRequired(true)
                         .WithName("имя")
                         .WithDescription("Новое имя (если новое имя будет нарушать правила сервере - мы его изменим без компенсаций)"))
+                    .Build(),
+
+                new SlashCommandBuilder()
+                    .WithName("активность")
+                    .WithDescription("Просмотр информации о своей активности на сервере")
                     .Build()
             };
 

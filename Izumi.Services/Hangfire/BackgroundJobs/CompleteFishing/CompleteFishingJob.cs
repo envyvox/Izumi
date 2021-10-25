@@ -69,23 +69,18 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteFishing
                 switch (rarity)
                 {
                     case FishRarityType.Common:
-                        await _mediator.Send(new AddStatisticToUserCommand(userId, StatisticType.FishingCommon));
                         break;
                     case FishRarityType.Rare:
-                        await _mediator.Send(new AddStatisticToUserCommand(userId, StatisticType.FishingRare));
                         break;
                     case FishRarityType.Epic:
-                        await _mediator.Send(new AddStatisticToUserCommand(userId, StatisticType.FishingEpic));
                         await _mediator.Send(new CheckAchievementInUserCommand(
                             userId, AchievementType.CatchEpicFish));
                         break;
                     case FishRarityType.Mythical:
-                        await _mediator.Send(new AddStatisticToUserCommand(userId, StatisticType.FishingMythical));
                         await _mediator.Send(new CheckAchievementInUserCommand(
                             userId, AchievementType.CatchMythicalFish));
                         break;
                     case FishRarityType.Legendary:
-                        await _mediator.Send(new AddStatisticToUserCommand(userId, StatisticType.FishingLegendary));
                         await _mediator.Send(new CheckAchievementInUserCommand(
                             userId, AchievementType.CatchLegendaryFish));
                         break;

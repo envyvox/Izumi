@@ -150,6 +150,8 @@ namespace Izumi.Services.Discord.Client.Events
                                 await HandleInteraction(request.Interaction, new SendIenCommand(command), false),
                             "переименоваться" =>
                                 await HandleInteraction(request.Interaction, new RenameCommand(command), false),
+                            "активность" =>
+                                await HandleInteraction(request.Interaction, new ActivityCommand(command), true),
                             _ => Unit.Value
                         };
                     case SocketMessageComponent component:

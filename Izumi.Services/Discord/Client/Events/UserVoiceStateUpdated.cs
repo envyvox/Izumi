@@ -4,6 +4,7 @@ using Discord;
 using Discord.WebSocket;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Guild.Commands;
+using Izumi.Services.Discord.Voice.Commands;
 using Izumi.Services.Extensions;
 using MediatR;
 
@@ -44,12 +45,16 @@ namespace Izumi.Services.Discord.Client.Events
             {
                 await _mediator.Send(new AddRoleToGuildUserCommand(
                     request.SocketUser.Id, DiscordRoleType.InVoice));
+                await _mediator.Send(new CreateUserVoiceCommand(
+                    (long) request.SocketUser.Id, (long) newChannel.Id));
             }
 
             if (newChannel is null)
             {
                 await _mediator.Send(new RemoveRoleFromGuildUserCommand(
                     request.SocketUser.Id, DiscordRoleType.InVoice));
+                await _mediator.Send(new DeleteUserVoiceCommand(
+                    (long) request.SocketUser.Id));
             }
 
             if (newChannel?.Id == createRoom)
