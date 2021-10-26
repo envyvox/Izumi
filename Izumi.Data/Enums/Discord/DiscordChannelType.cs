@@ -127,7 +127,7 @@ namespace Izumi.Data.Enums.Discord
             DiscordChannelType.CommunityDescParent => "доска сообщества",
             DiscordChannelType.CommunityDescHowItWork => Emote + "как-работает",
             DiscordChannelType.Photos => Emote + "фотографии",
-            DiscordChannelType.Screenshots => "Emote + скриншоты",
+            DiscordChannelType.Screenshots => Emote + "скриншоты",
             DiscordChannelType.Memes => Emote + "мемесы",
             DiscordChannelType.Arts => Emote + "арты",
             DiscordChannelType.Erotic => Emote + "эротика",
