@@ -23,7 +23,8 @@ namespace Izumi.Data.Enums
         MarketSell = 17,
         MarketBuy = 18,
         Contracts = 19,
-        BossKilled = 20
+        BossKilled = 20,
+        EnergySpent = 21
     }
 
     public static class StatisticHelper
@@ -50,6 +51,7 @@ namespace Izumi.Data.Enums
             StatisticType.MarketBuy => "Куплено предметов на рынке",
             StatisticType.Contracts => "Выполнено контрактов",
             StatisticType.BossKilled => "Убито ежедневных боссов",
+            StatisticType.EnergySpent => "Потрачено энергии",
             _ => throw new ArgumentOutOfRangeException(nameof(statistic), statistic, null)
         };
     }

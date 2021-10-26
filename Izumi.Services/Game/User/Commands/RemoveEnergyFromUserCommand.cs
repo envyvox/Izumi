@@ -2,7 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Izumi.Data;
+using Izumi.Data.Enums;
 using Izumi.Data.Extensions;
+using Izumi.Services.Game.Statistic.Commands;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,13 +16,16 @@ namespace Izumi.Services.Game.User.Commands
     public class RemoveEnergyFromUserHandler : IRequestHandler<RemoveEnergyFromUserCommand>
     {
         private readonly ILogger<RemoveEnergyFromUserHandler> _logger;
+        private readonly IMediator _mediator;
         private readonly AppDbContext _db;
 
         public RemoveEnergyFromUserHandler(
             DbContextOptions options,
-            ILogger<RemoveEnergyFromUserHandler> logger)
+            ILogger<RemoveEnergyFromUserHandler> logger,
+            IMediator mediator)
         {
             _logger = logger;
+            _mediator = mediator;
             _db = new AppDbContext(options);
         }
 
@@ -29,14 +34,20 @@ namespace Izumi.Services.Game.User.Commands
             var entity = await _db.Users
                 .SingleOrDefaultAsync(x => x.Id == request.UserId);
 
-            entity.Energy = request.Amount > entity.Energy ? 0 : entity.Energy - request.Amount;
+            var energySpent = request.Amount > entity.Energy
+                ? entity.Energy
+                : entity.Energy - request.Amount;
+
+            entity.Energy -= energySpent;
             entity.UpdatedAt = DateTimeOffset.UtcNow;
 
             await _db.UpdateEntity(entity);
 
             _logger.LogInformation(
-                "Removed energy from user {UserId} amount {Amount}",
-                request.UserId, request.Amount);
+                "Removed energy from user {UserId} amount {EnergySpent} (requested value was {Amount})",
+                request.UserId, energySpent, request.Amount);
+
+            await _mediator.Send(new AddStatisticToUserCommand(entity.Id, StatisticType.EnergySpent, energySpent));
 
             return Unit.Value;
         }
