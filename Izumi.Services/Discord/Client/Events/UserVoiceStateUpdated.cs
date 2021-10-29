@@ -32,16 +32,15 @@ namespace Izumi.Services.Discord.Client.Events
 
             var createRoomParent = channels[DiscordChannelType.CreateRoomParent].Id;
             var createRoom = channels[DiscordChannelType.CreateRoom].Id;
-
             var eventParent = channels[DiscordChannelType.EventParent].Id;
             var eventCreateRoom = channels[DiscordChannelType.EventCreateRoom].Id;
-
             var familyParent = channels[DiscordChannelType.FamilyRoomParent].Id;
+            var afkRoom = channels[DiscordChannelType.Afk].Id;
 
             var oldChannel = request.OldVoiceState.VoiceChannel;
             var newChannel = request.NewVoiceState.VoiceChannel;
 
-            if (oldChannel is null)
+            if (oldChannel is null && newChannel.Id != afkRoom)
             {
                 await _mediator.Send(new AddRoleToGuildUserCommand(
                     request.SocketUser.Id, DiscordRoleType.InVoice));
@@ -49,7 +48,7 @@ namespace Izumi.Services.Discord.Client.Events
                     (long) request.SocketUser.Id, (long) newChannel.Id));
             }
 
-            if (newChannel is null)
+            if (newChannel is null || newChannel.Id == afkRoom)
             {
                 await _mediator.Send(new RemoveRoleFromGuildUserCommand(
                     request.SocketUser.Id, DiscordRoleType.InVoice));
