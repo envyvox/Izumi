@@ -26,16 +26,15 @@ namespace Izumi.Services.Discord.Commands.Component
             DiscordRoleType.TeamfightTactics.Name(),
             DiscordRoleType.Valorant.Name(),
             DiscordRoleType.ApexLegends.Name(),
-            DiscordRoleType.LostArk.Name(),
             DiscordRoleType.Dota.Name(),
+            DiscordRoleType.Minecraft.Name(),
             DiscordRoleType.Osu.Name(),
             DiscordRoleType.AmongUs.Name(),
             DiscordRoleType.Rust.Name(),
             DiscordRoleType.CsGo.Name(),
             DiscordRoleType.HotS.Name(),
-            DiscordRoleType.WildRift.Name(),
-            DiscordRoleType.MobileLegends.Name(),
-            DiscordRoleType.NewWorld.Name()
+            DiscordRoleType.NewWorld.Name(),
+            DiscordRoleType.MobileGaming.Name()
         };
 
         public SelectGameRolesMenuHandler(IMediator mediator)
@@ -57,16 +56,15 @@ namespace Izumi.Services.Discord.Commands.Component
                     "TeamfightTactics" => DiscordRoleType.TeamfightTactics,
                     "Valorant" => DiscordRoleType.Valorant,
                     "ApexLegends" => DiscordRoleType.ApexLegends,
-                    "LostArk" => DiscordRoleType.LostArk,
                     "Dota" => DiscordRoleType.Dota,
+                    "Minecraft" => DiscordRoleType.Minecraft,
                     "Osu" => DiscordRoleType.Osu,
                     "AmongUs" => DiscordRoleType.AmongUs,
                     "Rust" => DiscordRoleType.Rust,
                     "CSGO" => DiscordRoleType.CsGo,
                     "HotS" => DiscordRoleType.HotS,
-                    "WildRift" => DiscordRoleType.WildRift,
-                    "MobileLegends" => DiscordRoleType.MobileLegends,
                     "NewWorld" => DiscordRoleType.NewWorld,
+                    "MobileGaming" => DiscordRoleType.MobileGaming,
                     _ => throw new ArgumentOutOfRangeException()
                 })
                 .Select(x => x.Name())

@@ -50,20 +50,18 @@ namespace Izumi.Services.Discord.Commands.Prefix
                     .WithMaxValues(14)
                     .AddOption("Genshin Impact", "GenshinImpact", emote: Parse(emotes.GetEmote("GenshinImpact")))
                     .AddOption("League of Legends", "LeagueOfLegends", emote: Parse(emotes.GetEmote("LeagueOfLegends")))
-                    .AddOption("Teamfight Tactics", "TeamfightTactics",
-                        emote: Parse(emotes.GetEmote("TeamfightTactics")))
+                    .AddOption("Teamfight Tactics", "TeamfightTactics", emote: Parse(emotes.GetEmote("TeamfightTactics")))
                     .AddOption("Valorant", "Valorant", emote: Parse(emotes.GetEmote("Valorant")))
                     .AddOption("Apex Legends", "ApexLegends", emote: Parse(emotes.GetEmote("ApexLegends")))
-                    .AddOption("Lost Ark", "LostArk", emote: Parse(emotes.GetEmote("LostArk")))
                     .AddOption("Dota 2", "Dota", emote: Parse(emotes.GetEmote("Dota")))
+                    .AddOption("Minecraft", "Minecraft", emote: Parse(emotes.GetEmote("Minecraft")))
                     .AddOption("Among Us", "AmongUs", emote: Parse(emotes.GetEmote("AmongUs")))
                     .AddOption("Osu", "Osu", emote: Parse(emotes.GetEmote("Osu")))
                     .AddOption("Rust", "Rust", emote: Parse(emotes.GetEmote("Rust")))
                     .AddOption("CS:GO", "CSGO", emote: Parse(emotes.GetEmote("CSGO")))
                     .AddOption("HotS", "HotS", emote: Parse(emotes.GetEmote("HotS")))
-                    .AddOption("Wild Rift", "WildRift", emote: Parse(emotes.GetEmote("WildRift")))
-                    .AddOption("Mobile Legends", "MobileLegends", emote: Parse(emotes.GetEmote("MobileLegends")))
-                    .AddOption("New World", "NewWorld", emote: Parse(emotes.GetEmote("NewWorld"))));
+                    .AddOption("New World", "NewWorld", emote: Parse(emotes.GetEmote("NewWorld")))
+                    .AddOption("Mobile Gaming", "MobileGaming", emote: Parse(emotes.GetEmote("MobileGaming"))));
 
             await Context.Channel.SendMessageAsync(embed: embed.Build(), component: menu.Build());
         }
@@ -86,7 +84,7 @@ namespace Izumi.Services.Discord.Commands.Prefix
             var buttons = new ComponentBuilder()
                 .WithButton("Мероприятия", "toggle-role-DiscordEvent", emote: new Emoji("🥳"));
 
-            await Context.Channel.SendMessageAsync("", false, embed.Build(), component: buttons.Build());
+            await Context.Channel.SendMessageAsync(embed: embed.Build(), component: buttons.Build());
         }
 
         [Command("how-desc-work")]
