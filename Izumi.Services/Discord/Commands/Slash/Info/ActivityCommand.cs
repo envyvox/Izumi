@@ -16,7 +16,7 @@ using Izumi.Services.Game.User.Queries;
 using MediatR;
 using StringExtensions = Izumi.Services.Extensions.StringExtensions;
 
-namespace Izumi.Services.Discord.Commands.Slash
+namespace Izumi.Services.Discord.Commands.Slash.Info
 {
     public record ActivityCommand(SocketSlashCommand Command) : IRequest;
 
@@ -55,8 +55,6 @@ namespace Izumi.Services.Discord.Commands.Slash
                     x is not StatisticType.VoiceMinutes)
                 .ToArray();
 
-            var gameP1 = gameStatistics.Take(gameStatistics.Length / 2);
-
             var userGameStatistic = gameStatistics.Aggregate(string.Empty, (s, v) =>
                 s + $"{emotes.GetEmote("List")} {v.Localize()}: **{(userStatistics.ContainsKey(v) ? userStatistics[v].Amount : 0)}**\n");
 
@@ -67,7 +65,7 @@ namespace Izumi.Services.Discord.Commands.Slash
                     $"\n\n{emotes.GetEmote("Arrow")} Награды за активность начисляются первого числа каждого месяца." +
                     $"\n{StringExtensions.EmptyChar}")
                 .AddField("Активность в чате",
-                    $"{userMessages} {_localizationService.Localize(LocalizationCategoryType.Basic, "Message", userMessages)}",
+                    $"**{userMessages}** {_localizationService.Localize(LocalizationCategoryType.Basic, "Message", userMessages)}",
                     true)
                 .AddField("Голосовой онлайн",
                     $"{userVoiceMinutes.Minutes().Humanize(2, new CultureInfo("ru-RU"))}",

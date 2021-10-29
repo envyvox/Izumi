@@ -183,6 +183,8 @@ namespace Izumi.Services.Seeder.Game
                             category, "User", "пользователь", "пользователя", "пользователей"));
                         commands.Add(new CreateLocalizationCommand(
                             category, "Message", "сообщение", "сообщения", "сообщений"));
+                        commands.Add(new CreateLocalizationCommand(
+                            category, "Post", "публикация", "публикации", "публикаций"));
 
                         break;
                     }

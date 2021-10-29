@@ -17,8 +17,10 @@ using Izumi.Services.Discord.Emote.Models;
 using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Discord.Role.Queries;
 using Izumi.Services.Extensions;
+using Izumi.Services.Game.Localization;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
+using StringExtensions = Izumi.Services.Extensions.StringExtensions;
 
 namespace Izumi.Services.Discord.Commands.Slash.Info
 {
@@ -27,11 +29,15 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
     public class CommunityDescHandler : IRequestHandler<CommunityDescCommand>
     {
         private readonly IMediator _mediator;
+        private readonly ILocalizationService _local;
         private Dictionary<string, EmoteDto> _emotes;
 
-        public CommunityDescHandler(IMediator mediator)
+        public CommunityDescHandler(
+            IMediator mediator,
+            ILocalizationService local)
         {
             _mediator = mediator;
+            _local = local;
         }
 
         public async Task<Unit> Handle(CommunityDescCommand request, CancellationToken ct)
@@ -64,39 +70,42 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
                 .Where(x => x.ChannelId == (long) channels[DiscordChannelType.Nsfw].Id)
                 .ToList();
 
-            var photosMessagesLikes = ChannelMessagesVotes(userVotes, photosMessages, VoteType.Like);
-            var photosMessagesDislikes = ChannelMessagesVotes(userVotes, photosMessages, VoteType.Dislike);
-            var screenshotMessagesLikes = ChannelMessagesVotes(userVotes, screenshotMessages, VoteType.Like);
-            var screenshotMessagesDislikes = ChannelMessagesVotes(userVotes, screenshotMessages, VoteType.Dislike);
-            var memesMessagesLikes = ChannelMessagesVotes(userVotes, memesMessages, VoteType.Like);
-            var memesMessagesDislikes = ChannelMessagesVotes(userVotes, memesMessages, VoteType.Dislike);
-            var artMessagesLikes = ChannelMessagesVotes(userVotes, artMessages, VoteType.Like);
-            var artMessagesDislikes = ChannelMessagesVotes(userVotes, artMessages, VoteType.Dislike);
-            var eroticMessagesLikes = ChannelMessagesVotes(userVotes, eroticMessages, VoteType.Like);
-            var eroticMessagesDislikes = ChannelMessagesVotes(userVotes, eroticMessages, VoteType.Dislike);
-            var nsfwMessagesLikes = ChannelMessagesVotes(userVotes, nsfwMessages, VoteType.Like);
-            var nsfwMessagesDislikes = ChannelMessagesVotes(userVotes, nsfwMessages, VoteType.Dislike);
+            var photosMessagesLikes = (uint) ChannelMessagesVotes(userVotes, photosMessages, VoteType.Like);
+            var photosMessagesDislikes = (uint) ChannelMessagesVotes(userVotes, photosMessages, VoteType.Dislike);
+            var screenshotMessagesLikes = (uint) ChannelMessagesVotes(userVotes, screenshotMessages, VoteType.Like);
+            var screenshotMessagesDislikes = (uint) ChannelMessagesVotes(userVotes, screenshotMessages, VoteType.Dislike);
+            var memesMessagesLikes = (uint) ChannelMessagesVotes(userVotes, memesMessages, VoteType.Like);
+            var memesMessagesDislikes = (uint) ChannelMessagesVotes(userVotes, memesMessages, VoteType.Dislike);
+            var artMessagesLikes = (uint) ChannelMessagesVotes(userVotes, artMessages, VoteType.Like);
+            var artMessagesDislikes = (uint) ChannelMessagesVotes(userVotes, artMessages, VoteType.Dislike);
+            var eroticMessagesLikes = (uint) ChannelMessagesVotes(userVotes, eroticMessages, VoteType.Like);
+            var eroticMessagesDislikes = (uint) ChannelMessagesVotes(userVotes, eroticMessages, VoteType.Dislike);
+            var nsfwMessagesLikes = (uint) ChannelMessagesVotes(userVotes, nsfwMessages, VoteType.Like);
+            var nsfwMessagesDislikes = (uint) ChannelMessagesVotes(userVotes, nsfwMessages, VoteType.Dislike);
+
+            var totalLikes = (uint) userVotes.Count(x => x.Vote == VoteType.Like);
 
             var embed = new EmbedBuilder()
                 .WithAuthor("Доска сообщества")
                 .WithDescription(
                     $"{_emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     "тут собрана информация о твоем участии в доске сообщества: " +
-                    $"\n{_emotes.GetEmote("Blank")}")
+                    $"\n{StringExtensions.EmptyChar}")
                 .AddField("Публикации",
-                    DisplayChannelInfo(photosMessages.Count, channels[DiscordChannelType.Photos].Id,
+                    DisplayChannelInfo((uint) photosMessages.Count, channels[DiscordChannelType.Photos].Id,
                         photosMessagesLikes, photosMessagesDislikes) +
-                    DisplayChannelInfo(screenshotMessages.Count, channels[DiscordChannelType.Screenshots].Id,
+                    DisplayChannelInfo((uint) screenshotMessages.Count, channels[DiscordChannelType.Screenshots].Id,
                         screenshotMessagesLikes, screenshotMessagesDislikes) +
-                    DisplayChannelInfo(memesMessages.Count, channels[DiscordChannelType.Memes].Id,
+                    DisplayChannelInfo((uint) memesMessages.Count, channels[DiscordChannelType.Memes].Id,
                         memesMessagesLikes, memesMessagesDislikes) +
-                    DisplayChannelInfo(artMessages.Count, channels[DiscordChannelType.Arts].Id,
+                    DisplayChannelInfo((uint) artMessages.Count, channels[DiscordChannelType.Arts].Id,
                         artMessagesLikes, artMessagesDislikes) +
-                    DisplayChannelInfo(eroticMessages.Count, channels[DiscordChannelType.Erotic].Id,
+                    DisplayChannelInfo((uint) eroticMessages.Count, channels[DiscordChannelType.Erotic].Id,
                         eroticMessagesLikes, eroticMessagesDislikes) +
-                    DisplayChannelInfo(nsfwMessages.Count, channels[DiscordChannelType.Nsfw].Id,
+                    DisplayChannelInfo((uint) nsfwMessages.Count, channels[DiscordChannelType.Nsfw].Id,
                         nsfwMessagesLikes, nsfwMessagesDislikes) +
-                    $"Всего {_emotes.GetEmote(VoteType.Like.ToString())} {userVotes.Count(x => x.Vote == VoteType.Like)} лайков");
+                    $"Всего {_emotes.GetEmote(VoteType.Like.ToString())} {totalLikes} " +
+                    $"{_local.Localize(LocalizationCategoryType.Vote, VoteType.Like.ToString(), totalLikes)}");
 
             if (hasRole)
             {
@@ -122,12 +131,12 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
                 .Count(cv => cv.Vote == vote);
         }
 
-        private string DisplayChannelInfo(long messages, ulong channelId, long likes, long dislikes)
+        private string DisplayChannelInfo(uint messages, ulong channelId, uint likes, uint dislikes)
         {
             return
-                $"{_emotes.GetEmote("List")} {messages} публикаций в <#{channelId}>, " +
-                $"{_emotes.GetEmote(VoteType.Like.ToString())} {likes} лайков " +
-                $"и {_emotes.GetEmote(VoteType.Dislike.ToString())} {dislikes} дизлайков\n";
+                $"{_emotes.GetEmote("List")} {messages} {_local.Localize(LocalizationCategoryType.Basic, "Post", messages)} в <#{channelId}>, " +
+                $"{_emotes.GetEmote(VoteType.Like.ToString())} {likes} {_local.Localize(LocalizationCategoryType.Vote, VoteType.Like.ToString(), likes)} " +
+                $"и {_emotes.GetEmote(VoteType.Dislike.ToString())} {dislikes} {_local.Localize(LocalizationCategoryType.Vote, VoteType.Dislike.ToString(), dislikes)}\n";
         }
     }
 }
