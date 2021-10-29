@@ -47,6 +47,19 @@
         CasinoLotteryDeliveryPrice = 43,
         SendIenTaxPercent = 44,
         RenamePrice = 45,
-        RenameCooldownDays = 46
+        RenameCooldownDays = 46,
+        ReputationBoxAmount = 47,
+        Reputation1000PearlAmount = 48,
+        Reputation5000PearlAmount = 49,
+        ReputationCapitalFoodId = 50,
+        ReputationGardenFoodId = 51,
+        ReputationSeaportFoodId = 52,
+        ReputationCastleFoodId = 53,
+        ReputationVillageFoodId = 54,
+        ReputationCapitalTitleNumber = 55,
+        ReputationGardenTitleNumber = 56,
+        ReputationSeaportTitleNumber = 57,
+        ReputationCastleTitleNumber = 58,
+        ReputationVillageTitleNumber = 59
     }
 }

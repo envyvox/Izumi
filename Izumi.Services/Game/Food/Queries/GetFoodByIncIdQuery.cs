@@ -6,17 +6,18 @@ using Izumi.Data;
 using Izumi.Services.Game.Food.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using static Izumi.Services.Extensions.ExceptionExtensions;
 
 namespace Izumi.Services.Game.Food.Queries
 {
-    public record GetFoodQuery(Guid Id) : IRequest<FoodDto>;
+    public record GetFoodByIncIdQuery(long IncId) : IRequest<FoodDto>;
 
-    public class GetFoodHandler : IRequestHandler<GetFoodQuery, FoodDto>
+    public class GetFoodByIncIdHandler : IRequestHandler<GetFoodByIncIdQuery, FoodDto>
     {
-        private readonly AppDbContext _db;
         private readonly IMapper _mapper;
+        private readonly AppDbContext _db;
 
-        public GetFoodHandler(
+        public GetFoodByIncIdHandler(
             DbContextOptions options,
             IMapper mapper)
         {
@@ -24,15 +25,15 @@ namespace Izumi.Services.Game.Food.Queries
             _mapper = mapper;
         }
 
-        public async Task<FoodDto> Handle(GetFoodQuery request, CancellationToken ct)
+        public async Task<FoodDto> Handle(GetFoodByIncIdQuery request, CancellationToken cancellationToken)
         {
             var entity = await _db.Foods
                 .Include(x => x.Ingredients)
-                .SingleOrDefaultAsync(x => x.Id == request.Id);
+                .SingleOrDefaultAsync(x => x.AutoIncrementedId == request.IncId);
 
             if (entity is null)
             {
-                throw new Exception($"food {request.Id} not found");
+                throw new GameUserExpectedException("никогда не слышала о блюде с таким номером");
             }
 
             return _mapper.Map<FoodDto>(entity);

@@ -22,7 +22,7 @@ namespace Izumi.Controllers.Game.Resource
         [HttpGet, Route("{id:guid}")]
         public async Task<ActionResult<FoodDto>> GetFood([FromRoute] Guid id)
         {
-            return Ok(await _mediator.Send(new GetFoodQuery(id)));
+            return Ok(await _mediator.Send(new GetFoodByIdQuery(id)));
         }
 
         [HttpGet, Route("list")]
