@@ -26,6 +26,7 @@ using Izumi.Services.Discord.Commands.Slash.Transit;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
+using Izumi.Services.Game.Localization.Queries;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -59,7 +60,7 @@ namespace Izumi.Services.Discord.Client.Events
                     request.Interaction.Channel.Id != channels[DiscordChannelType.GetRoles].Id)
                 {
                     await request.Interaction.RespondAsync(
-                        text: $"{request.Interaction.User.Mention}, использование игровых команд доступно лишь в канале команды.",
+                        $"{request.Interaction.User.Mention}, использование игровых команд доступно лишь в канале команды.",
                         ephemeral: true);
 
                     return Unit.Value;
@@ -162,6 +163,48 @@ namespace Izumi.Services.Discord.Client.Events
                             await HandleInteraction(request.Interaction, new SelectGameRolesMenu(component), true);
 
                         break;
+                    case SocketAutocompleteInteraction autocomplete:
+                    {
+                        var localizationCategory = autocomplete.Data.CommandName switch
+                        {
+                            "съесть" or "приготовить" => LocalizationCategoryType.Food,
+                            "изготовить" => (string) autocomplete.Data.Options
+                                    .Single(x => x.Name == "категория").Value switch
+                                {
+                                    "предмет" => LocalizationCategoryType.Crafting,
+                                    "алкоголь" => LocalizationCategoryType.Alcohol,
+                                    "напиток" => LocalizationCategoryType.Drink,
+                                    _ => throw new ArgumentOutOfRangeException()
+                                },
+                            "участок" => LocalizationCategoryType.Seed,
+                            _ => throw new ArgumentOutOfRangeException()
+                        };
+
+                        var localizations = await _mediator.Send(new GetLocalizationsByCategoryQuery(
+                            localizationCategory));
+
+                        var possibleChoices = localizations
+                            .Select(x => x.Single)
+                            .ToArray();
+
+                        var current = (string) autocomplete.Data.Current.Value;
+
+                        var options = possibleChoices
+                            .Where(x => x.Contains(current, StringComparison.OrdinalIgnoreCase))
+                            .Take(20);
+
+                        try
+                        {
+                            await autocomplete.RespondAsync(options.Select(x =>
+                                new AutocompleteResult(x, x)));
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
+
+                        break;
+                    }
                 }
             }
             catch (GameUserExpectedException e)
@@ -177,7 +220,7 @@ namespace Izumi.Services.Discord.Client.Events
                         $"{request.Interaction.User.Mention}, {e.Message}")
                     .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.CommandError)));
 
-                await request.Interaction.FollowupAsync("", new[] { embed.Build() });
+                await request.Interaction.FollowupAsync(embed: embed.Build());
             }
             catch (Exception e)
             {
@@ -193,7 +236,7 @@ namespace Izumi.Services.Discord.Client.Events
                         "этом команде разработки. Приношу извинения за моих глупых создателей, они обязательно исправятся.")
                     .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.CommandError)));
 
-                await request.Interaction.FollowupAsync("", new[] { embed.Build() }, ephemeral: true);
+                await request.Interaction.FollowupAsync(embed: embed.Build(), ephemeral: true);
 
                 _logger.LogError(e, "Interaction ended with unexpected exception");
             }

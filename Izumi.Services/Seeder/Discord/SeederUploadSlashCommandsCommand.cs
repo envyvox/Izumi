@@ -329,7 +329,8 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.String)
                         .WithRequired(true)
                         .WithName("название")
-                        .WithDescription("Название блюда которое ты хочешь съесть"))
+                        .WithDescription("Название блюда которое ты хочешь съесть")
+                        .WithAutocomplete(true))
                     .Build(),
 
                 new SlashCommandBuilder()
@@ -379,7 +380,8 @@ namespace Izumi.Services.Seeder.Discord
                             .WithType(ApplicationCommandOptionType.String)
                             .WithRequired(true)
                             .WithName("название")
-                            .WithDescription("Название семян, которые ты хочешь посадить")))
+                            .WithDescription("Название семян, которые ты хочешь посадить")
+                            .WithAutocomplete(true)))
                     .AddOption(new SlashCommandOptionBuilder()
                         .WithType(ApplicationCommandOptionType.SubCommand)
                         .WithRequired(false)
@@ -415,9 +417,9 @@ namespace Izumi.Services.Seeder.Discord
                         .WithRequired(true)
                         .WithName("категория")
                         .WithDescription("Категория изготовления")
-                        .AddChoice("предметов", "item")
-                        .AddChoice("алкоголя", "alcohol")
-                        .AddChoice("напитков", "drink"))
+                        .AddChoice("предметов", "предметов")
+                        .AddChoice("алкоголя", "алкоголя")
+                        .AddChoice("напитков", "напитков"))
                     .Build(),
 
                 new SlashCommandBuilder()
@@ -428,9 +430,9 @@ namespace Izumi.Services.Seeder.Discord
                         .WithRequired(true)
                         .WithName("категория")
                         .WithDescription("Категория изготовления")
-                        .AddChoice("предмет", "item")
-                        .AddChoice("алкоголь", "alcohol")
-                        .AddChoice("напиток", "drink"))
+                        .AddChoice("предмет", "предмет")
+                        .AddChoice("алкоголь", "алкоголь")
+                        .AddChoice("напиток", "напиток"))
                     .AddOption(new SlashCommandOptionBuilder()
                         .WithType(ApplicationCommandOptionType.Integer)
                         .WithRequired(true)
@@ -440,7 +442,8 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.String)
                         .WithRequired(true)
                         .WithName("название")
-                        .WithDescription("Название предмета который ты хочешь изготовить"))
+                        .WithDescription("Название предмета который ты хочешь изготовить")
+                        .WithAutocomplete(true))
                     .Build(),
 
                 new SlashCommandBuilder()
@@ -481,7 +484,8 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.String)
                         .WithRequired(true)
                         .WithName("название")
-                        .WithDescription("Название блюда которое ты хочешь приготовить"))
+                        .WithDescription("Название блюда которое ты хочешь приготовить")
+                        .WithAutocomplete(true))
                     .Build(),
 
                 new SlashCommandBuilder()
@@ -667,7 +671,8 @@ namespace Izumi.Services.Seeder.Discord
                         .WithType(ApplicationCommandOptionType.String)
                         .WithRequired(true)
                         .WithName("имя")
-                        .WithDescription("Новое имя (если новое имя будет нарушать правила сервере - мы его изменим без компенсаций)"))
+                        .WithDescription(
+                            "Новое имя (если новое имя будет нарушать правила сервере - мы его изменим без компенсаций)"))
                     .Build(),
 
                 new SlashCommandBuilder()
