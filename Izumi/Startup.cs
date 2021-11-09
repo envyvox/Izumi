@@ -59,7 +59,7 @@ namespace Izumi
             services.AddHangfireServer();
             services.AddHangfire(config =>
             {
-                GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
+                GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute {Attempts = 0});
                 config.UsePostgreSqlStorage(_config.GetConnectionString("main"));
             });
 
@@ -111,7 +111,7 @@ namespace Izumi
 
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
-                Authorization = new[] { new AllowAllAuthorizationFilter() }
+                Authorization = new[] {new AllowAllAuthorizationFilter()}
             });
 
             app.UseSerilogRequestLogging();

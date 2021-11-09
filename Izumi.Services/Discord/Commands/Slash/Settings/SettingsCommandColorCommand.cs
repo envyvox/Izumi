@@ -35,7 +35,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Settings
 
             var embed = new EmbedBuilder();
 
-            if (!user.IsPremium)
+            if (user.IsPremium is false)
             {
                 embed.WithDescription(
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +

@@ -61,7 +61,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Fisher
                 .WithAuthor("Дом рыбака")
                 .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.ShopFisher)));
 
-            if (!(fish.CatchSeasons.Contains(SeasonType.Any) || fish.CatchSeasons.Contains(season)))
+            if ((fish.CatchSeasons.Contains(SeasonType.Any) || fish.CatchSeasons.Contains(season)) is false)
             {
                 embed.WithDescription(
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {command.User.Mention}, " +

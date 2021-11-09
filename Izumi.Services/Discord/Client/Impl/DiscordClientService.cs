@@ -73,7 +73,7 @@ namespace Izumi.Services.Discord.Client.Impl
         private static async Task CommandServiceOnCommandExecuted(Optional<CommandInfo> command,
             ICommandContext context, IResult result)
         {
-            if (!string.IsNullOrEmpty(result?.ErrorReason))
+            if (string.IsNullOrEmpty(result?.ErrorReason) is false)
                 await context.Channel.SendMessageAsync(context.User.Mention + ", " + result.ErrorReason);
         }
 
@@ -110,7 +110,7 @@ namespace Izumi.Services.Discord.Client.Impl
 
             var argPos = 0;
 
-            if (!message.HasMentionPrefix(_socketClient.CurrentUser, ref argPos)) return;
+            if (message.HasMentionPrefix(_socketClient.CurrentUser, ref argPos) is false) return;
 
             var context = new SocketCommandContext(_socketClient, message);
 

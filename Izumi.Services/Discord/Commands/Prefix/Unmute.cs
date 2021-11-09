@@ -30,7 +30,7 @@ namespace Izumi.Services.Discord.Commands.Prefix
 
             var embed = new EmbedBuilder();
 
-            if (!hasRole)
+            if (hasRole is false)
             {
                 embed.WithDescription($"Пользователь {guildUser.Mention} не находится в блокировке чата.");
             }

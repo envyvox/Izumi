@@ -36,7 +36,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Info.Interaction
             var embed = new EmbedBuilder()
                 .WithAuthor("Обновление титула");
 
-            if (!hasTitle)
+            if (hasTitle is false)
             {
                 embed.WithDescription(
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
