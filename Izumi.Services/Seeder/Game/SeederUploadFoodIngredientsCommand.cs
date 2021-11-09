@@ -411,6 +411,18 @@ namespace Izumi.Services.Seeder.Game
                     new(IngredientCategoryType.Food, "Tofu", 1),
                     new(IngredientCategoryType.Food, "Spaghetti", 1),
                     new(IngredientCategoryType.Crop, "HotPepper", 1)
+                }),
+                new("SpecialPumpkinPie", new List<CreateIngredientDto>
+                {
+                    new(IngredientCategoryType.Crop, "Pumpkin", 1),
+                    new(IngredientCategoryType.Product, "Milk", 1),
+                    new(IngredientCategoryType.Crafting, "WheatFlour", 1),
+                    new(IngredientCategoryType.Crafting, "Sugar", 1)
+                }),
+                new("SpecialEggplantParmesan", new List<CreateIngredientDto>
+                {
+                    new(IngredientCategoryType.Crop, "Eggplant", 1),
+                    new(IngredientCategoryType.Crop, "Tomato", 1)
                 })
             };
 

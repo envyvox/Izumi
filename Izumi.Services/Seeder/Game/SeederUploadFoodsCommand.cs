@@ -89,7 +89,9 @@ namespace Izumi.Services.Seeder.Game
                 new("Harunosarada", FoodCategoryType.Newbie, false, false),
                 new("SpaghettiSalad", FoodCategoryType.Newbie, true, false),
                 new("AgeTofu", FoodCategoryType.Newbie, true, false),
-                new("SpicySpaghetti", FoodCategoryType.Newbie, true, false)
+                new("SpicySpaghetti", FoodCategoryType.Newbie, true, false),
+                new("SpecialPumpkinPie", FoodCategoryType.Newbie, false, true),
+                new("SpecialEggplantParmesan", FoodCategoryType.Newbie, false, true)
             };
 
             foreach (var command in commands)
