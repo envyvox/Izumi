@@ -22,7 +22,7 @@ namespace Izumi.Controllers.Game.Resource
         [HttpGet, Route("{id:guid}")]
         public async Task<ActionResult<CraftingDto>> GetCrafting([FromRoute] Guid id)
         {
-            return Ok(await _mediator.Send(new GetCraftingQuery(id)));
+            return Ok(await _mediator.Send(new GetCraftingByIdQuery(id)));
         }
 
         [HttpGet, Route("list")]

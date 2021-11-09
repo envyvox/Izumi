@@ -22,7 +22,7 @@ namespace Izumi.Controllers.Game.Resource
         [HttpGet, Route("{id:guid}")]
         public async Task<ActionResult<CropDto>> GetCrop([FromRoute] Guid id)
         {
-            return Ok(await _mediator.Send(new GetCropQuery(id)));
+            return Ok(await _mediator.Send(new GetCropByIdQuery(id)));
         }
 
         [HttpGet, Route("list")]

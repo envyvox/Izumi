@@ -3,20 +3,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Izumi.Data;
-using Izumi.Services.Game.Alcohol.Models;
+using Izumi.Services.Game.Gathering.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Izumi.Services.Game.Alcohol.Queries
+namespace Izumi.Services.Game.Gathering.Queries
 {
-    public record GetAlcoholQuery(Guid Id) : IRequest<AlcoholDto>;
+    public record GetGatheringByIdQuery(Guid Id) : IRequest<GatheringDto>;
 
-    public class GetAlcoholHandler : IRequestHandler<GetAlcoholQuery, AlcoholDto>
+    public class GetGatheringHandler : IRequestHandler<GetGatheringByIdQuery, GatheringDto>
     {
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
 
-        public GetAlcoholHandler(
+        public GetGatheringHandler(
             DbContextOptions options,
             IMapper mapper)
         {
@@ -24,19 +24,18 @@ namespace Izumi.Services.Game.Alcohol.Queries
             _mapper = mapper;
         }
 
-        public async Task<AlcoholDto> Handle(GetAlcoholQuery request, CancellationToken ct)
+        public async Task<GatheringDto> Handle(GetGatheringByIdQuery request, CancellationToken ct)
         {
-            var entity = await _db.Alcohols
+            var entity = await _db.Gatherings
                 .Include(x => x.Properties)
-                .Include(x => x.Ingredients)
                 .SingleOrDefaultAsync(x => x.Id == request.Id);
 
             if (entity is null)
             {
-                throw new Exception($"alcohol {request.Id} not found");
+                throw new Exception($"gathering {request.Id} not found");
             }
 
-            return _mapper.Map<AlcoholDto>(entity);
+            return _mapper.Map<GatheringDto>(entity);
         }
     }
 }

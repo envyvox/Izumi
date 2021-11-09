@@ -1,9 +1,19 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Izumi.Data.Enums;
 using Izumi.Services.Discord.Embed;
+using Izumi.Services.Game.Alcohol.Commands;
+using Izumi.Services.Game.Crafting.Commands;
+using Izumi.Services.Game.Crop.Commands;
 using Izumi.Services.Game.Currency.Commands;
+using Izumi.Services.Game.Drink.Commands;
+using Izumi.Services.Game.Food.Commands;
+using Izumi.Services.Game.Food.Queries;
+using Izumi.Services.Game.Gathering.Commands;
+using Izumi.Services.Game.Product.Commands;
+using Izumi.Services.Game.Seafood.Commands;
 using Izumi.Services.Game.Tutorial.Queries;
 using Izumi.Services.Game.World.Queries;
 using MediatR;
@@ -34,16 +44,72 @@ namespace Izumi.Services.Game.Tutorial.Commands
             switch (nextStep)
             {
                 case TutorialStepType.CookFriedEgg:
+                {
+                    var foodIncId = await _mediator.Send(new GetWorldPropertyValueQuery(
+                        WorldPropertyType.TutorialEatFoodIncId));
 
-                    // todo add fried egg recipe
-                    // todo add fried egg ingredients
+                    var food = await _mediator.Send(new GetFoodByIncIdQuery(foodIncId));
+
+                    await _mediator.Send(new CreateUserRecipeCommand(request.UserId, food.Id));
+
+                    foreach (var ingredient in food.Ingredients)
+                    {
+                        switch (ingredient.Category)
+                        {
+                            case IngredientCategoryType.Gathering:
+                                await _mediator.Send(new AddGatheringToUserCommand(
+                                    request.UserId, ingredient.IngredientId, ingredient.Amount));
+                                break;
+                            case IngredientCategoryType.Product:
+                                await _mediator.Send(new AddProductToUserCommand(
+                                    request.UserId, ingredient.IngredientId, ingredient.Amount));
+                                break;
+                            case IngredientCategoryType.Crafting:
+                                await _mediator.Send(new AddCraftingToUserCommand(
+                                    request.UserId, ingredient.IngredientId, ingredient.Amount));
+                                break;
+                            case IngredientCategoryType.Alcohol:
+                                await _mediator.Send(new AddAlcoholToUserCommand(
+                                    request.UserId, ingredient.IngredientId, ingredient.Amount));
+                                break;
+                            case IngredientCategoryType.Drink:
+                                await _mediator.Send(new AddDrinkToUserCommand(
+                                    request.UserId, ingredient.IngredientId, ingredient.Amount));
+                                break;
+                            case IngredientCategoryType.Crop:
+                                await _mediator.Send(new AddCropToUserCommand(
+                                    request.UserId, ingredient.IngredientId, ingredient.Amount));
+                                break;
+                            case IngredientCategoryType.Food:
+                                await _mediator.Send(new AddFoodToUserCommand(
+                                    request.UserId, ingredient.IngredientId, ingredient.Amount));
+                                break;
+                            case IngredientCategoryType.Seafood:
+                                await _mediator.Send(new AddSeafoodToUserCommand(
+                                    request.UserId, ingredient.IngredientId, ingredient.Amount));
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    }
 
                     break;
+                }
+
                 case TutorialStepType.TransitToCastle:
+                {
+                    var foodIncId = await _mediator.Send(new GetWorldPropertyValueQuery(
+                        WorldPropertyType.TutorialSpecialFoodIncId));
+                    var amount = await _mediator.Send(new GetWorldPropertyValueQuery(
+                        WorldPropertyType.TutorialSpecialFoodAmount));
 
-                    // todo add special food x30
+                    var food = await _mediator.Send(new GetFoodByIncIdQuery(foodIncId));
+
+                    await _mediator.Send(new AddFoodToUserCommand(request.UserId, food.Id, amount));
 
                     break;
+                }
+
                 case TutorialStepType.Completed:
 
                     var currencyAmount = await _mediator.Send(new GetWorldPropertyValueQuery(

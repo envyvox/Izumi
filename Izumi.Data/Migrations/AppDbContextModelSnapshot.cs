@@ -1906,6 +1906,37 @@ namespace Izumi.Data.Migrations
                     b.ToTable("user_products");
                 });
 
+            modelBuilder.Entity("Izumi.Data.Entities.User.UserRecipe", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("FoodId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("food_id");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_user_recipes");
+
+                    b.HasIndex("FoodId")
+                        .HasDatabaseName("ix_user_recipes_food_id");
+
+                    b.HasIndex("UserId", "FoodId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_user_recipes_user_id_food_id");
+
+                    b.ToTable("user_recipes");
+                });
+
             modelBuilder.Entity("Izumi.Data.Entities.User.UserReferrer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2762,6 +2793,27 @@ namespace Izumi.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Izumi.Data.Entities.User.UserRecipe", b =>
+                {
+                    b.HasOne("Izumi.Data.Entities.Resource.Food", "Food")
+                        .WithMany()
+                        .HasForeignKey("FoodId")
+                        .HasConstraintName("fk_user_recipes_foods_food_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Izumi.Data.Entities.User.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("fk_user_recipes_users_user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Food");
 
                     b.Navigation("User");
                 });

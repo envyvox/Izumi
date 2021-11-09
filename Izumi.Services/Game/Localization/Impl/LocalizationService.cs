@@ -30,5 +30,21 @@ namespace Izumi.Services.Game.Localization.Impl
 
             return entity.Localize(amount);
         }
+
+        public string Localize(IngredientCategoryType category, string keyword, uint amount = 1)
+        {
+            return Localize(category switch
+            {
+                IngredientCategoryType.Gathering => LocalizationCategoryType.Gathering,
+                IngredientCategoryType.Product => LocalizationCategoryType.Product,
+                IngredientCategoryType.Crafting => LocalizationCategoryType.Crafting,
+                IngredientCategoryType.Alcohol => LocalizationCategoryType.Alcohol,
+                IngredientCategoryType.Drink => LocalizationCategoryType.Drink,
+                IngredientCategoryType.Crop => LocalizationCategoryType.Crop,
+                IngredientCategoryType.Food => LocalizationCategoryType.Food,
+                IngredientCategoryType.Seafood => LocalizationCategoryType.Seafood,
+                _ => throw new ArgumentOutOfRangeException(nameof(category), category, null)
+            }, keyword, amount);
+        }
     }
 }

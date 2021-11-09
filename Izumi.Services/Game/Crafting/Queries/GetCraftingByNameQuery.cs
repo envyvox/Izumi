@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Izumi.Services.Game.Crafting.Queries
 {
-    public record GetCraftingQuery(Guid Id) : IRequest<CraftingDto>;
+    public record GetCraftingByNameQuery(string Name) : IRequest<CraftingDto>;
 
-    public class GetCraftingHandler : IRequestHandler<GetCraftingQuery, CraftingDto>
+    public class GetCraftingByNameHandler : IRequestHandler<GetCraftingByNameQuery, CraftingDto>
     {
-        private readonly AppDbContext _db;
         private readonly IMapper _mapper;
+        private readonly AppDbContext _db;
 
-        public GetCraftingHandler(
+        public GetCraftingByNameHandler(
             DbContextOptions options,
             IMapper mapper)
         {
@@ -24,16 +24,16 @@ namespace Izumi.Services.Game.Crafting.Queries
             _mapper = mapper;
         }
 
-        public async Task<CraftingDto> Handle(GetCraftingQuery request, CancellationToken ct)
+        public async Task<CraftingDto> Handle(GetCraftingByNameQuery request, CancellationToken ct)
         {
             var entity = await _db.Craftings
-                .Include(x => x.Properties)
                 .Include(x => x.Ingredients)
-                .SingleOrDefaultAsync(x => x.Id == request.Id);
+                .Include(x => x.Properties)
+                .SingleOrDefaultAsync(x => x.Name == request.Name);
 
             if (entity is null)
             {
-                throw new Exception($"crafting {request.Id} not found");
+                throw new Exception($"crafting with name {request.Name} not found");
             }
 
             return _mapper.Map<CraftingDto>(entity);

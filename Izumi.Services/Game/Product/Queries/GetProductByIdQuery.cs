@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Izumi.Services.Game.Product.Queries
 {
-    public record GetProductQuery(Guid Id) : IRequest<ProductDto>;
+    public record GetProductByIdQuery(Guid Id) : IRequest<ProductDto>;
 
-    public class GetProductHandler : IRequestHandler<GetProductQuery, ProductDto>
+    public class GetProductHandler : IRequestHandler<GetProductByIdQuery, ProductDto>
     {
         private readonly IMapper _mapper;
         private readonly AppDbContext _db;
@@ -24,7 +24,7 @@ namespace Izumi.Services.Game.Product.Queries
             _mapper = mapper;
         }
 
-        public async Task<ProductDto> Handle(GetProductQuery request, CancellationToken ct)
+        public async Task<ProductDto> Handle(GetProductByIdQuery request, CancellationToken ct)
         {
             var entity = await _db.Products
                 .SingleOrDefaultAsync(x => x.Id == request.Id);

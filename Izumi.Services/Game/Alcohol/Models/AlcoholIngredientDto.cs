@@ -6,7 +6,6 @@ using Izumi.Data.Enums;
 namespace Izumi.Services.Game.Alcohol.Models
 {
     public record AlcoholIngredientDto(
-        Data.Entities.Resource.Alcohol Alcohol,
         IngredientCategoryType Category,
         Guid IngredientId,
         uint Amount);

@@ -9,7 +9,7 @@ namespace Izumi.Services.Game.Drink.Models
         Guid Id,
         long AutoIncrementedId,
         string Name,
-        List<DrinkIngredient> Ingredients);
+        List<DrinkIngredientDto> Ingredients);
 
     public class DrinkProfile : Profile
     {

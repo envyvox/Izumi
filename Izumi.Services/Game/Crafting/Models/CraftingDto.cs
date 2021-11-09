@@ -11,7 +11,7 @@ namespace Izumi.Services.Game.Crafting.Models
         long AutoIncrementedId,
         string Name,
         List<CraftingProperty> Properties,
-        List<CraftingIngredient> Ingredients);
+        List<CraftingIngredientDto> Ingredients);
 
     public class CraftingProfile : Profile
     {

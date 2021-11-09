@@ -74,6 +74,7 @@ namespace Izumi.Data
         public DbSet<UserHangfireJob> UserHangfireJobs { get; set; }
         public DbSet<UserMovement> UserMovements { get; set; }
         public DbSet<UserProduct> UserProducts { get; set; }
+        public DbSet<UserRecipe> UserRecipes { get; set; }
         public DbSet<UserReferrer> UserReferrers { get; set; }
         public DbSet<UserReputation> UserReputations { get; set; }
         public DbSet<UserSeafood> UserSeafoods { get; set; }

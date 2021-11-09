@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutoMapper;
-using Izumi.Data.Entities.Resource.Ingredients;
 using Izumi.Data.Enums;
 
 namespace Izumi.Services.Game.Food.Models
@@ -13,7 +12,7 @@ namespace Izumi.Services.Game.Food.Models
         FoodCategoryType Category,
         bool RecipeSellable,
         bool IsSpecial,
-        List<FoodIngredient> Ingredients);
+        List<FoodIngredientDto> Ingredients);
 
     public class FoodProfile : Profile
     {

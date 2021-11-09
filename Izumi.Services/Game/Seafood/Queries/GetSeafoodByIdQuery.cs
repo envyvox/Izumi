@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Izumi.Services.Game.Seafood.Queries
 {
-    public record GetSeafoodQuery(Guid Id) : IRequest<SeafoodDto>;
+    public record GetSeafoodByIdQuery(Guid Id) : IRequest<SeafoodDto>;
 
-    public class GetSeafoodHandler : IRequestHandler<GetSeafoodQuery, SeafoodDto>
+    public class GetSeafoodHandler : IRequestHandler<GetSeafoodByIdQuery, SeafoodDto>
     {
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
@@ -24,7 +24,7 @@ namespace Izumi.Services.Game.Seafood.Queries
             _mapper = mapper;
         }
 
-        public async Task<SeafoodDto> Handle(GetSeafoodQuery request, CancellationToken ct)
+        public async Task<SeafoodDto> Handle(GetSeafoodByIdQuery request, CancellationToken ct)
         {
             var entity = await _db.Seafoods
                 .SingleOrDefaultAsync(x => x.Id == request.Id);

@@ -60,6 +60,10 @@
         ReputationGardenTitleNumber = 56,
         ReputationSeaportTitleNumber = 57,
         ReputationCastleTitleNumber = 58,
-        ReputationVillageTitleNumber = 59
+        ReputationVillageTitleNumber = 59,
+        CraftingPricePercent = 60,
+        TutorialEatFoodIncId = 61,
+        TutorialSpecialFoodIncId = 62,
+        TutorialSpecialFoodAmount = 63
     }
 }

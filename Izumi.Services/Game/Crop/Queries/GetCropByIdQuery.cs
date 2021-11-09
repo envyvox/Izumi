@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Izumi.Services.Game.Crop.Queries
 {
-    public record GetCropQuery(Guid Id) : IRequest<CropDto>;
+    public record GetCropByIdQuery(Guid Id) : IRequest<CropDto>;
 
-    public class GetCropHandler : IRequestHandler<GetCropQuery, CropDto>
+    public class GetCropHandler : IRequestHandler<GetCropByIdQuery, CropDto>
     {
         private readonly IMapper _mapper;
         private readonly AppDbContext _db;
@@ -24,7 +24,7 @@ namespace Izumi.Services.Game.Crop.Queries
             _mapper = mapper;
         }
 
-        public async Task<CropDto> Handle(GetCropQuery request, CancellationToken ct)
+        public async Task<CropDto> Handle(GetCropByIdQuery request, CancellationToken ct)
         {
             var entity = await _db.Crops
                 .Include(x => x.Seed)

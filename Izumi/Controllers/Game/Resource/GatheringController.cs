@@ -22,7 +22,7 @@ namespace Izumi.Controllers.Game.Resource
         [HttpGet, Route("{id:guid}")]
         public async Task<ActionResult<GatheringDto>> GetGathering([FromRoute] Guid id)
         {
-            return Ok(await _mediator.Send(new GetGatheringQuery(id)));
+            return Ok(await _mediator.Send(new GetGatheringByIdQuery(id)));
         }
 
         [HttpGet, Route("list")]

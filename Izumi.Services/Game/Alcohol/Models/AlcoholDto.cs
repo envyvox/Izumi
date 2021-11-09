@@ -11,7 +11,7 @@ namespace Izumi.Services.Game.Alcohol.Models
         long AutoIncrementedId,
         string Name,
         List<AlcoholProperty> Properties,
-        List<AlcoholIngredient> Ingredients);
+        List<AlcoholIngredientDto> Ingredients);
 
     public class AlcoholProfile : Profile
     {
