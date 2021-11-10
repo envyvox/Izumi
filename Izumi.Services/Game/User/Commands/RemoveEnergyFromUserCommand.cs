@@ -36,7 +36,7 @@ namespace Izumi.Services.Game.User.Commands
 
             var energySpent = request.Amount > entity.Energy
                 ? entity.Energy
-                : entity.Energy - request.Amount;
+                : request.Amount;
 
             entity.Energy -= energySpent;
             entity.UpdatedAt = DateTimeOffset.UtcNow;
