@@ -19,6 +19,7 @@ using Izumi.Services.Hangfire.BackgroundJobs.CompleteMaking.Impl;
 using Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit;
 using Izumi.Services.Hangfire.BackgroundJobs.EnergyRecovery;
 using Izumi.Services.Hangfire.BackgroundJobs.GenerateDynamicShopBanner;
+using Izumi.Services.Hangfire.BackgroundJobs.GenerateDynamicShopRecipe;
 using Izumi.Services.Hangfire.BackgroundJobs.StartNewDay;
 using Izumi.Services.Hangfire.BackgroundJobs.Unmute;
 using Izumi.Services.Hangfire.BackgroundJobs.VoiceStatistic;
@@ -97,6 +98,7 @@ namespace Izumi
             services.AddScoped<ICompleteContractJob, CompleteContractJob>();
             services.AddScoped<IUnmuteJob, UnmuteJob>();
             services.AddScoped<IVoiceStatisticJob, VoiceStatisticJob>();
+            services.AddScoped<IGenerateDynamicShopRecipeJob, GenerateDynamicShopRecipeJob>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

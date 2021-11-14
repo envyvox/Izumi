@@ -64,6 +64,12 @@
         CraftingPricePercent = 60,
         TutorialEatFoodIncId = 61,
         TutorialSpecialFoodIncId = 62,
-        TutorialSpecialFoodAmount = 63
+        TutorialSpecialFoodAmount = 63,
+        MarketMarkupCrafting = 64,
+        MarketMarkupAlcohol = 65,
+        MarketMarkupDrink = 66,
+        MarketMarkupFood = 67,
+        MarketTaxPercent = 68,
+        RecipePaybackSales = 69
     }
 }

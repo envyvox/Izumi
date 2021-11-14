@@ -50,6 +50,10 @@ namespace Izumi.Services.Discord.Commands.Slash.Shop.List
                     $"\n{StringExtensions.EmptyChar}")
                 .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.ShopBanner)));
 
+            var selectMenu = new SelectMenuBuilder()
+                .WithCustomId("shop-buy-banner")
+                .WithPlaceholder("Выбери баннер который хочешь приобрести");
+
             var counter = 0;
             foreach (var banner in banners)
             {
@@ -68,9 +72,12 @@ namespace Izumi.Services.Discord.Commands.Slash.Shop.List
                     counter = 0;
                     embed.AddEmptyField(true);
                 }
+
+                selectMenu.AddOption(banner.Name.ToLower(), $"{banner.AutoIncrementedId}");
             }
 
-            return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
+            return await _mediator.Send(new RespondEmbedCommand(request.Command, embed,
+                new ComponentBuilder().WithSelectMenu(selectMenu).Build()));
         }
     }
 }
