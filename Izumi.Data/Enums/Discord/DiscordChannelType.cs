@@ -4,90 +4,95 @@ namespace Izumi.Data.Enums.Discord
 {
     public enum DiscordChannelType : byte
     {
-        Chat = 1,
-        Commands = 2,
-        GetRoles = 4,
+        Chat,
+        Commands,
 
-        SearchParent = 3,
-        SearchGenshinImpact = 5,
-        SearchLeagueOfLegends = 6,
-        SearchTeamfightTactics = 7,
-        SearchValorant = 8,
-        SearchApexLegends = 9,
-        SearchDota = 10,
-        SearchMinecraft = 11,
-        SearchOsu = 12,
-        SearchAmongUs = 13,
-        SearchRust = 14,
-        SearchCsGo = 15,
-        SearchHotS = 16,
-        SearchNewWorld = 17,
-        SearchMobileGaming = 18,
+        SearchParent,
+        SearchGetRoles,
+        SearchGenshinImpact,
+        SearchLeagueOfLegends,
+        SearchTeamfightTactics,
+        SearchValorant,
+        SearchApexLegends,
+        SearchDota,
+        SearchMinecraft,
+        SearchOsu,
+        SearchAmongUs,
+        SearchRust,
+        SearchCsGo,
+        SearchHotS,
+        SearchNewWorld,
+        SearchMobileGaming,
 
-        EventParent = 20,
-        EventNotification = 22,
-        EventCreateRoom = 23,
+        EventParent,
 
-        GameParent = 24,
-        GameStart = 25,
-        GameUpdates = 26,
-        GameDiary = 27,
+        GameParent,
+        GameStart,
+        GameUpdates,
+        GameDiary,
 
-        CommunityDescParent = 28,
-        CommunityDescHowItWork = 29,
-        Photos = 30,
-        Screenshots = 31,
-        Memes = 32,
-        Arts = 33,
-        Erotic = 34,
-        Nsfw = 35,
+        CommunityDescParent,
+        CommunityDescHowItWork,
+        Photos,
+        Screenshots,
+        Memes,
+        Arts,
+        Erotic,
+        Nsfw,
 
-        LibraryParent = 36,
-        Rules = 37,
-        Announcements = 38,
-        Giveaways = 39,
-        Suggestions = 40,
+        LibraryParent,
+        Rules,
+        Announcements,
+        Giveaways,
+        Suggestions,
 
-        CreateRoomParent = 41,
-        NoMic = 42,
-        CreateRoom = 43,
+        TavernParent,
+        TavernOne,
+        TavernTwo,
+        TavernMale,
+        TavernFemale,
 
-        FamilyRoomParent = 44,
+        CreateRoomParent,
+        NoMic,
+        CreateRoom,
 
-        CapitalParent = 45,
-        CapitalDesc = 46,
-        CapitalEvents = 48,
+        FamilyRoomParent,
 
-        GardenParent = 49,
-        GardenDesc = 50,
-        GardenEvents = 52,
+        CapitalParent,
+        CapitalDesc,
+        CapitalEvents,
 
-        SeaportParent = 53,
-        SeaportDesc = 54,
-        SeaportEvents = 56,
+        GardenParent,
+        GardenDesc,
+        GardenEvents,
 
-        CastleParent = 57,
-        CastleDesc = 58,
-        CastleEvents = 60,
+        SeaportParent,
+        SeaportDesc,
+        SeaportEvents,
 
-        VillageParent = 61,
-        VillageDesc = 62,
-        VillageEvents = 64,
+        CastleParent,
+        CastleDesc,
+        CastleEvents,
 
-        AfkParent = 65,
-        Afk = 66,
+        VillageParent,
+        VillageDesc,
+        VillageEvents,
 
-        AdministrationParent = 67,
-        Administration = 68,
-        Moderation = 69,
-        EventManager = 70,
-        Staff = 72,
-        Meeting = 71
+        AfkParent,
+        Afk,
+
+        AdministrationParent,
+        Administration,
+        Moderation,
+        EventManager,
+        Staff,
+        Meeting
     }
 
     public static class DiscordChannelHelper
     {
         private const string Emote = "・";
+        private const string Tavern = "Таверна";
         private const string LocationDesc = "описание";
         private const string LocationEvents = "события";
 
@@ -95,7 +100,7 @@ namespace Izumi.Data.Enums.Discord
         {
             DiscordChannelType.Chat => Emote + "общение",
             DiscordChannelType.Commands => Emote + "команды",
-            DiscordChannelType.GetRoles => Emote + "получение-ролей",
+            DiscordChannelType.SearchGetRoles => Emote + "получение-ролей",
 
             DiscordChannelType.SearchParent => "поиск игроков",
             DiscordChannelType.SearchGenshinImpact => Emote + "genshin-impact",
@@ -114,8 +119,6 @@ namespace Izumi.Data.Enums.Discord
             DiscordChannelType.SearchMobileGaming => Emote + "mobile-gaming",
 
             DiscordChannelType.EventParent => "мероприятия",
-            DiscordChannelType.EventNotification => Emote + "оповещения🔔",
-            DiscordChannelType.EventCreateRoom => "Начать мероприятие",
 
             DiscordChannelType.GameParent => "игровая вселенная",
             DiscordChannelType.GameStart => Emote + "информация",
@@ -136,6 +139,12 @@ namespace Izumi.Data.Enums.Discord
             DiscordChannelType.Announcements => Emote + "объявления🔔",
             DiscordChannelType.Giveaways => Emote + "розыгрыши🔔",
             DiscordChannelType.Suggestions => Emote + "предложения",
+
+            DiscordChannelType.TavernParent => "Таверны",
+            DiscordChannelType.TavernOne => Tavern + " «Идзакая»",
+            DiscordChannelType.TavernTwo => Tavern + " «Каябукия»",
+            DiscordChannelType.TavernMale => Tavern + " «Оками»",
+            DiscordChannelType.TavernFemale => Tavern + " «Китсунэ»",
 
             DiscordChannelType.CreateRoomParent => "пригородные лагеря",
             DiscordChannelType.NoMic => Emote + "без-микрофона",
@@ -180,9 +189,9 @@ namespace Izumi.Data.Enums.Discord
         {
             DiscordChannelType.Chat => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.Commands => DiscordChannelCategoryType.TextChannel,
-            DiscordChannelType.GetRoles => DiscordChannelCategoryType.TextChannel,
 
             DiscordChannelType.SearchParent => DiscordChannelCategoryType.CategoryChannel,
+            DiscordChannelType.SearchGetRoles => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.SearchGenshinImpact => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.SearchLeagueOfLegends => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.SearchTeamfightTactics => DiscordChannelCategoryType.TextChannel,
@@ -199,8 +208,6 @@ namespace Izumi.Data.Enums.Discord
             DiscordChannelType.SearchMobileGaming => DiscordChannelCategoryType.TextChannel,
 
             DiscordChannelType.EventParent => DiscordChannelCategoryType.CategoryChannel,
-            DiscordChannelType.EventNotification => DiscordChannelCategoryType.TextChannel,
-            DiscordChannelType.EventCreateRoom => DiscordChannelCategoryType.VoiceChannel,
 
             DiscordChannelType.GameParent => DiscordChannelCategoryType.CategoryChannel,
             DiscordChannelType.GameStart => DiscordChannelCategoryType.TextChannel,
@@ -221,6 +228,12 @@ namespace Izumi.Data.Enums.Discord
             DiscordChannelType.Announcements => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.Giveaways => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.Suggestions => DiscordChannelCategoryType.TextChannel,
+
+            DiscordChannelType.TavernParent => DiscordChannelCategoryType.CategoryChannel,
+            DiscordChannelType.TavernOne => DiscordChannelCategoryType.VoiceChannel,
+            DiscordChannelType.TavernTwo => DiscordChannelCategoryType.VoiceChannel,
+            DiscordChannelType.TavernMale => DiscordChannelCategoryType.VoiceChannel,
+            DiscordChannelType.TavernFemale => DiscordChannelCategoryType.VoiceChannel,
 
             DiscordChannelType.CreateRoomParent => DiscordChannelCategoryType.CategoryChannel,
             DiscordChannelType.NoMic => DiscordChannelCategoryType.TextChannel,
@@ -263,6 +276,7 @@ namespace Izumi.Data.Enums.Discord
 
         public static DiscordChannelType Parent(this DiscordChannelType channel) => channel switch
         {
+            DiscordChannelType.SearchGetRoles => DiscordChannelType.SearchParent,
             DiscordChannelType.SearchGenshinImpact => DiscordChannelType.SearchParent,
             DiscordChannelType.SearchLeagueOfLegends => DiscordChannelType.SearchParent,
             DiscordChannelType.SearchTeamfightTactics => DiscordChannelType.SearchParent,
@@ -276,9 +290,6 @@ namespace Izumi.Data.Enums.Discord
             DiscordChannelType.SearchHotS => DiscordChannelType.SearchParent,
             DiscordChannelType.SearchNewWorld => DiscordChannelType.SearchParent,
             DiscordChannelType.SearchMobileGaming => DiscordChannelType.SearchParent,
-
-            DiscordChannelType.EventNotification => DiscordChannelType.EventParent,
-            DiscordChannelType.EventCreateRoom => DiscordChannelType.EventParent,
 
             DiscordChannelType.GameStart => DiscordChannelType.GameParent,
             DiscordChannelType.GameUpdates => DiscordChannelType.GameParent,
@@ -296,6 +307,11 @@ namespace Izumi.Data.Enums.Discord
             DiscordChannelType.Announcements => DiscordChannelType.LibraryParent,
             DiscordChannelType.Giveaways => DiscordChannelType.LibraryParent,
             DiscordChannelType.Suggestions => DiscordChannelType.LibraryParent,
+
+            DiscordChannelType.TavernOne => DiscordChannelType.TavernParent,
+            DiscordChannelType.TavernTwo => DiscordChannelType.TavernParent,
+            DiscordChannelType.TavernMale => DiscordChannelType.TavernParent,
+            DiscordChannelType.TavernFemale => DiscordChannelType.TavernParent,
 
             DiscordChannelType.NoMic => DiscordChannelType.CreateRoomParent,
             DiscordChannelType.CreateRoom => DiscordChannelType.CreateRoomParent,

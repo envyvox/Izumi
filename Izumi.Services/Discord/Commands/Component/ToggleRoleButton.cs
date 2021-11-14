@@ -26,10 +26,12 @@ namespace Izumi.Services.Discord.Commands.Component
 
         public async Task<Unit> Handle(ToggleRoleButton request, CancellationToken ct)
         {
+            // ALL THIS CODE IS NOT NEEDED CURRENTLY
+            // BUT MAYBE THERE WILL BE SOME BUTTONS IN FUTURE, SO
+
             var role = request.Component.Data.CustomId switch
             {
-                // роль мероприятий
-                "toggle-role-DiscordEvent" => DiscordRoleType.DiscordEvent,
+                "..." => DiscordRoleType.Administration,
                 _ => throw new ArgumentOutOfRangeException()
             };
 

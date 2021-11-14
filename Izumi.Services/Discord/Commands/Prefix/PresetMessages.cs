@@ -66,27 +66,6 @@ namespace Izumi.Services.Discord.Commands.Prefix
             await Context.Channel.SendMessageAsync(embed: embed.Build(), component: menu.Build());
         }
 
-        [Command("event-role")]
-        public async Task SendEventRoleMessageTask()
-        {
-            var channels = DiscordRepository.Channels;
-            var roles = DiscordRepository.Roles;
-
-            var embed = new EmbedBuilder()
-                .WithDefaultColor()
-                .WithAuthor("Роль мероприятия")
-                .WithDescription(
-                    $"Ты можешь получить роль <@&{roles[DiscordRoleType.DiscordEvent].Id}>, " +
-                    $"которая будет **упоминаться** в <#{channels[DiscordChannelType.EventNotification].Id}> " +
-                    "для оповещения о предстоящих **мероприятиях**, для этого нажми на **кнопку** под этим сообщением.")
-                .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.GetEventRole)));
-
-            var buttons = new ComponentBuilder()
-                .WithButton("Мероприятия", "toggle-role-DiscordEvent", emote: new Emoji("🥳"));
-
-            await Context.Channel.SendMessageAsync(embed: embed.Build(), component: buttons.Build());
-        }
-
         [Command("how-desc-work")]
         public async Task SendHowCommunityDescWorkMessageTask()
         {

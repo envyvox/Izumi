@@ -28,12 +28,9 @@ namespace Izumi.Services.Discord.Client.Events
         public async Task<Unit> Handle(UserVoiceStateUpdated request, CancellationToken cancellationToken)
         {
             var channels = DiscordRepository.Channels;
-            var roles = DiscordRepository.Roles;
 
             var createRoomParent = channels[DiscordChannelType.CreateRoomParent].Id;
             var createRoom = channels[DiscordChannelType.CreateRoom].Id;
-            var eventParent = channels[DiscordChannelType.EventParent].Id;
-            var eventCreateRoom = channels[DiscordChannelType.EventCreateRoom].Id;
             var familyParent = channels[DiscordChannelType.FamilyRoomParent].Id;
             var afkRoom = channels[DiscordChannelType.Afk].Id;
 
@@ -72,64 +69,6 @@ namespace Izumi.Services.Discord.Client.Events
                     new OverwritePermissions(manageChannel: PermValue.Allow));
             }
 
-            if (newChannel?.Id == eventCreateRoom)
-            {
-                var createdChannel = await newChannel.Guild.CreateVoiceChannelAsync("Мероприятие",
-                    x => x.CategoryId = eventParent);
-
-                await newChannel.Guild
-                    .GetUser(request.SocketUser.Id)
-                    .ModifyAsync(x => x.Channel = createdChannel);
-
-                var eventManagerRole = newChannel.Guild.GetRole(roles[DiscordRoleType.EventManager].Id);
-                var moderatorRole = newChannel.Guild.GetRole(roles[DiscordRoleType.Moderator].Id);
-
-                await createdChannel.AddPermissionOverwriteAsync(eventManagerRole,
-                    new OverwritePermissions(
-                        createInstantInvite: PermValue.Allow,
-                        manageChannel: PermValue.Allow,
-                        manageRoles: PermValue.Allow,
-                        viewChannel: PermValue.Allow,
-                        connect: PermValue.Allow,
-                        speak: PermValue.Allow,
-                        muteMembers: PermValue.Allow,
-                        deafenMembers: PermValue.Allow,
-                        moveMembers: PermValue.Allow,
-                        useVoiceActivation: PermValue.Allow,
-                        prioritySpeaker: PermValue.Allow,
-                        stream: PermValue.Allow));
-
-                await createdChannel.AddPermissionOverwriteAsync(moderatorRole,
-                    new OverwritePermissions(
-                        createInstantInvite: PermValue.Allow,
-                        manageChannel: PermValue.Deny,
-                        manageRoles: PermValue.Deny,
-                        viewChannel: PermValue.Allow,
-                        connect: PermValue.Allow,
-                        speak: PermValue.Allow,
-                        muteMembers: PermValue.Allow,
-                        deafenMembers: PermValue.Allow,
-                        moveMembers: PermValue.Allow,
-                        useVoiceActivation: PermValue.Allow,
-                        prioritySpeaker: PermValue.Allow,
-                        stream: PermValue.Allow));
-
-                await createdChannel.AddPermissionOverwriteAsync(newChannel.Guild.EveryoneRole,
-                    new OverwritePermissions(
-                        createInstantInvite: PermValue.Allow,
-                        manageChannel: PermValue.Deny,
-                        manageRoles: PermValue.Deny,
-                        viewChannel: PermValue.Allow,
-                        connect: PermValue.Allow,
-                        speak: PermValue.Allow,
-                        muteMembers: PermValue.Deny,
-                        deafenMembers: PermValue.Deny,
-                        moveMembers: PermValue.Deny,
-                        useVoiceActivation: PermValue.Allow,
-                        prioritySpeaker: PermValue.Deny,
-                        stream: PermValue.Deny));
-            }
-
             if (newChannel?.CategoryId == familyParent &&
                 newChannel.Users.Count == 1)
             {
@@ -157,12 +96,6 @@ namespace Izumi.Services.Discord.Client.Events
                 await oldChannel.DeleteAsync();
             }
 
-            if (oldChannel?.CategoryId == eventParent &&
-                oldChannel.Users.Count == 0 &&
-                oldChannel.Id != eventCreateRoom)
-            {
-                await oldChannel.DeleteAsync();
-            }
 
             if (oldChannel?.CategoryId == familyParent &&
                 oldChannel.Users.Count == 0)

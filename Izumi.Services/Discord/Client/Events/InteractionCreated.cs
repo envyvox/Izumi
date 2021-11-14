@@ -57,7 +57,7 @@ namespace Izumi.Services.Discord.Client.Events
                 var channels = DiscordRepository.Channels;
 
                 if (request.Interaction.Channel.Id != channels[DiscordChannelType.Commands].Id &&
-                    request.Interaction.Channel.Id != channels[DiscordChannelType.GetRoles].Id)
+                    request.Interaction.Channel.Id != channels[DiscordChannelType.SearchGetRoles].Id)
                 {
                     await request.Interaction.RespondAsync(
                         $"{request.Interaction.User.Mention}, использование игровых команд доступно лишь в канале команды.",
