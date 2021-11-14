@@ -48,7 +48,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Contract
             {
                 embed.WithDescription(
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
-                    "рабочие контракты доступны в любом крупном городе и только для ничем не занятых путешевственников.");
+                    "рабочие контракты доступны в любом крупном городе и только для ничем не занятых путешественников.");
             }
             else
             {

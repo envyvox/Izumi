@@ -7,6 +7,7 @@ using Izumi.Services.Discord.Emote.Commands;
 using Izumi.Services.Discord.Guild.Commands;
 using Izumi.Services.Hangfire.BackgroundJobs.EnergyRecovery;
 using Izumi.Services.Hangfire.BackgroundJobs.GenerateDynamicShopBanner;
+using Izumi.Services.Hangfire.BackgroundJobs.GenerateDynamicShopRecipe;
 using Izumi.Services.Hangfire.BackgroundJobs.StartNewDay;
 using Izumi.Services.Hangfire.BackgroundJobs.VoiceStatistic;
 using MediatR;
@@ -56,6 +57,9 @@ namespace Izumi.Services.Discord.Client.Events
                     x => x.Execute(),
                     Cron.Daily, _timeZoneInfo);
                 RecurringJob.AddOrUpdate<IGenerateDynamicShopBannerJob>("generate-dynamic-shop-banners",
+                    x => x.Execute(),
+                    Cron.Daily, _timeZoneInfo);
+                RecurringJob.AddOrUpdate<IGenerateDynamicShopRecipeJob>("generate-dynamic-shop-recipes",
                     x => x.Execute(),
                     Cron.Daily, _timeZoneInfo);
 

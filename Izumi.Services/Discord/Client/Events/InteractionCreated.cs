@@ -161,6 +161,8 @@ namespace Izumi.Services.Discord.Client.Events
                             await HandleInteraction(request.Interaction, new ToggleRoleButton(component), true);
                         if (component.Data.CustomId == "select-game-roles")
                             await HandleInteraction(request.Interaction, new SelectGameRolesMenu(component), true);
+                        if (component.Data.CustomId == "shop-buy-recipe")
+                            await HandleInteraction(request.Interaction, new ShopBuyRecipeMenu(component), false);
 
                         break;
                     case SocketAutocompleteInteraction autocomplete:

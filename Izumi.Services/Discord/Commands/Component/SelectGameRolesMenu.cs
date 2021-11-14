@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Guild.Commands;
 using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Extensions;
+using Izumi.Services.Game.User.Queries;
 using MediatR;
 
 namespace Izumi.Services.Discord.Commands.Component
@@ -47,6 +49,7 @@ namespace Izumi.Services.Discord.Commands.Component
             var roles = DiscordRepository.Roles;
             var selectedValues = request.Component.Data.Values;
             var guildUser = await _mediator.Send(new GetSocketGuildUserQuery(request.Component.User.Id));
+            var user = await _mediator.Send(new GetUserQuery((long) request.Component.User.Id));
             var userRoles = guildUser.Roles.Where(x => _gameRolesNames.Contains(x.Name)).ToArray();
 
             var selectedRoles = selectedValues.Select(selectedValue => selectedValue switch
@@ -105,7 +108,7 @@ namespace Izumi.Services.Discord.Commands.Component
             }
 
             var embed = new EmbedBuilder()
-                .WithDefaultColor()
+                .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))
                 .WithDescription(
                     (addedRoles.Length > 0
                         ? $"Ты успешно получил роли: {addedRoles.RemoveFromEnd(2)}\n"

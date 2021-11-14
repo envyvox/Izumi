@@ -24,8 +24,6 @@ namespace Izumi.Services.Discord.Commands.Slash.Shop
             {
                 "seed" => await _mediator.Send(new ShopSeedBuyCommand(request.Command)),
                 "product" => await _mediator.Send(new ShopProductBuyCommand(request.Command)),
-                "recipe" => await _mediator.Send(new ShopRecipeBuyCommand(request.Command)),
-                "banner" => await _mediator.Send(new ShopBannerBuyCommand(request.Command)),
                 _ => Unit.Value
             };
         }

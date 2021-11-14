@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -7,6 +8,7 @@ using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Guild.Commands;
 using Izumi.Services.Discord.Guild.Queries;
 using Izumi.Services.Extensions;
+using Izumi.Services.Game.User.Queries;
 using MediatR;
 
 namespace Izumi.Services.Discord.Commands.Component
@@ -24,7 +26,6 @@ namespace Izumi.Services.Discord.Commands.Component
 
         public async Task<Unit> Handle(ToggleRoleButton request, CancellationToken ct)
         {
-            var roles = DiscordRepository.Roles;
             var role = request.Component.Data.CustomId switch
             {
                 // роль мероприятий
@@ -32,10 +33,12 @@ namespace Izumi.Services.Discord.Commands.Component
                 _ => throw new ArgumentOutOfRangeException()
             };
 
+            var roles = DiscordRepository.Roles;
+            var user = await _mediator.Send(new GetUserQuery((long) request.Component.User.Id));
             var hasRole = await _mediator.Send(new CheckGuildUserHasRoleQuery(request.Component.User.Id, role));
 
             var embed = new EmbedBuilder()
-                .WithDefaultColor();
+                .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)));
 
             if (hasRole)
             {
