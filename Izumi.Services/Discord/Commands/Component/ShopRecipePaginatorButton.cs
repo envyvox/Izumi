@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,6 +51,7 @@ namespace Izumi.Services.Discord.Commands.Component
             
             var embed = new EmbedBuilder()
                 .WithAuthor("Магазин рецептов")
+                .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))
                 .WithDescription(
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Component.User.Mention}, " +
                     "тут отображаются рецепты:" +
