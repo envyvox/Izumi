@@ -308,16 +308,6 @@ namespace Izumi.Services.Seeder.Discord
                     .Build(),
 
                 new SlashCommandBuilder()
-                    .WithName("контракт")
-                    .WithDescription("Взяться за выполнение рабочего контракта")
-                    .AddOption(new SlashCommandOptionBuilder()
-                        .WithType(ApplicationCommandOptionType.Integer)
-                        .WithRequired(true)
-                        .WithName("номер")
-                        .WithDescription("Номер контракта"))
-                    .Build(),
-
-                new SlashCommandBuilder()
                     .WithName("съесть")
                     .WithDescription("Съесть указанное блюдо для восстановления энергии")
                     .AddOption(new SlashCommandOptionBuilder()
@@ -449,27 +439,6 @@ namespace Izumi.Services.Seeder.Discord
                 new SlashCommandBuilder()
                     .WithName("приготовление")
                     .WithDescription("Посмотреть доступные для приготовления блюда")
-                    .AddOption(new SlashCommandOptionBuilder()
-                        .WithType(ApplicationCommandOptionType.Integer)
-                        .WithRequired(true)
-                        .WithName("категория")
-                        .WithDescription("Категория блюд, рецепты которых ты хочешь посмотреть")
-                        .AddChoice(FoodCategoryType.Newbie.Localize(),
-                            FoodCategoryType.Newbie.GetHashCode())
-                        .AddChoice(FoodCategoryType.Student.Localize(),
-                            FoodCategoryType.Student.GetHashCode())
-                        .AddChoice(FoodCategoryType.Experienced.Localize(),
-                            FoodCategoryType.Experienced.GetHashCode())
-                        .AddChoice(FoodCategoryType.Professional.Localize(),
-                            FoodCategoryType.Professional.GetHashCode())
-                        .AddChoice(FoodCategoryType.Expert.Localize(),
-                            FoodCategoryType.Expert.GetHashCode())
-                        .AddChoice(FoodCategoryType.Master.Localize(),
-                            FoodCategoryType.Master.GetHashCode())
-                        .AddChoice(FoodCategoryType.Grandmaster.Localize(),
-                            FoodCategoryType.Grandmaster.GetHashCode())
-                        .AddChoice(FoodCategoryType.Legendary.Localize(),
-                            FoodCategoryType.Legendary.GetHashCode()))
                     .Build(),
 
                 new SlashCommandBuilder()

@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Izumi.Data;
-using Izumi.Data.Enums;
 using Izumi.Data.Extensions;
 using Izumi.Services.Game.Food.Models;
 using MediatR;
@@ -14,7 +13,6 @@ namespace Izumi.Services.Game.Food.Commands
     public record UpdateFoodCommand(
             Guid Id,
             string Name,
-            FoodCategoryType Category,
             bool RecipeSellable,
             bool IsSpecial)
         : IRequest<FoodDto>;
@@ -38,7 +36,6 @@ namespace Izumi.Services.Game.Food.Commands
                 .SingleOrDefaultAsync(x => x.Id == request.Id);
 
             entity.Name = request.Name;
-            entity.Category = request.Category;
             entity.RecipeSellable = request.RecipeSellable;
             entity.IsSpecial = request.IsSpecial;
 

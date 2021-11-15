@@ -173,10 +173,15 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
                         desc = "тут отображаются твои блюда:";
                         var userFoods = await _mediator.Send(new GetUserFoodsQuery(user.Id));
 
-                        foreach (var category in Enum.GetValues(typeof(FoodCategoryType)).Cast<FoodCategoryType>())
+                        while (userFoods.Count > 10)
                         {
-                            embed.AddField(category.Localize(),
-                                DisplayFoods(userFoods.Where(x => x.Food.Category == category)));
+                            var displayFoods = userFoods
+                                .Take(10)
+                                .ToList();
+
+                            userFoods.RemoveRange(0, 10);
+
+                            embed.AddField(StringExtensions.EmptyChar, DisplayFoods(displayFoods));
                         }
 
                         break;

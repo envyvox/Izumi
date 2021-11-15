@@ -43,8 +43,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Shop.List
                 .WithDescription(
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
                     "тут отображаются баннеры:" +
-                    $"\n\n{emotes.GetEmote("Arrow")} Напиши `/магазин-купить` и выбери баннер из списка вариантов, " +
-                    "затем напиши номер желаемого баннера." +
+                    $"\n\n{emotes.GetEmote("Arrow")} Для приобретения баннера, **выбери его** из списка под этим сообщением." +
                     $"\n\n{emotes.GetEmote("Arrow")} Это динамический магазин, товары которого обновляются каждый " +
                     "день, не пропускай!" +
                     $"\n{StringExtensions.EmptyChar}")

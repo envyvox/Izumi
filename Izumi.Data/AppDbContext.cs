@@ -89,7 +89,6 @@ namespace Izumi.Data
         public DbSet<BuildingIngredient> BuildingIngredients { get; set; }
         public DbSet<Contract> Contracts { get; set; }
         public DbSet<DynamicShopBanner> DynamicShopBanners { get; set; }
-        public DbSet<DynamicShopRecipe> DynamicShopRecipes { get; set; }
         public DbSet<Localization> Localizations { get; set; }
         public DbSet<Transit> Transits { get; set; }
         public DbSet<WorldProperty> WorldProperties { get; set; }

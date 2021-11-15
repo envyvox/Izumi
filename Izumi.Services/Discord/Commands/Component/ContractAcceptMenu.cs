@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Humanizer;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -6,9 +7,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Hangfire;
-using Humanizer;
 using Izumi.Data.Enums;
-using Izumi.Services.Discord.Embed;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
@@ -24,16 +23,16 @@ using Izumi.Services.Hangfire.Commands;
 using MediatR;
 using StringExtensions = Izumi.Services.Extensions.StringExtensions;
 
-namespace Izumi.Services.Discord.Commands.Slash.Contract
+namespace Izumi.Services.Discord.Commands.Component
 {
-    public record ContractAcceptCommand(SocketSlashCommand Command) : IRequest;
+    public record ContractAcceptMenu(SocketMessageComponent Component) : IRequest;
 
-    public class ContractAcceptHandler : IRequestHandler<ContractAcceptCommand>
+    public class ContractAcceptMenuHandler : IRequestHandler<ContractAcceptMenu>
     {
         private readonly IMediator _mediator;
         private readonly ILocalizationService _local;
 
-        public ContractAcceptHandler(
+        public ContractAcceptMenuHandler(
             IMediator mediator,
             ILocalizationService local)
         {
@@ -41,22 +40,23 @@ namespace Izumi.Services.Discord.Commands.Slash.Contract
             _local = local;
         }
 
-        public async Task<Unit> Handle(ContractAcceptCommand request, CancellationToken ct)
+        public async Task<Unit> Handle(ContractAcceptMenu request, CancellationToken ct)
         {
-            var incId = (long) request.Command.Data.Options.First().Value;
+            var contractIncId = long.Parse(request.Component.Data.Values.First());
 
             var emotes = DiscordRepository.Emotes;
-            var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
-            var contract = await _mediator.Send(new GetContractQuery(incId));
+            var user = await _mediator.Send(new GetUserQuery((long) request.Component.User.Id));
+            var contract = await _mediator.Send(new GetContractQuery(contractIncId));
 
             var embed = new EmbedBuilder()
+                .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))
                 .WithAuthor(contract.Name)
                 .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.Contracts)));
 
             if (user.Location != contract.Location)
             {
                 embed.WithDescription(
-                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
+                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Component.User.Mention}, " +
                     $"для работы над этим контрактом необходимо находится в **{contract.Location.Localize(true)}** " +
                     "и быть ничем не занятым.");
             }
@@ -80,7 +80,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Contract
 
                 embed
                     .WithDescription(
-                        $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
+                        $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Component.User.Mention}, " +
                         "ты взялся помогать городу выполняя рабочий контракт, это очень здорово. " +
                         "Желаю тебе отлично поработать, не подведи!" +
                         $"\n{StringExtensions.EmptyChar}")
@@ -96,7 +96,9 @@ namespace Izumi.Services.Discord.Commands.Slash.Contract
                         $"{_local.Localize(LocalizationCategoryType.Bar, "Energy", contract.EnergyCost)}", true);
             }
 
-            return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
+            await request.Component.FollowupAsync(embed: embed.Build());
+
+            return Unit.Value;
         }
     }
 }

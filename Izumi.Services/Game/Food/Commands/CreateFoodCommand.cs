@@ -13,7 +13,6 @@ namespace Izumi.Services.Game.Food.Commands
 {
     public record CreateFoodCommand(
             string Name,
-            FoodCategoryType Category,
             bool RecipeSellable,
             bool IsSpecial)
         : IRequest<FoodDto>;
@@ -45,7 +44,6 @@ namespace Izumi.Services.Game.Food.Commands
             {
                 Id = Guid.NewGuid(),
                 Name = request.Name,
-                Category = request.Category,
                 RecipeSellable = request.RecipeSellable,
                 IsSpecial = request.IsSpecial
             });

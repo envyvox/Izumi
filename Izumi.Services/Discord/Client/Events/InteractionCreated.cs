@@ -117,8 +117,6 @@ namespace Izumi.Services.Discord.Client.Events
                                 await HandleInteraction(request.Interaction, new ShopBuyCommand(command), false),
                             "контракты" =>
                                 await HandleInteraction(request.Interaction, new ContractListCommand(command), true),
-                            "контракт" =>
-                                await HandleInteraction(request.Interaction, new ContractAcceptCommand(command), false),
                             "съесть" =>
                                 await HandleInteraction(request.Interaction, new EatFoodCommand(command), false),
                             "репутация" =>
@@ -157,14 +155,29 @@ namespace Izumi.Services.Discord.Client.Events
                         };
                     case SocketMessageComponent component:
 
+                        // roles
                         if (component.Data.CustomId.Contains("toggle-role"))
                             await HandleInteraction(request.Interaction, new ToggleRoleButton(component), true);
                         if (component.Data.CustomId == "select-game-roles")
                             await HandleInteraction(request.Interaction, new SelectGameRolesMenu(component), true);
+                        
+                        // menus
                         if (component.Data.CustomId == "shop-buy-recipe")
                             await HandleInteraction(request.Interaction, new ShopBuyRecipeMenu(component), false);
                         if (component.Data.CustomId == "shop-buy-banner")
                             await HandleInteraction(request.Interaction, new ShopBuyBannerMenu(component), false);
+                        if (component.Data.CustomId == "contract-accept")
+                            await HandleInteraction(request.Interaction, new ContractAcceptMenu(component), false);
+                        
+                        // pagination
+                        if (component.Data.CustomId == "cooking-list-back")
+                            await HandleInteraction(request.Interaction, new CookingListPaginatorButton(component, false), true);
+                        if (component.Data.CustomId == "cooking-list-forward")
+                            await HandleInteraction(request.Interaction, new CookingListPaginatorButton(component, true), true);
+                        if (component.Data.CustomId == "shop-recipe-back")
+                            await HandleInteraction(request.Interaction, new ShopRecipePaginatorButton(component, false), true);
+                        if (component.Data.CustomId == "shop-recipe-forward")
+                            await HandleInteraction(request.Interaction, new ShopRecipePaginatorButton(component, true), true);
 
                         break;
                     case SocketAutocompleteInteraction autocomplete:

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ using Izumi.Services.Game.Crafting.Queries;
 using Izumi.Services.Game.Crop.Queries;
 using Izumi.Services.Game.Drink.Queries;
 using Izumi.Services.Game.Fish.Queries;
+using Izumi.Services.Game.Food.Models;
 using Izumi.Services.Game.Food.Queries;
 using Izumi.Services.Game.Gathering.Queries;
 using Izumi.Services.Game.Localization;
@@ -65,7 +67,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
                         var exist = userCollections.Any(x => x.ItemId == gathering.Id);
 
                         gatheringString +=
-                            $"{emotes.GetEmote(gathering.Name + (exist ? "" : "BW"))}" +
+                            $"{emotes.GetEmote(gathering.Name + (exist ? "" : "BW"))} " +
                             $"{_local.Localize(LocalizationCategoryType.Gathering, gathering.Name)} ";
                     }
 
@@ -82,7 +84,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
                         var exist = userCollections.Any(x => x.ItemId == crafting.Id);
 
                         craftingString +=
-                            $"{emotes.GetEmote(crafting.Name + (exist ? "" : "BW"))}" +
+                            $"{emotes.GetEmote(crafting.Name + (exist ? "" : "BW"))} " +
                             $"{_local.Localize(LocalizationCategoryType.Crafting, crafting.Name)} ";
                     }
 
@@ -99,7 +101,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
                         var exist = userCollections.Any(x => x.ItemId == alcohol.Id);
 
                         alcoholString +=
-                            $"{emotes.GetEmote(alcohol.Name + (exist ? "" : "BW"))}" +
+                            $"{emotes.GetEmote(alcohol.Name + (exist ? "" : "BW"))} " +
                             $"{_local.Localize(LocalizationCategoryType.Alcohol, alcohol.Name)} ";
                     }
 
@@ -116,7 +118,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
                         var exist = userCollections.Any(x => x.ItemId == drink.Id);
 
                         drinkString +=
-                            $"{emotes.GetEmote(drink.Name + (exist ? "" : "BW"))}" +
+                            $"{emotes.GetEmote(drink.Name + (exist ? "" : "BW"))} " +
                             $"{_local.Localize(LocalizationCategoryType.Drink, drink.Name)} ";
                     }
 
@@ -134,7 +136,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
                     {
                         var exist = userCollections.Any(x => x.ItemId == crop.Id);
                         var displayString =
-                            $"{emotes.GetEmote(crop.Name + (exist ? "" : "BW"))}" +
+                            $"{emotes.GetEmote(crop.Name + (exist ? "" : "BW"))} " +
                             $"{_local.Localize(LocalizationCategoryType.Crop, crop.Name)} ";
 
                         switch (crop.Seed.Season)
@@ -172,7 +174,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
                     {
                         var exist = userCollections.Any(x => x.ItemId == fish.Id);
                         var displayString =
-                            $"{emotes.GetEmote(fish.Name + (exist ? "" : "BW"))}" +
+                            $"{emotes.GetEmote(fish.Name + (exist ? "" : "BW"))} " +
                             $"{_local.Localize(LocalizationCategoryType.Fish, fish.Name)} ";
 
                         switch (fish.Rarity)
@@ -208,64 +210,30 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
                 case CollectionType.Food:
 
                     var foods = await _mediator.Send(new GetFoodsQuery());
-                    var foodNewbieString = string.Empty;
-                    var foodStudentString = string.Empty;
-                    var foodExperiencedString = string.Empty;
-                    var foodProfessionalString = string.Empty;
-                    var foodExpertString = string.Empty;
-                    var foodMasterString = string.Empty;
-                    var foodGrandmasterString = string.Empty;
-                    var foodLegendaryString = string.Empty;
 
-                    foreach (var food in foods)
+                    while (foods.Count > 10)
                     {
-                        var exist = userCollections.Any(x => x.ItemId == food.Id);
-                        var displayString =
-                            $"{emotes.GetEmote(food.Name + (exist ? "" : "BW"))}" +
-                            $"{_local.Localize(LocalizationCategoryType.Food, food.Name)} ";
+                        var displayFoods = foods
+                            .Take(10)
+                            .ToList();
 
-                        switch (food.Category)
+                        foods.RemoveRange(0, 10);
+
+                        var foodString = string.Empty;
+
+                        foreach (var food in displayFoods)
                         {
-                            case FoodCategoryType.Newbie:
-                                foodNewbieString += displayString;
-                                break;
-                            case FoodCategoryType.Student:
-                                foodStudentString += displayString;
-                                break;
-                            case FoodCategoryType.Experienced:
-                                foodExperiencedString += displayString;
-                                break;
-                            case FoodCategoryType.Professional:
-                                foodProfessionalString += displayString;
-                                break;
-                            case FoodCategoryType.Expert:
-                                foodExpertString += displayString;
-                                break;
-                            case FoodCategoryType.Master:
-                                foodMasterString += displayString;
-                                break;
-                            case FoodCategoryType.Grandmaster:
-                                foodGrandmasterString += displayString;
-                                break;
-                            case FoodCategoryType.Legendary:
-                                foodLegendaryString += displayString;
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
+                            var exist = userCollections.Any(x => x.ItemId == food.Id);
+                            foodString +=
+                                $"{emotes.GetEmote(food.Name + (exist ? "" : "BW"))} " +
+                                $"{_local.Localize(LocalizationCategoryType.Food, food.Name)} ";
                         }
+
+                        embed.AddField(StringExtensions.EmptyChar, foodString);
                     }
 
-                    embed
-                        .AddField(FoodCategoryType.Newbie.Localize(), foodNewbieString)
-                        .AddField(FoodCategoryType.Student.Localize(), foodStudentString)
-                        .AddField(FoodCategoryType.Experienced.Localize(), foodExperiencedString)
-                        .AddField(FoodCategoryType.Professional.Localize(), foodProfessionalString)
-                        .AddField(FoodCategoryType.Expert.Localize(), foodExpertString)
-                        .AddField(FoodCategoryType.Master.Localize(), foodMasterString)
-                        .AddField(FoodCategoryType.Grandmaster.Localize(), foodGrandmasterString)
-                        .AddField(FoodCategoryType.Legendary.Localize(), foodLegendaryString);
-
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }

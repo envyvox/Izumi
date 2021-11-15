@@ -9,7 +9,6 @@ namespace Izumi.Services.Game.Food.Models
         Guid Id,
         long AutoIncrementedId,
         string Name,
-        FoodCategoryType Category,
         bool RecipeSellable,
         bool IsSpecial,
         List<FoodIngredientDto> Ingredients);

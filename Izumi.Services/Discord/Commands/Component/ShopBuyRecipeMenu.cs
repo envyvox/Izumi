@@ -43,7 +43,7 @@ namespace Izumi.Services.Discord.Commands.Component
             user.Location.CheckRequiredLocation(LocationType.Garden);
 
             var emotes = DiscordRepository.Emotes;
-            var food = await _mediator.Send(new GetDynamicShopRecipeByIncIdQuery(foodIncId));
+            var food = await _mediator.Send(new GetFoodByIncIdQuery(foodIncId));
 
             var hasRecipe = await _mediator.Send(new CheckUserHasRecipeQuery(user.Id, food.Id));
 

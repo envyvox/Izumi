@@ -11,7 +11,6 @@
     <HeaderContent>
         <MudTh>Emote</MudTh>
         <MudTh>Name</MudTh>
-        <MudTh>Category</MudTh>
         <MudTh>RecipeSellable</MudTh>
         <MudTh>IsSpecial</MudTh>
         <MudTh>IncId</MudTh>
@@ -22,7 +21,6 @@
             <img src="https://cdn.discordapp.com/emojis/@_emotes.GetEmoteId(context.Name)" alt="icon" width="30" height="30"/>
         </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Category">@context.Category</MudTd>
         <MudTd DataLabel="RecipeSellable">
             <MudCheckBox ReadOnly="@true" @bind-Checked="@context.RecipeSellable"/>
         </MudTd>
@@ -38,14 +36,6 @@
         </MudTd>
         <MudTd DataLabel="Name">
             <MudTextField @bind-Value="@context.Name" Required/>
-        </MudTd>
-        <MudTd DataLabel="Category">
-            <MudSelect @bind-Value="@context.Category">
-                @foreach (FoodCategoryType category in Enum.GetValues(typeof(FoodCategoryType)))
-                {
-                    <MudSelectItem Value="@category">@category</MudSelectItem>
-                }
-            </MudSelect>
         </MudTd>
         <MudTd DataLabel="RecipeSellable">
             <MudCheckBox @bind-Checked="@context.RecipeSellable"/>
@@ -107,7 +97,6 @@
             Id = food.Id,
             AutoIncrementedId = food.AutoIncrementedId,
             Name = food.Name,
-            Category = food.Category,
             RecipeSellable = food.RecipeSellable,
             IsSpecial = food.IsSpecial
         };
@@ -123,7 +112,6 @@
             {
                 Id = food.Id,
                 Name = food.Name,
-                Category = food.Category,
                 RecipeSellable = food.RecipeSellable,
                 IsSpecial = food.IsSpecial
             });
@@ -146,7 +134,6 @@
         food.Id = _backup.Id;
         food.AutoIncrementedId = _backup.AutoIncrementedId;
         food.Name = _backup.Name;
-        food.Category = _backup.Category;
         food.RecipeSellable = _backup.RecipeSellable;
         food.IsSpecial = _backup.IsSpecial;
     }

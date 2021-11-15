@@ -15,6 +15,7 @@ using Izumi.Services.Game.Localization;
 using Izumi.Services.Game.Tutorial.Commands;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
+using static Izumi.Services.Extensions.ExceptionExtensions;
 using StringExtensions = Izumi.Services.Extensions.StringExtensions;
 
 namespace Izumi.Services.Discord.Commands.Slash.Contract
@@ -46,39 +47,44 @@ namespace Izumi.Services.Discord.Commands.Slash.Contract
 
             if (contracts.Count < 1)
             {
-                embed.WithDescription(
-                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
+                throw new GameUserExpectedException(
                     "рабочие контракты доступны в любом крупном городе и только для ничем не занятых путешественников.");
             }
-            else
+
+            embed
+                .WithDescription(
+                    $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
+                    "тут отображаются доступные в этой локации рабочие контракты: " +
+                    $"\n\n{emotes.GetEmote("Arrow")} Для того чтобы взяться за выполнение рабочего контракта, **выбери его** из списка под этим сообщением." +
+                    $"\n{StringExtensions.EmptyChar}")
+                .WithFooter("* Длительность указана с учетом твоей текущей энергии.");
+
+            var selectMenu = new SelectMenuBuilder()
+                .WithCustomId("contract-accept")
+                .WithPlaceholder("Выбери контракт за который хочешь взяться");
+
+            foreach (var contract in contracts)
             {
-                embed
-                    .WithDescription(
-                        $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Command.User.Mention}, " +
-                        "тут отображаются доступные в этой локации рабочие контракты: " +
-                        $"\n\n{emotes.GetEmote("Arrow")} Напиши `/контракт` и введи номер рабочего контракта за который хочешь взяться." +
-                        $"\n{StringExtensions.EmptyChar}")
-                    .WithFooter("* Длительность указана с учетом твоей текущей энергии.");
+                var actionTime = await _mediator.Send(new GetActionTimeQuery(contract.Duration, user.Energy));
 
-                foreach (var contract in contracts)
-                {
-                    var actionTime = await _mediator.Send(new GetActionTimeQuery(contract.Duration, user.Energy));
+                embed.AddField(
+                    $"{emotes.GetEmote("List")} {contract.Name}",
+                    $"{contract.Description}" +
+                    $"\nНаграда: {emotes.GetEmote(CurrencyType.Ien.ToString())} {contract.CurrencyReward} " +
+                    $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString(), contract.CurrencyReward)}, " +
+                    $"{emotes.GetEmote(contract.Location.Reputation().Emote(int.MaxValue))} {contract.ReputationReward} " +
+                    $"репутации в **{contract.Location.Localize(true)}**" +
+                    $"\nДлительность: {actionTime.Humanize(1, new CultureInfo("ru-RU"))}" +
+                    $"\nРасход энергии: {emotes.GetEmote("Energy")} {contract.EnergyCost} " +
+                    $"{_local.Localize(LocalizationCategoryType.Bar, "Energy", contract.EnergyCost)}");
 
-                    embed.AddField(
-                        $"{emotes.GetEmote("List")} `{contract.AutoIncrementedId}` {contract.Name}",
-                        $"{contract.Description}" +
-                        $"\nНаграда: {emotes.GetEmote(CurrencyType.Ien.ToString())} {contract.CurrencyReward} " +
-                        $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString(), contract.CurrencyReward)}, " +
-                        $"{emotes.GetEmote(contract.Location.Reputation().Emote(int.MaxValue))} {contract.ReputationReward} " +
-                        $"репутации в **{contract.Location.Localize(true)}**" +
-                        $"\nДлительность: {actionTime.Humanize(1, new CultureInfo("ru-RU"))}" +
-                        $"\nРасход энергии: {emotes.GetEmote("Energy")} {contract.EnergyCost} " +
-                        $"{_local.Localize(LocalizationCategoryType.Bar, "Energy", contract.EnergyCost)}");
-                }
+                selectMenu.AddOption(contract.Name.ToLower(), $"{contract.AutoIncrementedId}");
             }
 
             await _mediator.Send(new CheckUserTutorialStepCommand(user.Id, TutorialStepType.CheckContracts));
-            return await _mediator.Send(new RespondEmbedCommand(request.Command, embed));
+
+            return await _mediator.Send(new RespondEmbedCommand(request.Command, embed,
+                new ComponentBuilder().WithSelectMenu(selectMenu).Build()));
         }
     }
 }
