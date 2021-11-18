@@ -57,7 +57,8 @@ namespace Izumi.Services.Discord.Client.Events
                 var channels = DiscordRepository.Channels;
 
                 if (request.Interaction.Channel.Id != channels[DiscordChannelType.Commands].Id &&
-                    request.Interaction.Channel.Id != channels[DiscordChannelType.SearchGetRoles].Id)
+                    request.Interaction.Channel.Id != channels[DiscordChannelType.GetRoles].Id &&
+                    request.Interaction.Channel.Id != channels[DiscordChannelType.Moderation].Id)
                 {
                     await request.Interaction.RespondAsync(
                         $"{request.Interaction.User.Mention}, использование игровых команд доступно лишь в канале команды.",
@@ -158,9 +159,13 @@ namespace Izumi.Services.Discord.Client.Events
                         // roles
                         if (component.Data.CustomId.Contains("toggle-role"))
                             await HandleInteraction(request.Interaction, new ToggleRoleButton(component), true);
+                        if (component.Data.CustomId.Contains("update-gender"))
+                            await HandleInteraction(request.Interaction, new UpdateGenderButtons(component), true);
                         if (component.Data.CustomId == "select-game-roles")
                             await HandleInteraction(request.Interaction, new SelectGameRolesMenu(component), true);
-                        
+                        if (component.Data.CustomId == "request-gender-role")
+                            await HandleInteraction(request.Interaction, new RequestGenderButton(component), true);
+
                         // menus
                         if (component.Data.CustomId == "shop-buy-recipe")
                             await HandleInteraction(request.Interaction, new ShopBuyRecipeMenu(component), false);

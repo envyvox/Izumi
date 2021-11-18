@@ -104,8 +104,6 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
                 .AddField("Текущая локация",
                     locationString +
                     $"\n{StringExtensions.EmptyChar}")
-                .AddField("Рейтинг приключений",
-                    $"{emotes.GetEmote("Blank")} Временно недоступно.")
                 .AddField("Семья",
                     $"{emotes.GetEmote("Blank")} Временно недоступно." +
                     $"\n{StringExtensions.EmptyChar}")

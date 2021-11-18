@@ -65,7 +65,7 @@ namespace Izumi.Services.Game.Effect.Commands
                     $"{_local.Localize(LocalizationCategoryType.Currency, CurrencyType.Ien.ToString(), reward)}, " +
                     "вот бы и мне так везло...");
 
-            await _mediator.Send(new SendEmbedToChannelCommand(DiscordChannelType.GameDiary, embedNotify));
+            await _mediator.Send(new SendEmbedToChannelCommand(DiscordChannelType.GameEvents, embedNotify));
 
             _logger.LogInformation(
                 "Lottery ended with winner {UserId}",

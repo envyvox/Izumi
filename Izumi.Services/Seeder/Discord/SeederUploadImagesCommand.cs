@@ -51,7 +51,8 @@ namespace Izumi.Services.Seeder.Discord
                 new(ImageType.GetEventRole, "https://cdn.discordapp.com/attachments/842067362139209778/850652843848761394/unknown.png"),
                 new(ImageType.ColorPicker, "https://cdn.discordapp.com/attachments/842067362139209778/848897929641328660/ColorPicker.png"),
                 new(ImageType.Premium, "https://cdn.discordapp.com/attachments/842067362139209778/848626579978190868/Premium.png"),
-                new(ImageType.GetGameRoles, "https://cdn.discordapp.com/attachments/842067362139209778/898169768266309662/unknown.png")
+                new(ImageType.GetGameRoles, "https://cdn.discordapp.com/attachments/842067362139209778/898169768266309662/unknown.png"),
+                new(ImageType.RequestGenderRole, "https://cdn.discordapp.com/attachments/842067362139209778/910949110935330826/unknown.png")
             };
 
             foreach (var createImageCommand in commands)

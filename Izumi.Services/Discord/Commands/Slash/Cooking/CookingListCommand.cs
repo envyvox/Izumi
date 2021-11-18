@@ -72,8 +72,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Cooking
 
             var component = new ComponentBuilder()
                 .WithButton("Назад", "cooking-list-back", disabled: true)
-                .WithButton("Вперед", "cooking-list-forward")
-                .Build();
+                .WithButton("Вперед", "cooking-list-forward");
 
             await _mediator.Send(new CheckUserTutorialStepCommand(user.Id, TutorialStepType.CheckCookingList));
 

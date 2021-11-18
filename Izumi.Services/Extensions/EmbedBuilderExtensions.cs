@@ -16,5 +16,10 @@ namespace Izumi.Services.Extensions
         {
             return builder.WithColor(new Color(uint.Parse(DefaultEmbedColor, NumberStyles.HexNumber)));
         }
+
+        public static EmbedBuilder WithUserColor(this EmbedBuilder builder, string commandColor)
+        {
+            return builder.WithColor(new Color(uint.Parse(commandColor, NumberStyles.HexNumber)));
+        }
     }
 }

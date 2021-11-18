@@ -612,10 +612,6 @@ namespace Izumi.Services.Seeder.Discord
                             .WithRequired(true)
                             .WithName("цвет")
                             .WithDescription("HEX значение нового цвета полоски у команд")))
-                    .AddOption(new SlashCommandOptionBuilder()
-                        .WithType(ApplicationCommandOptionType.SubCommand)
-                        .WithName("пола")
-                        .WithDescription("Отправить запрос на подтверждение пола"))
                     .Build(),
 
                 new SlashCommandBuilder()

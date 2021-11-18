@@ -10,8 +10,8 @@ namespace Izumi.Services.Discord.Embed
 {
     public record RespondEmbedCommand(
             SocketSlashCommand Command,
-            EmbedBuilder Builder,
-            MessageComponent Component = null,
+            EmbedBuilder EmbedBuilder,
+            ComponentBuilder ComponentBuilder = null,
             string Text = null)
         : IRequest;
 
@@ -29,17 +29,12 @@ namespace Izumi.Services.Discord.Embed
         {
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
 
-            var embed = request.Builder
-                .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))
-                .Build();
+            var embed = request.EmbedBuilder
+                .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)));
 
-            await request.Command.FollowupAsync(
-                text: request.Text,
-                embeds: new[] { embed },
-                isTTS: false,
-                allowedMentions: AllowedMentions.None,
-                options: null,
-                component: request.Component);
+            await request.Command.FollowupAsync(request.Text,
+                embed: embed.Build(),
+                component: request.ComponentBuilder.Build());
 
             return Unit.Value;
         }

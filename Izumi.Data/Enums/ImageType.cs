@@ -29,6 +29,7 @@
         ColorPicker = 25,
         Premium = 26,
         Tutorial = 27,
-        GetGameRoles = 28
+        GetGameRoles = 28,
+        RequestGenderRole = 29
     }
 }

@@ -12,7 +12,8 @@ namespace Izumi.Services.Discord.Embed
 {
     public record SendEmbedToChannelCommand(
             DiscordChannelType Channel,
-            EmbedBuilder Builder,
+            EmbedBuilder EmbedBuilder,
+            ComponentBuilder ComponentBuilder = null,
             string Message = "")
         : IRequest;
 
@@ -32,11 +33,13 @@ namespace Izumi.Services.Discord.Embed
         public async Task<Unit> Handle(SendEmbedToChannelCommand request, CancellationToken ct)
         {
             var channels = DiscordRepository.Channels;
-            var channel = await _mediator.Send(new GetSocketTextChannelQuery((ulong) channels[request.Channel].Id));
+            var channel = await _mediator.Send(new GetSocketTextChannelQuery(channels[request.Channel].Id));
 
             try
             {
-                await channel.SendMessageAsync(request.Message, embed: request.Builder.Build());
+                await channel.SendMessageAsync(request.Message,
+                    embed: request.EmbedBuilder.Build(),
+                    component: request.ComponentBuilder.Build());
 
                 _logger.LogInformation(
                     "Sended a message in channel {ChannelType}",

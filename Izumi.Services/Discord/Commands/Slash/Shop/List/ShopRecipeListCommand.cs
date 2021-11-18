@@ -93,7 +93,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Shop.List
             }
 
             return await _mediator.Send(new RespondEmbedCommand(request.Command, embed,
-                component.WithSelectMenu(selectMenu).Build()));
+                component.WithSelectMenu(selectMenu)));
         }
     }
 }

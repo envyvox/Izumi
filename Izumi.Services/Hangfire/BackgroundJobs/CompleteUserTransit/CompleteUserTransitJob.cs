@@ -37,48 +37,29 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit
                 "Complete user transit job executed for user {UserId} and destination {Destination}",
                 userId, destination.ToString());
 
-            var channels = DiscordRepository.Channels;
-            DiscordChannelType descChannel;
-            DiscordChannelType eventsChannel;
-
             switch (destination)
             {
                 case LocationType.Capital:
-
-                    descChannel = DiscordChannelType.CapitalDesc;
-                    eventsChannel = DiscordChannelType.CapitalEvents;
 
                     await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.TransitToCapital));
 
                     break;
                 case LocationType.Garden:
 
-                    descChannel = DiscordChannelType.GardenDesc;
-                    eventsChannel = DiscordChannelType.GardenEvents;
-
                     await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.TransitToGarden));
 
                     break;
                 case LocationType.Seaport:
-
-                    descChannel = DiscordChannelType.SeaportDesc;
-                    eventsChannel = DiscordChannelType.SeaportEvents;
 
                     await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.TransitToSeaport));
 
                     break;
                 case LocationType.Castle:
 
-                    descChannel = DiscordChannelType.CastleDesc;
-                    eventsChannel = DiscordChannelType.CastleEvents;
-
                     await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.TransitToCastle));
 
                     break;
                 case LocationType.Village:
-
-                    descChannel = DiscordChannelType.VillageDesc;
-                    eventsChannel = DiscordChannelType.VillageEvents;
 
                     await _mediator.Send(new CheckUserTutorialStepCommand(userId, TutorialStepType.TransitToVillage));
 
@@ -98,10 +79,7 @@ namespace Izumi.Services.Hangfire.BackgroundJobs.CompleteUserTransit
             var embed = new EmbedBuilder()
                 .WithAuthor("Прибытие в локацию")
                 .WithDescription(
-                    $"Ты достиг точки прибытия, добро пожаловать в **{destination.Localize()}**!" +
-                    $"\n{StringExtensions.EmptyChar}")
-                .AddField("Каналы локации",
-                    $"<#{channels[descChannel].Id}>, <#{channels[eventsChannel].Id}>")
+                    $"Ты достиг точки прибытия, добро пожаловать в **{destination.Localize()}**!")
                 .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.InTransit)));
 
             await _mediator.Send(new SendEmbedToUserCommand((ulong) userId, embed));

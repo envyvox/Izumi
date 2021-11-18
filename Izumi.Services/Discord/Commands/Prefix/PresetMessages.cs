@@ -36,7 +36,7 @@ namespace Izumi.Services.Discord.Commands.Prefix
                 .WithDefaultColor()
                 .WithAuthor("Игровые роли")
                 .WithDescription(
-                    "Ты можешь получить игровые роли, которые открывают доступ к текстовым каналам где можно " +
+                    "Ты можешь получить **игровые роли**, которые открывают доступ к **текстовым каналам** где можно " +
                     "как **найти людей** для совместной игры, так и просто пообщаться на игровую тематику. " +
                     "Для этого **выбери роли** из списка под этим сообщением.")
                 .WithFooter("Игровые роли можно при необходимости снять, убрав их из списка.")
@@ -50,7 +50,8 @@ namespace Izumi.Services.Discord.Commands.Prefix
                     .WithMaxValues(14)
                     .AddOption("Genshin Impact", "GenshinImpact", emote: Parse(emotes.GetEmote("GenshinImpact")))
                     .AddOption("League of Legends", "LeagueOfLegends", emote: Parse(emotes.GetEmote("LeagueOfLegends")))
-                    .AddOption("Teamfight Tactics", "TeamfightTactics", emote: Parse(emotes.GetEmote("TeamfightTactics")))
+                    .AddOption("Teamfight Tactics", "TeamfightTactics",
+                        emote: Parse(emotes.GetEmote("TeamfightTactics")))
                     .AddOption("Valorant", "Valorant", emote: Parse(emotes.GetEmote("Valorant")))
                     .AddOption("Apex Legends", "ApexLegends", emote: Parse(emotes.GetEmote("ApexLegends")))
                     .AddOption("Dota 2", "Dota", emote: Parse(emotes.GetEmote("Dota")))
@@ -64,6 +65,29 @@ namespace Izumi.Services.Discord.Commands.Prefix
                     .AddOption("Mobile Gaming", "MobileGaming", emote: Parse(emotes.GetEmote("MobileGaming"))));
 
             await Context.Channel.SendMessageAsync(embed: embed.Build(), component: menu.Build());
+        }
+
+        [Command("gender-role")]
+        public async Task SendGenderRoleMessageTask()
+        {
+            var emotes = DiscordRepository.Emotes;
+            var roles = DiscordRepository.Roles;
+
+            var embed = new EmbedBuilder()
+                .WithAuthor("Подтверждение пола")
+                .WithDescription(
+                    "Ты можешь запросить **подтверждение пола** и получить роль " +
+                    $"<@&{roles[DiscordRoleType.GenderMale].Id}> или <@&{roles[DiscordRoleType.GenderFemale].Id}>, " +
+                    "открывающую доступ к особому **голосовому каналу**, доступному только пользователям с этим полом, а так же отображение пола " +
+                    $"{emotes.GetEmote(GenderType.Male.EmoteName())}{emotes.GetEmote(GenderType.Female.EmoteName())} " +
+                    "в **игровом профиле**. Для этого **нажми на кнопку** под этим сообщением.")
+                .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.RequestGenderRole)))
+                .WithFooter("Гендерную роль можно при необходимости снять, попросив об этом администратора.");
+
+            var button = new ComponentBuilder()
+                .WithButton("Запросить роль", "request-gender-role");
+
+            await Context.Channel.SendMessageAsync(embed: embed.Build(), component: button.Build());
         }
 
         [Command("how-desc-work")]
@@ -86,6 +110,7 @@ namespace Izumi.Services.Discord.Commands.Prefix
                     $"{emotes.GetEmote("List")} <#{channels[DiscordChannelType.Screenshots].Id}> - Твои яркие моменты.\n" +
                     $"{emotes.GetEmote("List")} <#{channels[DiscordChannelType.Memes].Id}> - Говорящее само за себя название канала.\n" +
                     $"{emotes.GetEmote("List")} <#{channels[DiscordChannelType.Arts].Id}> - Красивые рисунки.\n" +
+                    $"{emotes.GetEmote("List")} <#{channels[DiscordChannelType.Music].Id}> - Твоя любимая музыка.\n" +
                     $"{emotes.GetEmote("List")} <#{channels[DiscordChannelType.Erotic].Id}> - Изображения, носящие эротический характер.\n" +
                     $"{emotes.GetEmote("List")} <#{channels[DiscordChannelType.Nsfw].Id}> - Изображения 18+." +
                     $"\n{StringExtensions.EmptyChar}")
