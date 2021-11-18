@@ -28,9 +28,9 @@ namespace Izumi.Services.Discord.Commands.Component
 
         public async Task<Unit> Handle(UpdateGenderButtons request, CancellationToken ct)
         {
-            var gender = request.Component.Data.CustomId.Contains("male")
-                ? GenderType.Male
-                : GenderType.Female;
+            var gender = request.Component.Data.CustomId.Contains("female")
+                ? GenderType.Female
+                : GenderType.Male;
             var userId = ulong.Parse(Regex.Match(request.Component.Data.CustomId, @"\d+").Value);
 
             var emotes = DiscordRepository.Emotes;
