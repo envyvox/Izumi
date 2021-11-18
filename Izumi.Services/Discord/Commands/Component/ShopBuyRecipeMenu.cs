@@ -48,7 +48,7 @@ namespace Izumi.Services.Discord.Commands.Component
             var hasRecipe = await _mediator.Send(new CheckUserHasRecipeQuery(user.Id, food.Id));
 
             var embed = new EmbedBuilder()
-                .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))
+                .WithUserColor(user.CommandColor)
                 .WithAuthor("Магазин рецептов")
                 .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.ShopRecipe)));
 

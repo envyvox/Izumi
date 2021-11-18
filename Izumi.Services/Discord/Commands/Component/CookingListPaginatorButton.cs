@@ -50,7 +50,7 @@ namespace Izumi.Services.Discord.Commands.Component
                 .ToList();
 
             var embed = new EmbedBuilder()
-                .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))
+                .WithUserColor(user.CommandColor)
                 .WithDescription(
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Component.User.Mention}, " +
                     "тут отображаются всевозможные рецепты:" +

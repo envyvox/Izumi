@@ -51,7 +51,7 @@ namespace Izumi.Services.Discord.Commands.Component
             
             var embed = new EmbedBuilder()
                 .WithAuthor("Магазин рецептов")
-                .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))
+                .WithUserColor(user.CommandColor)
                 .WithDescription(
                     $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} {request.Component.User.Mention}, " +
                     "тут отображаются рецепты:" +

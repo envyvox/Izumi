@@ -47,7 +47,7 @@ namespace Izumi.Services.Discord.Commands.Component
             var userCurrency = await _mediator.Send(new GetUserCurrencyQuery(user.Id, CurrencyType.Ien));
 
             var embed = new EmbedBuilder()
-                .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))
+                .WithUserColor(user.CommandColor)
                 .WithAuthor("Магазин баннеров");
 
             if (hasBanner)

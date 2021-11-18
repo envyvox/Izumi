@@ -1,8 +1,8 @@
-﻿using System.Globalization;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using Izumi.Services.Extensions;
 using Izumi.Services.Game.User.Queries;
 using MediatR;
 
@@ -11,7 +11,7 @@ namespace Izumi.Services.Discord.Embed
     public record RespondEmbedCommand(
             SocketSlashCommand Command,
             EmbedBuilder EmbedBuilder,
-            ComponentBuilder ComponentBuilder = null,
+            MessageComponent Component = null,
             string Text = null)
         : IRequest;
 
@@ -30,11 +30,11 @@ namespace Izumi.Services.Discord.Embed
             var user = await _mediator.Send(new GetUserQuery((long) request.Command.User.Id));
 
             var embed = request.EmbedBuilder
-                .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)));
+                .WithUserColor(user.CommandColor);
 
             await request.Command.FollowupAsync(request.Text,
                 embed: embed.Build(),
-                component: request.ComponentBuilder.Build());
+                component: request.Component);
 
             return Unit.Value;
         }

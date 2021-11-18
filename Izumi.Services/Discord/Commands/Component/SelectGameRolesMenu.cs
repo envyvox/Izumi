@@ -108,7 +108,7 @@ namespace Izumi.Services.Discord.Commands.Component
             }
 
             var embed = new EmbedBuilder()
-                .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))
+                .WithUserColor(user.CommandColor)
                 .WithDescription(
                     (addedRoles.Length > 0
                         ? $"Ты успешно получил роли: {addedRoles.RemoveFromEnd(2)}\n"

@@ -49,7 +49,7 @@ namespace Izumi.Services.Discord.Commands.Component
             var contract = await _mediator.Send(new GetContractQuery(contractIncId));
 
             var embed = new EmbedBuilder()
-                .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))
+                .WithUserColor(user.CommandColor)
                 .WithAuthor(contract.Name)
                 .WithImageUrl(await _mediator.Send(new GetImageUrlQuery(ImageType.Contracts)));
 

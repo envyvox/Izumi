@@ -31,7 +31,7 @@ namespace Izumi.Services.Discord.Commands.Component
             var user = await _mediator.Send(new GetUserQuery((long) request.Component.User.Id));
 
             var embed = new EmbedBuilder()
-                .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)));
+                .WithUserColor(user.CommandColor);
 
             if (user.Gender is not GenderType.None)
             {
@@ -59,7 +59,8 @@ namespace Izumi.Services.Discord.Commands.Component
                     .WithButton("Подтвердить мужской пол", $"update-gender-male_{user.Id}",
                         emote: Parse(emotes.GetEmote(GenderType.Male.EmoteName())))
                     .WithButton("Подтвердить женский пол", $"update-gender-female_{user.Id}",
-                        emote: Parse(emotes.GetEmote(GenderType.Female.EmoteName())));
+                        emote: Parse(emotes.GetEmote(GenderType.Female.EmoteName())))
+                    .Build();
 
                 await _mediator.Send(new SendEmbedToChannelCommand(
                     DiscordChannelType.Moderation, notify, component, $"<@&{roles[DiscordRoleType.Moderator].Id}>"));

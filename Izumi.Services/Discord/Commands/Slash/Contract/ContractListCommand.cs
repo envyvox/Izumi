@@ -84,7 +84,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Contract
             await _mediator.Send(new CheckUserTutorialStepCommand(user.Id, TutorialStepType.CheckContracts));
 
             return await _mediator.Send(new RespondEmbedCommand(request.Command, embed,
-                new ComponentBuilder().WithSelectMenu(selectMenu)));
+                new ComponentBuilder().WithSelectMenu(selectMenu).Build()));
         }
     }
 }

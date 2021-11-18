@@ -76,7 +76,7 @@ namespace Izumi.Services.Discord.Commands.Slash.Shop.List
             }
 
             return await _mediator.Send(new RespondEmbedCommand(request.Command, embed,
-                new ComponentBuilder().WithSelectMenu(selectMenu)));
+                new ComponentBuilder().WithSelectMenu(selectMenu).Build()));
         }
     }
 }

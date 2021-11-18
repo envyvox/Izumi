@@ -235,7 +235,7 @@ namespace Izumi.Services.Discord.Client.Events
                 var user = await _mediator.Send(new GetUserQuery((long) request.Interaction.User.Id));
 
                 var embed = new EmbedBuilder()
-                    .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))
+                    .WithUserColor(user.CommandColor)
                     .WithAuthor("Ой, кажется что-то пошло не так...")
                     .WithDescription(
                         $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} " +
@@ -250,7 +250,7 @@ namespace Izumi.Services.Discord.Client.Events
                 var user = await _mediator.Send(new GetUserQuery((long) request.Interaction.User.Id));
 
                 var embed = new EmbedBuilder()
-                    .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))
+                    .WithUserColor(user.CommandColor)
                     .WithAuthor("Ой, кажется что-то пошло не так...")
                     .WithDescription(
                         $"{emotes.GetEmote(user.Title.EmoteName())} {user.Title.Localize()} " +

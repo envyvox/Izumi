@@ -40,7 +40,7 @@ namespace Izumi.Services.Discord.Commands.Component
             var hasRole = await _mediator.Send(new CheckGuildUserHasRoleQuery(request.Component.User.Id, role));
 
             var embed = new EmbedBuilder()
-                .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)));
+                .WithUserColor(user.CommandColor);
 
             if (hasRole)
             {

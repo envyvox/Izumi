@@ -13,7 +13,7 @@ namespace Izumi.Services.Discord.Embed
     public record SendEmbedToChannelCommand(
             DiscordChannelType Channel,
             EmbedBuilder EmbedBuilder,
-            ComponentBuilder ComponentBuilder = null,
+            MessageComponent Component = null,
             string Message = "")
         : IRequest;
 
@@ -39,7 +39,7 @@ namespace Izumi.Services.Discord.Embed
             {
                 await channel.SendMessageAsync(request.Message,
                     embed: request.EmbedBuilder.Build(),
-                    component: request.ComponentBuilder.Build());
+                    component: request.Component);
 
                 _logger.LogInformation(
                     "Sended a message in channel {ChannelType}",

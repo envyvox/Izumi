@@ -43,10 +43,10 @@ namespace Izumi.Services.Discord.Embed
             var channels = DiscordRepository.Channels;
 
             var embed = request.Builder
-                .WithColor(new Color(uint.Parse(user.CommandColor, NumberStyles.HexNumber)))
+                .WithUserColor(user.CommandColor)
                 .Build();
 
-            var buttons = new ComponentBuilder()
+            var component = new ComponentBuilder()
                 .WithButton($"Открыть канал #{DiscordChannelType.Chat.Name()}", null, ButtonStyle.Link, null,
                     $"https://www.discord.com/channels/{_options.GuildId}/{channels[DiscordChannelType.Chat].Id}")
                 .WithButton($"Открыть канал #{DiscordChannelType.Commands.Name()}", null, ButtonStyle.Link, null,
@@ -55,7 +55,7 @@ namespace Izumi.Services.Discord.Embed
 
             try
             {
-                await socketUser.SendMessageAsync(request.Message, false, embed, component: buttons);
+                await socketUser.SendMessageAsync(request.Message, embed: embed, component: component);
 
                 _logger.LogInformation(
                     "Sended a direct message to user {UserId}",
