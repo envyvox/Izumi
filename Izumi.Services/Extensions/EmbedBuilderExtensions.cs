@@ -5,7 +5,7 @@ namespace Izumi.Services.Extensions
 {
     public static class EmbedBuilderExtensions
     {
-        private const string DefaultEmbedColor = "202225";
+        private const string DefaultEmbedColor = "36393F";
 
         public static EmbedBuilder AddEmptyField(this EmbedBuilder builder, bool inline)
         {
