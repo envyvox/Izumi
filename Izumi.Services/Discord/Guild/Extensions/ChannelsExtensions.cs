@@ -18,7 +18,7 @@ namespace Izumi.Services.Discord.Guild.Extensions
 
             return channels
                 .Where(x => communityDescChannels.Contains(x.Key))
-                .Select(x => (ulong) x.Value.Id);
+                .Select(x => x.Value.Id);
         }
     }
 }

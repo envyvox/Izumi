@@ -63,6 +63,9 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
             var artMessages = userMessages
                 .Where(x => x.ChannelId == (long) channels[DiscordChannelType.Arts].Id)
                 .ToList();
+            var musicMessages = userMessages
+                .Where(x => x.ChannelId == (long) channels[DiscordChannelType.Music].Id)
+                .ToList();
             var eroticMessages = userMessages
                 .Where(x => x.ChannelId == (long) channels[DiscordChannelType.Erotic].Id)
                 .ToList();
@@ -73,11 +76,14 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
             var photosMessagesLikes = (uint) ChannelMessagesVotes(userVotes, photosMessages, VoteType.Like);
             var photosMessagesDislikes = (uint) ChannelMessagesVotes(userVotes, photosMessages, VoteType.Dislike);
             var screenshotMessagesLikes = (uint) ChannelMessagesVotes(userVotes, screenshotMessages, VoteType.Like);
-            var screenshotMessagesDislikes = (uint) ChannelMessagesVotes(userVotes, screenshotMessages, VoteType.Dislike);
+            var screenshotMessagesDislikes =
+                (uint) ChannelMessagesVotes(userVotes, screenshotMessages, VoteType.Dislike);
             var memesMessagesLikes = (uint) ChannelMessagesVotes(userVotes, memesMessages, VoteType.Like);
             var memesMessagesDislikes = (uint) ChannelMessagesVotes(userVotes, memesMessages, VoteType.Dislike);
             var artMessagesLikes = (uint) ChannelMessagesVotes(userVotes, artMessages, VoteType.Like);
             var artMessagesDislikes = (uint) ChannelMessagesVotes(userVotes, artMessages, VoteType.Dislike);
+            var musicMessagesLikes = (uint) ChannelMessagesVotes(userVotes, musicMessages, VoteType.Like);
+            var musicMessagesDislikes = (uint) ChannelMessagesVotes(userVotes, musicMessages, VoteType.Dislike);
             var eroticMessagesLikes = (uint) ChannelMessagesVotes(userVotes, eroticMessages, VoteType.Like);
             var eroticMessagesDislikes = (uint) ChannelMessagesVotes(userVotes, eroticMessages, VoteType.Dislike);
             var nsfwMessagesLikes = (uint) ChannelMessagesVotes(userVotes, nsfwMessages, VoteType.Like);
@@ -100,6 +106,8 @@ namespace Izumi.Services.Discord.Commands.Slash.Info
                         memesMessagesLikes, memesMessagesDislikes) +
                     DisplayChannelInfo((uint) artMessages.Count, channels[DiscordChannelType.Arts].Id,
                         artMessagesLikes, artMessagesDislikes) +
+                    DisplayChannelInfo((uint) musicMessages.Count, channels[DiscordChannelType.Music].Id,
+                        musicMessagesLikes, musicMessagesDislikes) +
                     DisplayChannelInfo((uint) eroticMessages.Count, channels[DiscordChannelType.Erotic].Id,
                         eroticMessagesLikes, eroticMessagesDislikes) +
                     DisplayChannelInfo((uint) nsfwMessages.Count, channels[DiscordChannelType.Nsfw].Id,
