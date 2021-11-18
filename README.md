@@ -1,7 +1,7 @@
 # About / Информация
 
-**Изуми** это уникальный бот с упрощенной RPG системой, созданный специально для Discord-сервера Hinode.<br>
-***Izumi** is a unique bot with a simplified RPG system, created specifically for the Hinode Discord server.*
+**Изуми** это уникальный бот с упрощенной RPG системой, созданный специально для Discord-сервера Lobby.<br>
+***Izumi** is a unique bot with a simplified RPG system, created specifically for the Lobby Discord server.*
 
 ![alt-текст](https://cdn.discordapp.com/attachments/842067362139209778/897915309871230996/unknown.png "Превью команд")
 
@@ -9,12 +9,12 @@
 *Because this bot is intended for the Russian-speaking community further information will be in Russian.*
 
 # Как начать играть?
-1. Присоединись на наш сервер в Discord: https://discord.gg/hinode
+1. Присоединись на наш сервер в Discord: https://discord.gg/lobby
 2. Открой текстовый канал `#команды`<br>
 ![alt-текст](https://cdn.discordapp.com/attachments/842067362139209778/897912189699113070/unknown.png "Канал #команды")
 3. Ознакомиться с игровым миром проще всего через прохождение обучения, так что напиши в чат команду `/обучение`.<br>
 ![alt-текст](https://cdn.discordapp.com/attachments/842067362139209778/897912959857201202/unknown.png "Команда /обучение")
-4. Следуй указаниям **Изуми** и добро пожаловать в игровой мир **Hinode**!
+4. Следуй указаниям **Изуми** и добро пожаловать в игровой мир!
 
 # Хочу использовать бота на своем сервере, как это сделать?
 - На данный момент мы не поддерживаем возможность добавления **Изуми** на другие сервера.
