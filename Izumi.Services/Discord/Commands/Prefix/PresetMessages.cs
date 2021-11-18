@@ -74,6 +74,7 @@ namespace Izumi.Services.Discord.Commands.Prefix
             var roles = DiscordRepository.Roles;
 
             var embed = new EmbedBuilder()
+                .WithDefaultColor()
                 .WithAuthor("Подтверждение пола")
                 .WithDescription(
                     "Ты можешь запросить **подтверждение пола** и получить роль " +
