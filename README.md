@@ -9,7 +9,7 @@
 *Because this bot is intended for the Russian-speaking community further information will be in Russian.*
 
 # Как начать играть?
-1. Присоединись на наш сервер в Discord: https://discord.gg/Y2XBgT9JqA
+1. Присоединись на наш сервер в Discord: https://discord.gg/hinode
 2. Открой текстовый канал `#команды`<br>
 ![alt-текст](https://cdn.discordapp.com/attachments/842067362139209778/897912189699113070/unknown.png "Канал #команды")
 3. Ознакомиться с игровым миром проще всего через прохождение обучения, так что напиши в чат команду `/обучение`.<br>
