@@ -4,10 +4,17 @@ namespace Izumi.Data.Enums.Discord
 {
     public enum DiscordChannelType : byte
     {
-        GameInfo,
+        Welcome,
         Chat,
         Commands,
         GetRoles,
+        Announcements,
+
+        GameParent,
+        GameInfo,
+        GameLore,
+        GameEvents,
+        GameUpdates,
 
         SearchParent,
         SearchGenshinImpact,
@@ -26,7 +33,6 @@ namespace Izumi.Data.Enums.Discord
         SearchMobileGaming,
 
         EventParent,
-        GameEvents,
 
         CommunityDescParent,
         CommunityDescHowItWork,
@@ -40,9 +46,6 @@ namespace Izumi.Data.Enums.Discord
 
         LibraryParent,
         Rules,
-        GameLore,
-        Announcements,
-        GameUpdates,
         Giveaways,
         Suggestions,
 
@@ -76,10 +79,17 @@ namespace Izumi.Data.Enums.Discord
 
         public static string Name(this DiscordChannelType channel) => channel switch
         {
-            DiscordChannelType.GameInfo => Emote + "информация",
+            DiscordChannelType.Welcome => Emote + "приветствие",
             DiscordChannelType.Chat => Emote + "общение",
             DiscordChannelType.Commands => Emote + "команды",
             DiscordChannelType.GetRoles => Emote + "получение-ролей",
+            DiscordChannelType.Announcements => Emote + "объявления",
+
+            DiscordChannelType.GameParent => "игровая вселенная",
+            DiscordChannelType.GameInfo => Emote + "информация",
+            DiscordChannelType.GameLore => Emote + "история-мира",
+            DiscordChannelType.GameEvents => Emote + "игровые-события",
+            DiscordChannelType.GameUpdates => Emote + "обновления",
 
             DiscordChannelType.SearchParent => "поиск игроков",
             DiscordChannelType.SearchGenshinImpact => Emote + "genshin-impact",
@@ -98,7 +108,6 @@ namespace Izumi.Data.Enums.Discord
             DiscordChannelType.SearchMobileGaming => Emote + "mobile-gaming",
 
             DiscordChannelType.EventParent => "мероприятия",
-            DiscordChannelType.GameEvents => Emote + "игровые-события",
 
             DiscordChannelType.CommunityDescParent => "доска сообщества",
             DiscordChannelType.CommunityDescHowItWork => Emote + "как-работает",
@@ -112,10 +121,7 @@ namespace Izumi.Data.Enums.Discord
 
             DiscordChannelType.LibraryParent => "великая «тосёкан»",
             DiscordChannelType.Rules => Emote + "правила",
-            DiscordChannelType.GameLore => Emote + "история-мира",
-            DiscordChannelType.Announcements => Emote + "объявления🔔",
-            DiscordChannelType.GameUpdates => Emote + "обновления🔔",
-            DiscordChannelType.Giveaways => Emote + "розыгрыши🔔",
+            DiscordChannelType.Giveaways => Emote + "розыгрыши",
             DiscordChannelType.Suggestions => Emote + "предложения",
 
             DiscordChannelType.TavernParent => "Таверны",
@@ -145,10 +151,17 @@ namespace Izumi.Data.Enums.Discord
 
         public static DiscordChannelCategoryType Category(this DiscordChannelType channel) => channel switch
         {
-            DiscordChannelType.GameInfo => DiscordChannelCategoryType.TextChannel,
+            DiscordChannelType.Welcome => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.Chat => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.Commands => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.GetRoles => DiscordChannelCategoryType.TextChannel,
+            DiscordChannelType.Announcements => DiscordChannelCategoryType.TextChannel,
+
+            DiscordChannelType.GameParent => DiscordChannelCategoryType.CategoryChannel,
+            DiscordChannelType.GameInfo => DiscordChannelCategoryType.TextChannel,
+            DiscordChannelType.GameLore => DiscordChannelCategoryType.TextChannel,
+            DiscordChannelType.GameEvents => DiscordChannelCategoryType.TextChannel,
+            DiscordChannelType.GameUpdates => DiscordChannelCategoryType.TextChannel,
 
             DiscordChannelType.SearchParent => DiscordChannelCategoryType.CategoryChannel,
             DiscordChannelType.SearchGenshinImpact => DiscordChannelCategoryType.TextChannel,
@@ -167,7 +180,6 @@ namespace Izumi.Data.Enums.Discord
             DiscordChannelType.SearchMobileGaming => DiscordChannelCategoryType.TextChannel,
 
             DiscordChannelType.EventParent => DiscordChannelCategoryType.CategoryChannel,
-            DiscordChannelType.GameEvents => DiscordChannelCategoryType.TextChannel,
 
             DiscordChannelType.CommunityDescParent => DiscordChannelCategoryType.CategoryChannel,
             DiscordChannelType.CommunityDescHowItWork => DiscordChannelCategoryType.TextChannel,
@@ -181,9 +193,6 @@ namespace Izumi.Data.Enums.Discord
 
             DiscordChannelType.LibraryParent => DiscordChannelCategoryType.CategoryChannel,
             DiscordChannelType.Rules => DiscordChannelCategoryType.TextChannel,
-            DiscordChannelType.GameLore => DiscordChannelCategoryType.TextChannel,
-            DiscordChannelType.Announcements => DiscordChannelCategoryType.TextChannel,
-            DiscordChannelType.GameUpdates => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.Giveaways => DiscordChannelCategoryType.TextChannel,
             DiscordChannelType.Suggestions => DiscordChannelCategoryType.TextChannel,
 
@@ -214,6 +223,11 @@ namespace Izumi.Data.Enums.Discord
 
         public static DiscordChannelType Parent(this DiscordChannelType channel) => channel switch
         {
+            DiscordChannelType.GameInfo => DiscordChannelType.GameParent,
+            DiscordChannelType.GameLore => DiscordChannelType.GameParent,
+            DiscordChannelType.GameEvents => DiscordChannelType.GameParent,
+            DiscordChannelType.GameUpdates => DiscordChannelType.GameParent,
+
             DiscordChannelType.SearchGenshinImpact => DiscordChannelType.SearchParent,
             DiscordChannelType.SearchLeagueOfLegends => DiscordChannelType.SearchParent,
             DiscordChannelType.SearchTeamfightTactics => DiscordChannelType.SearchParent,
@@ -228,8 +242,6 @@ namespace Izumi.Data.Enums.Discord
             DiscordChannelType.SearchNewWorld => DiscordChannelType.SearchParent,
             DiscordChannelType.SearchMobileGaming => DiscordChannelType.SearchParent,
 
-            DiscordChannelType.GameEvents => DiscordChannelType.EventParent,
-
             DiscordChannelType.CommunityDescHowItWork => DiscordChannelType.CommunityDescParent,
             DiscordChannelType.Photos => DiscordChannelType.CommunityDescParent,
             DiscordChannelType.Screenshots => DiscordChannelType.CommunityDescParent,
@@ -240,9 +252,6 @@ namespace Izumi.Data.Enums.Discord
             DiscordChannelType.Nsfw => DiscordChannelType.CommunityDescParent,
 
             DiscordChannelType.Rules => DiscordChannelType.LibraryParent,
-            DiscordChannelType.GameLore => DiscordChannelType.LibraryParent,
-            DiscordChannelType.Announcements => DiscordChannelType.LibraryParent,
-            DiscordChannelType.GameUpdates => DiscordChannelType.LibraryParent,
             DiscordChannelType.Giveaways => DiscordChannelType.LibraryParent,
             DiscordChannelType.Suggestions => DiscordChannelType.LibraryParent,
 

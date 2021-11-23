@@ -4,10 +4,12 @@ using Discord.Commands;
 using Izumi.Data.Enums;
 using Izumi.Data.Enums.Discord;
 using Izumi.Services.Discord.Client;
+using Izumi.Services.Discord.Client.Options;
 using Izumi.Services.Discord.Emote.Extensions;
 using Izumi.Services.Discord.Image.Queries;
 using Izumi.Services.Extensions;
 using MediatR;
+using Microsoft.Extensions.Options;
 using static Discord.Emote;
 
 namespace Izumi.Services.Discord.Commands.Prefix
@@ -18,13 +20,94 @@ namespace Izumi.Services.Discord.Commands.Prefix
     {
         private readonly IMediator _mediator;
         private readonly IDiscordClientService _discordClientService;
+        private readonly DiscordOptions _options;
 
         public PresetMessages(
             IMediator mediator,
-            IDiscordClientService discordClientService)
+            IDiscordClientService discordClientService,
+            IOptions<DiscordOptions> options)
         {
             _mediator = mediator;
             _discordClientService = discordClientService;
+            _options = options.Value;
+        }
+
+        [Command("welcome")]
+        public async Task SendWelcomeMessageTask()
+        {
+            var channels = DiscordRepository.Channels;
+            var roles = DiscordRepository.Roles;
+            var emotes = DiscordRepository.Emotes;
+
+            await Context.Channel.SendMessageAsync(embed: new EmbedBuilder()
+                .WithDefaultColor()
+                .WithImageUrl(
+                    "https://cdn.discordapp.com/attachments/842067362139209778/912388119796543498/unknown.png")
+                .Build());
+
+            await Context.Channel.SendMessageAsync(embed: new EmbedBuilder()
+                .WithDefaultColor()
+                .WithTitle("Навигатор по серверу")
+                .WithDescription(
+                    $"<#{channels[DiscordChannelType.Chat].Id}> - Общение на различные темы.\n" +
+                    $"<#{channels[DiscordChannelType.Commands].Id}> - Взаимодействие с ботом.\n" +
+                    $"<#{channels[DiscordChannelType.GetRoles].Id}> - Получение серверных ролей.\n" +
+                    $"<#{channels[DiscordChannelType.Announcements].Id}> - Серверные оповещения.\n" +
+                    "\n**Игровая вселенная**\n" +
+                    $"<#{channels[DiscordChannelType.GameInfo].Id}> - Информация о боте.\n" +
+                    $"<#{channels[DiscordChannelType.GameLore].Id}> - История игрового мира.\n" +
+                    $"<#{channels[DiscordChannelType.GameEvents].Id}> - Оповещения об игровых событиях.\n" +
+                    $"<#{channels[DiscordChannelType.GameUpdates].Id}> - Обновления бота.\n" +
+                    "\n**Доска сообщества**\n" +
+                    $"<#{channels[DiscordChannelType.CommunityDescHowItWork].Id}> - Описание того, как устроена доска.\n" +
+                    $"<#{channels[DiscordChannelType.Photos].Id}> - Красивые ~~котики~~ фотографии.\n" +
+                    $"<#{channels[DiscordChannelType.Screenshots].Id}> - Твои яркие моменты.\n" +
+                    $"<#{channels[DiscordChannelType.Memes].Id}> - Говорящее само за себя название канала.\n" +
+                    $"<#{channels[DiscordChannelType.Arts].Id}> - Красивые рисунки.\n" +
+                    $"<#{channels[DiscordChannelType.Music].Id}> - Любимые треки или клипы.\n" +
+                    $"<#{channels[DiscordChannelType.Erotic].Id}> - Изображения, носящие эротический характер.\n" +
+                    $"<#{channels[DiscordChannelType.Nsfw].Id}> - Изображения 18+.\n" +
+                    "\n**Великая «Тосёкан»**\n" +
+                    $"<#{channels[DiscordChannelType.Rules].Id}> - Правила сервера.\n" +
+                    $"<#{channels[DiscordChannelType.Giveaways].Id}> - Различные серверные розыгрыши.\n" +
+                    $"<#{channels[DiscordChannelType.Suggestions].Id}> - Твои предложения по улучшению сервера или бота.\n" +
+                    "\n**Голосовые каналы**\n" +
+                    "На нашем сервере присутствует возможность **создавать** голосовые каналы самостоятельно, " +
+                    $"для этого необходимо **зайти** в канал {emotes.GetEmote("DiscordVoiceChannel")} **Разжечь костер**.\n" +
+                    $"{emotes.GetEmote("Arrow")} Ты можешь изменять название и все права созданной тобой комнаты.")
+                .WithImageUrl(
+                    "https://cdn.discordapp.com/attachments/842067362139209778/912509699943968838/unknown.png")
+                .Build());
+
+            await Context.Channel.SendMessageAsync(embed: new EmbedBuilder()
+                .WithDefaultColor()
+                .WithTitle("Мероприятия")
+                .WithDescription(
+                    "На нашем сервере проводятся различные мероприятия, такие как кастомные игры 5х5 в " +
+                    "League of Legends, Valorant или сломанный телефон, мафия и другие.\n\n" +
+                    "**Расписание мероприятий**\n" +
+                    "Для того чтобы всегда быть в курсе всех мероприятий, нажми на кнопку " +
+                    $"{emotes.GetEmote("DiscordEventSchedule")} **Меропрития** над текстовыми каналами, " +
+                    "там отображаются все **запланированные** мероприятия.\n\n" +
+                    "Выбери интересующее тебя мероприятие и нажми\n" +
+                    $"{emotes.GetEmote("DiscordNotification")} **Интересует** для того чтобы получить уведомление о его " +
+                    $"начале, а так же чтобы <@&{roles[DiscordRoleType.EventManager].Id}> было проще " +
+                    "понять сколько людей собирается придти.")
+                .WithImageUrl(
+                    "https://cdn.discordapp.com/attachments/842067362139209778/912503517435023380/unknown.png")
+                .Build());
+
+            await Context.Channel.SendMessageAsync(embed: new EmbedBuilder()
+                .WithDefaultColor()
+                .WithTitle("Игровая вселенная")
+                .WithDescription(
+                    $"На сервере присутствует собственный RPG бот {Context.Client.CurrentUser.Mention}.\n\n" +
+                    "Развитие персонажа, экономика, выращивание урожая, рыбалка, кулинария и многое другое " +
+                    "ждет тебя в твоем приключении по игровому миру.\n\n" +
+                    $"Заглядывай в <#{channels[DiscordChannelType.GameInfo].Id}> чтобы узнать подробнее.")
+                .WithImageUrl(
+                    "https://cdn.discordapp.com/attachments/842067362139209778/912516229015674900/unknown.png")
+                .Build());
         }
 
         [Command("game-roles")]
